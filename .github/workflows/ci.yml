@@ -62,20 +62,15 @@ jobs:
       - name: 安装验证工具
         run: |
           npm install -g @apidevtools/swagger-cli
-          npm install -g swagger-parser
       
       - name: 验证 OpenAPI 3.0 规范
         run: |
           swagger-cli validate openapi.yaml
           echo "✅ OpenAPI 规范验证通过"
       
-      - name: 检查规范完整性
+      - name: 检查规范完整性和所有引用
         run: |
           swagger-cli bundle openapi.yaml -o /tmp/bundled.yaml
           echo "✅ 规范完整性检查通过"
-      
-      - name: 验证所有引用
-        run: |
-          swagger-parser validate openapi.yaml
           echo "✅ 所有引用验证通过"
 
