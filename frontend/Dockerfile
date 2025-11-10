@@ -4,7 +4,7 @@ FROM node:20-alpine as build
 WORKDIR /app
 
 # 构建参数
-ARG VITE_API_BASE_URL=http://api.reforum.space/api
+ARG VITE_API_BASE_URL=https://api.reforum.space/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 # 复制依赖文件

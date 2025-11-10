@@ -6,7 +6,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_BASE_URL=http://api.reforum.space/api
+        - VITE_API_BASE_URL=https://api.reforum.space/api
     ports:
       - "80:80"
     depends_on:
@@ -27,8 +27,8 @@ services:
       - DB_NAME=forum_db
       - DB_USER=HuangWeiLong
       - DB_PASSWORD=20070511SuKiI
-      - FRONTEND_URL=http://reforum.space
-      - APP_URL=http://api.reforum.space
+      - FRONTEND_URL=https://reforum.space
+      - APP_URL=https://api.reforum.space
       - JWT_SECRET=sowaYvaRP6izCRdOTAS84KtJ5a8qyYSdeNkhL+6W2Po=
       - JWT_EXPIRES_IN=7d
       - RESEND_API_KEY=re_KRV8Cpnw_NzaBNyN4agsb1Emb59F3BPYH

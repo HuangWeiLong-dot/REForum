@@ -46,7 +46,7 @@ A       www        43.167.196.43   www 子域名
 - ✅ `APP_URL`: 更新为 `http://api.reforum.space`
 
 ### 2. frontend/Dockerfile
-- ✅ `VITE_API_BASE_URL`: 更新为 `https://api.reforum.space/api`
+- ✅ `VITE_API_BASE_URL`: 更新为 `http://api.reforum.space/api`
 
 ### 3. frontend/nginx.conf
 - ✅ `server_name`: 更新为 `reforum.space www.reforum.space`
