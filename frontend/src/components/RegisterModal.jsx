@@ -155,3 +155,4 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
 export default RegisterModal
 
 
+
