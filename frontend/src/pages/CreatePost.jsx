@@ -53,21 +53,43 @@ const CreatePost = () => {
     setSubmitting(true)
     try {
       const postData = {
-        title: formData.title,
-        content: formData.content,
-        categoryId: parseInt(formData.categoryId),
+        title: formData.title.trim(),
+        content: formData.content.trim(),
+        categoryId: parseInt(formData.categoryId, 10),
         tags: formData.tags
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter((tag) => tag.length > 0),
+          ? formData.tags
+              .split(',')
+              .map((tag) => tag.trim())
+              .filter((tag) => tag.length > 0)
+          : [],
+      }
+
+      // 验证 categoryId
+      if (isNaN(postData.categoryId) || postData.categoryId <= 0) {
+        setError('请选择有效的版块')
+        setSubmitting(false)
+        return
       }
 
       const response = await postAPI.createPost(postData)
       navigate(`/post/${response.data.id}`)
     } catch (error) {
-      setError(
-        error.response?.data?.message || '发布失败，请检查输入信息'
-      )
+      console.error('发布帖子错误:', error)
+      let errorMessage = '发布失败，请检查输入信息'
+      
+      if (error.response?.data) {
+        // 处理验证错误
+        if (error.response.data.details && Array.isArray(error.response.data.details)) {
+          const details = error.response.data.details
+            .map(d => d.message || d)
+            .join('; ')
+          errorMessage = `验证失败: ${details}`
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message
+        }
+      }
+      
+      setError(errorMessage)
     } finally {
       setSubmitting(false)
     }

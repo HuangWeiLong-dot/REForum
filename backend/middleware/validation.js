@@ -72,11 +72,21 @@ export const validateCreatePost = [
     .isLength({ min: 10 })
     .withMessage('内容长度至少为10个字符'),
   body('categoryId')
-    .isInt({ min: 1 })
-    .withMessage('分类ID必须是有效的整数'),
+    .custom((value) => {
+      const num = parseInt(value, 10);
+      if (isNaN(num) || num <= 0) {
+        throw new Error('分类ID必须是有效的正整数');
+      }
+      return true;
+    })
+    .toInt(),
   body('tags')
     .optional()
-    .isArray()
+    .custom((value) => {
+      if (value === null || value === undefined) return true;
+      if (Array.isArray(value)) return true;
+      return false;
+    })
     .withMessage('标签必须是数组'),
   body('tags.*')
     .optional()

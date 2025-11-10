@@ -70,8 +70,9 @@ class Comment {
     const comments = await Promise.all(
       result.rows.map(async (comment) => {
         const replies = await this.getReplies(comment.id);
+        const formattedComment = this.formatComment(comment);
         return {
-          ...this.formatComment(comment),
+          ...formattedComment,
           replies: replies,
         };
       })
@@ -80,8 +81,13 @@ class Comment {
     return comments;
   }
 
-  // 获取评论的回复
-  static async getReplies(parentId) {
+  // 获取评论的回复（限制最大深度为3层）
+  static async getReplies(parentId, currentDepth = 0, maxDepth = 3) {
+    // 如果达到最大深度，不再递归获取
+    if (currentDepth >= maxDepth) {
+      return [];
+    }
+
     const result = await query(
       `SELECT c.*,
               u.id as author_id, u.username as author_username, u.avatar as author_avatar
@@ -95,7 +101,7 @@ class Comment {
     // 递归获取嵌套回复
     const replies = await Promise.all(
       result.rows.map(async (reply) => {
-        const nestedReplies = await this.getReplies(reply.id);
+        const nestedReplies = await this.getReplies(reply.id, currentDepth + 1, maxDepth);
         return {
           ...this.formatComment(reply),
           replies: nestedReplies,

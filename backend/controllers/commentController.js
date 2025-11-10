@@ -22,27 +22,8 @@ class CommentController {
         limit: 20,
       });
 
-      // 格式化评论数据
-      const formattedComments = comments.map(comment => {
-        const formatComment = (c) => ({
-          id: c.id,
-          content: c.content,
-          author: {
-            id: c.author_id,
-            username: c.author_username,
-            avatar: c.author_avatar,
-          },
-          postId: c.post_id,
-          parentId: c.parent_id,
-          replies: c.replies ? c.replies.map(formatComment) : [],
-          likeCount: c.like_count,
-          createdAt: c.created_at,
-          updatedAt: c.updated_at,
-        });
-        return formatComment(comment);
-      });
-
-      return res.status(200).json(formattedComments);
+      // comments 已经是格式化后的对象，直接返回
+      return res.status(200).json(comments);
     } catch (error) {
       console.error('获取评论列表错误:', error);
       return res.status(500).json({
@@ -68,9 +49,9 @@ class CommentController {
         });
       }
 
-      // 如果 parentId 存在，验证父评论是否存在
+      // 如果 parentId 存在，验证父评论是否存在并检查嵌套深度
       if (parentId) {
-        const parentComment = await Comment.findById(parentId);
+        const parentComment = await Comment.findById(parseInt(parentId));
         if (!parentComment) {
           return res.status(404).json({
             error: 'COMMENT_NOT_FOUND',
@@ -82,6 +63,15 @@ class CommentController {
           return res.status(400).json({
             error: 'INVALID_PARENT',
             message: '父评论不属于该帖子',
+          });
+        }
+        
+        // 检查嵌套深度（限制为3层）
+        const depth = await CommentController.getCommentDepth(parseInt(parentId));
+        if (depth >= 3) {
+          return res.status(400).json({
+            error: 'MAX_DEPTH_REACHED',
+            message: '评论嵌套深度已达到最大值（3层）',
           });
         }
       }
@@ -106,6 +96,32 @@ class CommentController {
     }
   }
 
+  // 获取评论的嵌套深度
+  static async getCommentDepth(commentId) {
+    let depth = 0;
+    let currentId = commentId;
+    const { query } = await import('../config/database.js');
+    
+    while (currentId) {
+      const result = await query(
+        'SELECT parent_id FROM comments WHERE id = $1',
+        [currentId]
+      );
+      
+      if (result.rows.length === 0 || !result.rows[0].parent_id) {
+        break;
+      }
+      
+      currentId = result.rows[0].parent_id;
+      depth++;
+      
+      // 防止无限循环
+      if (depth > 10) break;
+    }
+    
+    return depth;
+  }
+
   // 回复评论
   static async replyComment(req, res) {
     try {
@@ -113,12 +129,21 @@ class CommentController {
       const userId = req.userId;
       const { content } = req.body;
 
-      // 验证父评论是否存在
+      // 验证父评论是否存在并检查嵌套深度
       const parentComment = await Comment.findById(parseInt(commentId));
       if (!parentComment) {
         return res.status(404).json({
           error: 'COMMENT_NOT_FOUND',
           message: '评论不存在',
+        });
+      }
+
+      // 检查嵌套深度（限制为3层）
+      const depth = await CommentController.getCommentDepth(parseInt(commentId));
+      if (depth >= 3) {
+        return res.status(400).json({
+          error: 'MAX_DEPTH_REACHED',
+          message: '评论嵌套深度已达到最大值（3层）',
         });
       }
 
