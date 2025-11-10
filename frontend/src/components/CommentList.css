@@ -19,10 +19,29 @@
 }
 
 .comment-reply {
-  margin-left: 2rem;
+  margin-left: 1.5rem;
+  margin-top: 0.75rem;
   border-left: 3px solid var(--primary-color);
-  padding-left: 1.25rem;
+  padding-left: 1rem;
   background-color: var(--background-alt);
+  position: relative;
+}
+
+.comment-reply::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary-color), transparent);
+  opacity: 0.6;
+}
+
+.comment-depth-limit {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  font-style: italic;
 }
 
 .comment-content {
