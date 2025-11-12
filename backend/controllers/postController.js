@@ -5,7 +5,7 @@ class PostController {
   // 获取帖子列表
   static async getPosts(req, res) {
     try {
-      const { page = 1, limit = 20, sort = 'time', category, tag } = req.query;
+      const { page = 1, limit = 20, sort = 'time', category, tag, author, search } = req.query;
 
       const result = await Post.findAll({
         page: parseInt(page),
@@ -13,10 +13,15 @@ class PostController {
         sort,
         category: category ? parseInt(category) : undefined,
         tag,
+        author: author ? parseInt(author) : undefined,
+        search: search ? search.trim() : undefined,
       });
 
       // 格式化帖子数据
-      const formattedPosts = result.data.map(post => Post.formatPostListItem(post));
+      const userId = req.userId || null;
+      const formattedPosts = await Promise.all(
+        result.data.map(post => Post.formatPostListItem(post, userId))
+      );
 
       return res.status(200).json({
         data: formattedPosts,
@@ -35,6 +40,9 @@ class PostController {
   static async getPostById(req, res) {
     try {
       const { postId } = req.params;
+      const userId = req.userId || null; // 可能为 undefined，转换为 null
+      const ipAddress = req.ip || req.connection.remoteAddress || null;
+
       const post = await Post.findById(parseInt(postId));
 
       if (!post) {
@@ -44,8 +52,11 @@ class PostController {
         });
       }
 
-      // 增加浏览量
-      await Post.incrementViewCount(parseInt(postId));
+      // 增加浏览量（去重：同一用户或同一IP在24小时内只计算一次）
+      await Post.incrementViewCount(parseInt(postId), userId, ipAddress);
+
+      // 重新获取帖子以获取最新的浏览量
+      const updatedPost = await Post.findById(parseInt(postId));
 
       // 获取标签
       const { query } = await import('../config/database.js');
@@ -57,10 +68,10 @@ class PostController {
         [postId]
       );
 
-      const formattedPost = Post.formatPostDetail({
-        ...post,
+      const formattedPost = await Post.formatPostDetail({
+        ...updatedPost,
         tags: tagsResult.rows,
-      });
+      }, userId);
 
       return res.status(200).json(formattedPost);
     } catch (error) {
@@ -110,10 +121,10 @@ class PostController {
         [post.id]
       );
 
-      const formattedPost = Post.formatPostDetail({
+      const formattedPost = await Post.formatPostDetail({
         ...post,
         tags: tagsResult.rows,
-      });
+      }, userId);
 
       return res.status(201).json(formattedPost);
     } catch (error) {
@@ -178,10 +189,10 @@ class PostController {
         [postId]
       );
 
-      const formattedPost = Post.formatPostDetail({
+      const formattedPost = await Post.formatPostDetail({
         ...updatedPost,
         tags: tagsResult.rows,
-      });
+      }, userId);
 
       return res.status(200).json(formattedPost);
     } catch (error) {
@@ -189,6 +200,109 @@ class PostController {
       return res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: '更新帖子失败',
+      });
+    }
+  }
+
+  // 点赞/取消点赞帖子
+  static async toggleLike(req, res) {
+    try {
+      const userId = req.userId;
+      const { postId } = req.params;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: 'UNAUTHORIZED',
+          message: '请先登录',
+        });
+      }
+
+      const post = await Post.findById(parseInt(postId));
+      if (!post) {
+        return res.status(404).json({
+          error: 'POST_NOT_FOUND',
+          message: '帖子不存在',
+        });
+      }
+
+      const result = await Post.toggleLike(parseInt(postId), userId);
+
+      return res.status(200).json({
+        message: result.liked ? '点赞成功' : '已取消点赞',
+        liked: result.liked,
+        likeCount: result.likeCount,
+      });
+    } catch (error) {
+      console.error('点赞操作错误:', error);
+      return res.status(500).json({
+        error: 'INTERNAL_ERROR',
+        message: '操作失败',
+      });
+    }
+  }
+
+  // 检查用户是否已点赞
+  static async checkLikeStatus(req, res) {
+    try {
+      const userId = req.userId;
+      const { postId } = req.params;
+
+      if (!userId) {
+        return res.status(200).json({ liked: false });
+      }
+
+      const liked = await Post.hasUserLiked(parseInt(postId), userId);
+      return res.status(200).json({ liked });
+    } catch (error) {
+      console.error('检查点赞状态错误:', error);
+      return res.status(500).json({
+        error: 'INTERNAL_ERROR',
+        message: '检查失败',
+      });
+    }
+  }
+
+  // 删除帖子
+  static async deletePost(req, res) {
+    try {
+      const userId = req.userId;
+      const { postId } = req.params;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: 'UNAUTHORIZED',
+          message: '请先登录',
+        });
+      }
+
+      // 检查帖子是否存在
+      const post = await Post.findById(parseInt(postId));
+      if (!post) {
+        return res.status(404).json({
+          error: 'POST_NOT_FOUND',
+          message: '帖子不存在',
+        });
+      }
+
+      // 检查权限（只有作者可以删除）
+      if (post.author_id !== userId) {
+        return res.status(403).json({
+          error: 'FORBIDDEN',
+          message: '无权限删除此帖子',
+        });
+      }
+
+      // 删除帖子
+      await Post.delete(parseInt(postId));
+
+      return res.status(200).json({
+        message: '帖子删除成功',
+      });
+    } catch (error) {
+      console.error('删除帖子错误:', error);
+      return res.status(500).json({
+        error: 'INTERNAL_ERROR',
+        message: '删除帖子失败',
       });
     }
   }
