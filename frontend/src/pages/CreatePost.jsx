@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { postAPI, categoryAPI } from '../services/api'
+import ImageUpload from '../components/ImageUpload'
 import './CreatePost.css'
 
 const CreatePost = () => {
@@ -14,6 +15,7 @@ const CreatePost = () => {
     categoryId: '',
     tags: '',
   })
+  const [images, setImages] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -52,9 +54,24 @@ const CreatePost = () => {
 
     setSubmitting(true)
     try {
+      // 将图片URL插入到内容中
+      let contentWithImages = formData.content.trim()
+      if (images.length > 0) {
+        const imageUrls = images
+          .filter(img => img.url) // 只包含已上传的图片
+          .map(img => `![图片](${img.url})`)
+          .join('\n\n')
+        
+        if (imageUrls) {
+          contentWithImages = contentWithImages 
+            ? `${contentWithImages}\n\n${imageUrls}`
+            : imageUrls
+        }
+      }
+
       const postData = {
         title: formData.title.trim(),
-        content: formData.content.trim(),
+        content: contentWithImages,
         categoryId: parseInt(formData.categoryId, 10),
         tags: formData.tags
           ? formData.tags
@@ -154,6 +171,14 @@ const CreatePost = () => {
               rows={10}
               placeholder="请输入帖子内容（至少10个字符）"
               className="form-textarea"
+            />
+          </div>
+
+          <div className="form-group">
+            <ImageUpload
+              images={images}
+              onChange={setImages}
+              maxImages={10}
             />
           </div>
 

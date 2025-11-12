@@ -4,10 +4,11 @@
 }
 
 .create-post-card {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 1.5rem 0;
 }
 
 .create-post-title {
@@ -48,19 +49,21 @@
 .form-select,
 .form-textarea {
   padding: 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
   font-size: 1rem;
   font-family: inherit;
+  background-color: transparent;
   transition: border-color 0.2s;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: none;
 }
 
 .form-textarea {
@@ -82,35 +85,38 @@
 
 .cancel-button {
   padding: 0.75rem 1.5rem;
-  background: none;
+  background: transparent;
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .cancel-button:hover {
-  background-color: var(--hover-background);
+  background-color: transparent;
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .submit-button {
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
   color: white;
-  border: none;
+  border: 1px solid var(--primary-color);
   border-radius: var(--radius-md);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .submit-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-color) 100%);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: none;
+  box-shadow: none;
 }
 
 .submit-button:disabled {
