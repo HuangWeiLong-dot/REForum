@@ -17,6 +17,7 @@ RUN npm ci
 COPY src ./src
 COPY index.html ./
 COPY vite.config.js ./
+# 复制 public 目录（如果存在）
 COPY public ./public
 
 # 构建应用
