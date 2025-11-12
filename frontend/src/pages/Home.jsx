@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { postAPI } from '../services/api'
 import PostCard from '../components/PostCard'
 import './Home.css'
 
 const Home = () => {
+  const [searchParams] = useSearchParams()
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [pagination, setPagination] = useState({
@@ -14,6 +16,17 @@ const Home = () => {
   })
   const [sort, setSort] = useState('time')
   const [selectedCategory, setSelectedCategory] = useState(null)
+
+  // 当 URL 参数变化时，更新选中的分类
+  useEffect(() => {
+    const categoryId = searchParams.get('category')
+    if (categoryId) {
+      setSelectedCategory(parseInt(categoryId, 10))
+    } else {
+      setSelectedCategory(null)
+    }
+    setPagination(prev => ({ ...prev, page: 1 }))
+  }, [searchParams])
 
   useEffect(() => {
     fetchPosts()
@@ -73,7 +86,7 @@ const Home = () => {
           <div className="empty-state">
             <p>暂无帖子</p>
             <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.5rem' }}>
-              后端服务可能未运行，请确保后端 API 已启动
+              暂时没有找到相关帖子，请稍后再试
             </p>
           </div>
         ) : (
