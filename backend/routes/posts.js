@@ -22,5 +22,14 @@ router.post('/', authenticate, validateCreatePost, PostController.createPost);
 // 更新帖子（需要认证）
 router.put('/:postId', authenticate, validatePostId, validateUpdatePost, PostController.updatePost);
 
+// 删除帖子（需要认证）
+router.delete('/:postId', authenticate, validatePostId, PostController.deletePost);
+
+// 点赞/取消点赞帖子（需要认证）
+router.post('/:postId/like', authenticate, validatePostId, PostController.toggleLike);
+
+// 检查点赞状态（需要认证）
+router.get('/:postId/like', authenticate, validatePostId, PostController.checkLikeStatus);
+
 export default router;
 
