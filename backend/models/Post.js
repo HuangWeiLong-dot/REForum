@@ -6,7 +6,8 @@ class Post {
     const result = await query(
       `SELECT p.*, 
               u.id as author_id, u.username as author_username, u.avatar as author_avatar,
-              c.id as category_id, c.name as category_name, c.description as category_description, c.color as category_color
+              c.id as category_id, c.name as category_name, c.description as category_description, c.color as category_color,
+              (SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comment_count
        FROM posts p
        LEFT JOIN users u ON p.author_id = u.id
        LEFT JOIN categories c ON p.category_id = c.id
@@ -144,13 +145,14 @@ class Post {
     return result.rows[0] || null;
   }
 
-  // 获取帖子列表（分页、排序、筛选）
-  static async findAll({ page = 1, limit = 20, sort = 'time', category, tag }) {
+  // 获取帖子列表（分页、排序、筛选、搜索）
+  static async findAll({ page = 1, limit = 20, sort = 'time', category, tag, author, search }) {
     const offset = (page - 1) * limit;
     let orderBy = 'p.created_at DESC';
     
     if (sort === 'hot') {
-      orderBy = '(p.view_count + p.like_count * 2) DESC, p.created_at DESC';
+      // 热门排序：按照点赞数量降序排列，点赞数相同的按创建时间降序
+      orderBy = 'p.like_count DESC, p.created_at DESC';
     }
 
     let whereClause = 'WHERE 1=1';
@@ -169,6 +171,24 @@ class Post {
         WHERE pt.post_id = p.id AND t.name = $${paramCount++}
       )`;
       params.push(tag);
+    }
+
+    if (author) {
+      whereClause += ` AND p.author_id = $${paramCount++}`;
+      params.push(author);
+    }
+
+    // 搜索功能：搜索帖子标题、内容和作者用户名
+    if (search && search.trim()) {
+      const searchTerm = `%${search.trim()}%`;
+      // PostgreSQL 允许同一个参数占位符多次使用
+      whereClause += ` AND (
+        p.title ILIKE $${paramCount} OR 
+        p.content ILIKE $${paramCount} OR
+        u.username ILIKE $${paramCount}
+      )`;
+      params.push(searchTerm);
+      paramCount++;
     }
 
     params.push(limit, offset);
@@ -222,9 +242,137 @@ class Post {
     };
   }
 
-  // 增加浏览量
-  static async incrementViewCount(id) {
-    await query('UPDATE posts SET view_count = view_count + 1 WHERE id = $1', [id]);
+  // 增加浏览量（去重：同一用户或同一IP在24小时内只计算一次）
+  static async incrementViewCount(id, userId = null, ipAddress = null) {
+    const client = await getClient();
+    try {
+      await client.query('BEGIN');
+
+      // 检查是否已经浏览过
+      let hasViewed = false;
+
+      if (userId) {
+        // 已登录用户：检查用户是否已经浏览过
+        const userViewResult = await client.query(
+          'SELECT id FROM post_views WHERE post_id = $1 AND user_id = $2',
+          [id, userId]
+        );
+        hasViewed = userViewResult.rows.length > 0;
+      } else if (ipAddress) {
+        // 未登录用户：检查IP地址在24小时内是否已经浏览过
+        const ipViewResult = await client.query(
+          `SELECT id FROM post_views 
+           WHERE post_id = $1 AND ip_address = $2 AND user_id IS NULL
+           AND viewed_at > NOW() - INTERVAL '24 hours'`,
+          [id, ipAddress]
+        );
+        hasViewed = ipViewResult.rows.length > 0;
+      }
+
+      // 如果没有浏览过，增加浏览量并记录
+      if (!hasViewed) {
+        // 增加浏览量
+        await client.query('UPDATE posts SET view_count = view_count + 1 WHERE id = $1', [id]);
+        
+        // 记录浏览历史
+        try {
+          if (userId) {
+            // 已登录用户：使用 user_id 唯一约束
+            await client.query(
+              `INSERT INTO post_views (post_id, user_id, ip_address) 
+               VALUES ($1, $2, $3)`,
+              [id, userId, ipAddress]
+            );
+          } else if (ipAddress) {
+            // 未登录用户：直接插入（已在上面检查过24小时内是否浏览过）
+            await client.query(
+              `INSERT INTO post_views (post_id, user_id, ip_address) 
+               VALUES ($1, NULL, $2)`,
+              [id, ipAddress]
+            );
+          }
+        } catch (insertError) {
+          // 如果插入失败（可能是并发导致的唯一约束冲突），忽略错误
+          // 因为我们已经检查过，这种情况很少发生
+          if (!insertError.code || insertError.code !== '23505') {
+            throw insertError;
+          }
+        }
+      }
+
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  // 切换点赞状态（点赞/取消点赞）
+  static async toggleLike(postId, userId) {
+    const client = await getClient();
+    try {
+      await client.query('BEGIN');
+
+      // 检查是否已经点赞
+      const likeResult = await client.query(
+        'SELECT id FROM post_likes WHERE post_id = $1 AND user_id = $2',
+        [postId, userId]
+      );
+
+      const hasLiked = likeResult.rows.length > 0;
+
+      if (hasLiked) {
+        // 取消点赞
+        await client.query(
+          'DELETE FROM post_likes WHERE post_id = $1 AND user_id = $2',
+          [postId, userId]
+        );
+        await client.query(
+          'UPDATE posts SET like_count = GREATEST(like_count - 1, 0) WHERE id = $1',
+          [postId]
+        );
+        await client.query('COMMIT');
+        return { liked: false, likeCount: await this.getLikeCount(postId) };
+      } else {
+        // 点赞
+        await client.query(
+          'INSERT INTO post_likes (post_id, user_id) VALUES ($1, $2)',
+          [postId, userId]
+        );
+        await client.query(
+          'UPDATE posts SET like_count = like_count + 1 WHERE id = $1',
+          [postId]
+        );
+        await client.query('COMMIT');
+        return { liked: true, likeCount: await this.getLikeCount(postId) };
+      }
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  // 获取点赞数
+  static async getLikeCount(postId) {
+    const result = await query(
+      'SELECT like_count FROM posts WHERE id = $1',
+      [postId]
+    );
+    return result.rows[0]?.like_count || 0;
+  }
+
+  // 检查用户是否已点赞
+  static async hasUserLiked(postId, userId) {
+    if (!userId) return false;
+    const result = await query(
+      'SELECT id FROM post_likes WHERE post_id = $1 AND user_id = $2',
+      [postId, userId]
+    );
+    return result.rows.length > 0;
   }
 
   // 生成内容摘要
@@ -236,11 +384,12 @@ class Post {
   }
 
   // 格式化帖子数据（用于 API 响应）
-  static formatPostListItem(post) {
-    return {
+  static async formatPostListItem(post, userId = null) {
+    const baseData = {
       id: post.id,
       title: post.title,
       excerpt: post.excerpt,
+      content: post.content, // 添加完整内容，用于首页显示图片
       author: {
         id: post.author_id,
         username: post.author_username,
@@ -259,14 +408,20 @@ class Post {
       createdAt: post.created_at,
       updatedAt: post.updated_at,
     };
+
+    // 如果提供了用户ID，检查是否已点赞
+    if (userId) {
+      baseData.liked = await this.hasUserLiked(post.id, userId);
+    }
+
+    return baseData;
   }
 
   // 格式化帖子详情（包含完整内容）
-  static formatPostDetail(post) {
-    return {
-      ...this.formatPostListItem(post),
-      content: post.content,
-    };
+  static async formatPostDetail(post, userId = null) {
+    const baseData = await this.formatPostListItem(post, userId);
+    baseData.commentCount = parseInt(post.comment_count) || 0;
+    return baseData;
   }
 }
 
