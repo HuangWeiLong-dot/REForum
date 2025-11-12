@@ -13,7 +13,7 @@ COPY package.json package-lock.json* ./
 # 安装依赖
 RUN npm ci
 
-# 复制源代码（明确复制 src 目录）
+# 复制所有源代码文件（使用通配符确保所有文件都被复制）
 COPY src ./src
 COPY index.html ./
 COPY vite.config.js ./
