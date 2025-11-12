@@ -1,12 +1,30 @@
 import User from '../models/User.js';
 import { generateToken } from '../middleware/auth.js';
 import EmailService from '../services/emailService.js';
+import VerificationCodeService from '../services/verificationCodeService.js';
 
 class AuthController {
   // 用户注册
   static async register(req, res) {
     try {
-      const { username, email, password } = req.body;
+      const { username, email, password, verificationCode } = req.body;
+
+      // 验证必填字段
+      if (!verificationCode) {
+        return res.status(400).json({
+          error: 'MISSING_VERIFICATION_CODE',
+          message: '请提供验证码',
+        });
+      }
+
+      // 验证验证码
+      const codeVerification = VerificationCodeService.verifyCode(email, verificationCode);
+      if (!codeVerification.valid) {
+        return res.status(400).json({
+          error: 'INVALID_VERIFICATION_CODE',
+          message: codeVerification.message,
+        });
+      }
 
       // 检查用户名是否已存在
       const existingUserByUsername = await User.findByUsername(username);

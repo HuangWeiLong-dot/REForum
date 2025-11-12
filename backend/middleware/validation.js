@@ -32,6 +32,12 @@ export const validateRegister = [
   body('password')
     .isLength({ min: 6 })
     .withMessage('密码长度至少为6个字符'),
+  body('verificationCode')
+    .trim()
+    .isLength({ min: 6, max: 6 })
+    .withMessage('验证码必须是6位数字')
+    .matches(/^\d{6}$/)
+    .withMessage('验证码必须是6位数字'),
   handleValidationErrors,
 ];
 
