@@ -5,22 +5,25 @@
 
 .user-profile-loading,
 .user-profile-error {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
   padding: 2rem;
   text-align: center;
   color: var(--text-secondary);
+  box-shadow: none;
 }
 
 .profile-header {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 2rem;
-  margin-bottom: 1rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
   display: flex;
   gap: 2rem;
+  box-shadow: none;
 }
 
 .profile-avatar {
@@ -98,17 +101,56 @@
 }
 
 .profile-empty {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 2rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 2rem 0;
   text-align: center;
   color: var(--text-secondary);
+  box-shadow: none;
 }
 
 .profile-posts {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.profile-post-item {
+  position: relative;
+}
+
+.delete-post-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.delete-post-button:hover:not(:disabled) {
+  background-color: var(--error-color);
+  border-color: var(--error-color);
+  color: white;
+}
+
+.delete-post-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-post-button svg {
+  width: 14px;
+  height: 14px;
 }
 

@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { userAPI, postAPI } from '../services/api'
 import PostCard from '../components/PostCard'
+import { FaTrash } from 'react-icons/fa'
 import './UserProfile.css'
 
 const UserProfile = () => {
   const { userId } = useParams()
+  const { user: currentUser, isAuthenticated } = useAuth()
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState(null)
 
   useEffect(() => {
     fetchUserData()
@@ -17,18 +21,45 @@ const UserProfile = () => {
   const fetchUserData = async () => {
     setLoading(true)
     try {
-      const userRes = await userAPI.getUser(userId)
+      const [userRes, postsRes] = await Promise.all([
+        userAPI.getUser(userId),
+        postAPI.getPosts({ author: userId, limit: 50 })
+      ])
       setUser(userRes.data)
-      // 注意：当前 API 可能不支持按作者筛选
-      // 实际项目中应该在后端实现按作者筛选帖子的功能
-      // 这里暂时设置为空数组，等待后端实现
-      setPosts([])
+      setPosts(postsRes.data.data || [])
     } catch (error) {
       console.error('Failed to fetch user data:', error)
     } finally {
       setLoading(false)
     }
   }
+
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm('确定要删除这条帖子吗？此操作无法撤销。')) {
+      return
+    }
+
+    setDeleting(postId)
+    try {
+      await postAPI.deletePost(postId)
+      // 删除成功后，从列表中移除该帖子
+      setPosts(posts.filter(post => post.id !== postId))
+      // 更新用户的帖子数量
+      if (user) {
+        setUser({ ...user, postCount: (user.postCount || 1) - 1 })
+      }
+      // 触发自定义事件，通知其他组件刷新（如RightSidebar的标签列表）
+      window.dispatchEvent(new CustomEvent('postDeleted'))
+    } catch (error) {
+      console.error('Failed to delete post:', error)
+      alert(error.response?.data?.message || '删除帖子失败，请重试')
+    } finally {
+      setDeleting(null)
+    }
+  }
+
+  // 检查是否是当前登录用户自己的资料页
+  const isOwnProfile = isAuthenticated && currentUser && parseInt(userId) === currentUser.id
 
   if (loading) {
     return <div className="user-profile-loading">加载中...</div>
@@ -51,7 +82,7 @@ const UserProfile = () => {
           )}
         </div>
         <div className="profile-info">
-          <h1 className="profile-username">u/{user.username}</h1>
+          <h1 className="profile-username">{user.username}</h1>
           {user.bio && <p className="profile-bio">{user.bio}</p>}
           <div className="profile-stats">
             <div className="stat-item">
@@ -64,9 +95,13 @@ const UserProfile = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">
-                {new Date(user.joinDate).getFullYear()}
+                {new Date(user.joinDate).toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
               </span>
-              <span className="stat-label">加入年份</span>
+              <span className="stat-label">加入时间</span>
             </div>
           </div>
         </div>
@@ -79,7 +114,19 @@ const UserProfile = () => {
         ) : (
           <div className="profile-posts">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <div key={post.id} className="profile-post-item">
+                <PostCard post={post} />
+                {isOwnProfile && (
+                  <button
+                    className="delete-post-button"
+                    onClick={() => handleDeletePost(post.id)}
+                    disabled={deleting === post.id}
+                    title="删除帖子"
+                  >
+                    {deleting === post.id ? '删除中...' : <FaTrash />}
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         )}
