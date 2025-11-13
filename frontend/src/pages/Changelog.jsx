@@ -6,6 +6,16 @@ import './Changelog.css'
 const Changelog = () => {
   const updates = [
     {
+      date: '2025-11-13',
+      version: '1.1.0',
+      title: '新增「问题修复」板块',
+      description: '在侧边栏新增“问题修复”入口，集中展示近期对用户可见的缺陷修复。',
+      features: [
+        '以用户能看懂的语言说明每次修复的内容与影响范围',
+        '首批收录：图片地址异常（https://uploads/ 开头）已修复；删除帖子后标签仍显示已修复'
+      ]
+    },
+    {
       date: '2025-11-12',
       version: '1.0.0',
       title: '搜索功能上线',
