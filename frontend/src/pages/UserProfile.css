@@ -70,6 +70,7 @@
 .profile-stats {
   display: flex;
   gap: 2rem;
+  flex-wrap: nowrap;
 }
 
 .stat-item {
@@ -152,5 +153,65 @@
 .delete-post-button svg {
   width: 14px;
   height: 14px;
+}
+
+@media (max-width: 768px) {
+  .user-profile {
+    width: 100%;
+    max-width: none;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+
+  .profile-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .stat-item {
+    align-items: center;
+  }
+
+  .profile-username {
+    font-size: 1.25rem;
+  }
+
+  .profile-bio {
+    font-size: 0.95rem;
+  }
+
+  .profile-posts {
+    gap: 1rem;
+  }
+
+  .delete-post-button {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-stats {
+    gap: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.05rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
 }
 
