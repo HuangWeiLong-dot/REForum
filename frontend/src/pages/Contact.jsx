@@ -9,7 +9,7 @@ const QqIcon = RiQqLine
 const Contact = () => {
   const contributors = [
     {
-      name: '社区管理员',
+      name: '黄伟隆',
       role: '项目负责人',
       email: '3571676852@qq.com',
       qq: '3571676852',
@@ -17,7 +17,7 @@ const Contact = () => {
       avatar: '/avatars/admin1.jpg', // 占位符路径，请将实际照片放在 frontend/public/avatars/admin1.jpg
     },
     {
-      name: '社区管理员',
+      name: '江海鹏',
       role: '开发工程师',
       bio: '目前主要参与需求评审，暂未负责具体的开发工作。',
       email: '3242772908@qq.com',
