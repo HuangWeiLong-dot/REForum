@@ -23,8 +23,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 安全中间件
-app.use(helmet());
+// 安全中间件（允许跨域加载资源，如图片）
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  // 关闭 COEP，避免与跨域资源加载冲突
+  crossOriginEmbedderPolicy: false
+}));
 
 // CORS 配置
 app.use(cors({
