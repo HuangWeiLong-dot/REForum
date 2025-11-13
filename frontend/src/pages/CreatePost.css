@@ -55,7 +55,18 @@
   font-size: 1rem;
   font-family: inherit;
   background-color: transparent;
+  color: var(--text-primary);
   transition: border-color 0.2s;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+.form-select {
+  color: var(--text-primary);
+  background-image: none;
 }
 
 .form-input:focus,
