@@ -97,7 +97,7 @@ async function checkDatabaseConnection() {
     
     // 检查必要的表是否存在
     log('\n检查数据库表...', 'blue');
-    const tables = ['users', 'posts', 'comments', 'categories', 'tags'];
+    const tables = ['users', 'posts', 'comments', 'categories', 'tags', 'notifications'];
     for (const table of tables) {
       try {
         const tableCheck = await pool.query(

@@ -143,6 +143,8 @@ class PostController {
         title
       ).catch(err => {
         console.error('创建通知失败:', err);
+        console.error('错误详情:', err.message);
+        console.error('错误堆栈:', err.stack);
         // 通知创建失败不影响帖子创建
       });
 

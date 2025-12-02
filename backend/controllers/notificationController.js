@@ -5,6 +5,12 @@ class NotificationController {
   static async getNotifications(req, res) {
     try {
       const userId = req.userId;
+      if (!userId) {
+        return res.status(401).json({
+          error: 'UNAUTHORIZED',
+          message: '未授权访问',
+        });
+      }
       const { limit = 50, offset = 0, unreadOnly = false } = req.query;
 
       const notifications = await Notification.findByUserId(userId, {
@@ -23,9 +29,12 @@ class NotificationController {
       });
     } catch (error) {
       console.error('获取通知列表错误:', error);
+      console.error('错误详情:', error.message);
+      console.error('错误堆栈:', error.stack);
       return res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: '获取通知列表失败',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined,
       });
     }
   }
@@ -34,14 +43,23 @@ class NotificationController {
   static async getUnreadCount(req, res) {
     try {
       const userId = req.userId;
+      if (!userId) {
+        return res.status(401).json({
+          error: 'UNAUTHORIZED',
+          message: '未授权访问',
+        });
+      }
       const count = await Notification.getUnreadCount(userId);
 
       return res.status(200).json({ count });
     } catch (error) {
       console.error('获取未读通知数量错误:', error);
+      console.error('错误详情:', error.message);
+      console.error('错误堆栈:', error.stack);
       return res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: '获取未读通知数量失败',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined,
       });
     }
   }

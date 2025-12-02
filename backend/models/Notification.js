@@ -18,34 +18,62 @@ class Notification {
     try {
       await client.query('BEGIN');
 
+      // 检查 notifications 表是否存在
+      const tableCheck = await client.query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'notifications'
+        )`
+      );
+
+      if (!tableCheck.rows[0].exists) {
+        console.warn('⚠️  notifications 表不存在，跳过创建通知。请运行数据库迁移脚本。');
+        await client.query('ROLLBACK');
+        return [];
+      }
+
       // 获取所有用户（除了发帖人）
       const usersResult = await client.query(
         'SELECT id FROM users WHERE id != $1',
         [authorId]
       );
 
+      // 如果没有其他用户，直接返回
+      if (usersResult.rows.length === 0) {
+        await client.query('COMMIT');
+        return [];
+      }
+
       // 为每个用户创建通知
       const notifications = [];
       for (const user of usersResult.rows) {
-        const notification = await client.query(
-          `INSERT INTO notifications (user_id, type, title, content, related_post_id, related_user_id)
-           VALUES ($1, 'new_post', $2, $3, $4, $5)
-           RETURNING *`,
-          [
-            user.id,
-            `${authorUsername} 发布了新帖子`,
-            postTitle,
-            postId,
-            authorId
-          ]
-        );
-        notifications.push(notification.rows[0]);
+        try {
+          const notification = await client.query(
+            `INSERT INTO notifications (user_id, type, title, content, related_post_id, related_user_id)
+             VALUES ($1, 'new_post', $2, $3, $4, $5)
+             RETURNING *`,
+            [
+              user.id,
+              `${authorUsername} 发布了新帖子`,
+              postTitle,
+              postId,
+              authorId
+            ]
+          );
+          notifications.push(notification.rows[0]);
+        } catch (err) {
+          console.error(`为用户 ${user.id} 创建通知失败:`, err.message);
+          // 继续为其他用户创建通知
+        }
       }
 
       await client.query('COMMIT');
+      console.log(`✅ 成功为 ${notifications.length} 个用户创建通知`);
       return notifications;
     } catch (error) {
       await client.query('ROLLBACK');
+      console.error('创建通知事务失败:', error.message);
       throw error;
     } finally {
       client.release();

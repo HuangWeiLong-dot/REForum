@@ -120,7 +120,7 @@
    \dt
    
    -- 应该看到以下表：
-   -- users, posts, comments, categories, tags, post_tags, post_likes, post_views
+   -- users, posts, comments, categories, tags, post_tags, post_likes, post_views, notifications
    ```
 
 2. **如果表不存在，运行初始化脚本**
@@ -187,7 +187,28 @@ docker-compose ps
 - [ ] 端口 3000 未被其他程序占用
 - [ ] 防火墙允许本地连接
 
-### 9. 获取帮助
+### 9. 通知功能问题
+
+**问题症状：** 通知 API 返回 500 错误，或创建帖子后没有通知
+
+**解决步骤：**
+
+1. **检查 notifications 表是否存在**
+   ```sql
+   SELECT table_name 
+   FROM information_schema.tables 
+   WHERE table_schema = 'public' AND table_name = 'notifications';
+   ```
+
+2. **如果表不存在，运行迁移脚本**
+   ```bash
+   psql -U your_username -d reforum -f backend/migrations/add_notifications_table.sql
+   ```
+
+3. **查看详细设置指南**
+   - 参考 `docs/NOTIFICATION_SETUP.md` 获取完整的设置说明
+
+### 10. 获取帮助
 
 如果以上步骤都无法解决问题：
 
