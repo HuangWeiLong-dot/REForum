@@ -7,9 +7,9 @@ import { categoryAPI } from '../services/api'
 import { mockCategoryAPI, mockCategories } from '../data/mockData'
 import './Sidebar.css'
 
-// 是否使用假数据（可以通过环境变量控制）
-// 默认启用假数据，设置为 false 或环境变量 VITE_USE_MOCK_DATA=false 时使用真实API
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA !== 'false'
+// 是否使用假数据（通过 .env 文件中的 VITE_USE_MOCK_DATA 环境变量控制）
+// 在 frontend/.env 文件中设置 VITE_USE_MOCK_DATA=true 使用假数据，VITE_USE_MOCK_DATA=false 使用真实API
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
 
 const Sidebar = () => {
   const location = useLocation()
