@@ -1,5 +1,6 @@
 import Post from '../models/Post.js';
 import Category from '../models/Category.js';
+import Notification from '../models/Notification.js';
 
 class PostController {
   // 获取帖子列表
@@ -125,6 +126,25 @@ class PostController {
         ...post,
         tags: tagsResult.rows,
       }, userId);
+
+      // 异步创建通知（不阻塞响应）
+      // 获取作者信息
+      const authorResult = await query(
+        'SELECT username FROM users WHERE id = $1',
+        [userId]
+      );
+      const authorUsername = authorResult.rows[0]?.username || '用户';
+
+      // 为所有其他用户创建新帖子通知
+      Notification.createNewPostNotifications(
+        post.id,
+        userId,
+        authorUsername,
+        title
+      ).catch(err => {
+        console.error('创建通知失败:', err);
+        // 通知创建失败不影响帖子创建
+      });
 
       return res.status(201).json(formattedPost);
     } catch (error) {

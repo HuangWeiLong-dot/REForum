@@ -5,6 +5,7 @@ import { FaSearch, FaPlus, FaUserCircle, FaMoon, FaSun } from 'react-icons/fa'
 import { useLanguage } from '../context/LanguageContext'
 import LoginModal from './LoginModal'
 import RegisterModal from './RegisterModal'
+import Inbox from './Inbox'
 import './Header.css'
 
 const Header = () => {
@@ -78,6 +79,7 @@ const Header = () => {
             {theme === 'dark' ? <FaSun /> : <FaMoon />}
             <span>{theme === 'dark' ? t('header.lightLabel') : t('header.darkLabel')}</span>
           </button>
+          {isAuthenticated && <Inbox />}
           {isAuthenticated ? (
             <>
               <button 

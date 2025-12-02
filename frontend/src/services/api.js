@@ -107,5 +107,14 @@ export const categoryAPI = {
   getTags: (params) => api.get('/tags', { params }),
 }
 
+// 通知 API
+export const notificationAPI = {
+  getNotifications: (params) => api.get('/notifications', { params }),
+  getUnreadCount: () => api.get('/notifications/unread-count'),
+  markAsRead: (notificationId) => api.put(`/notifications/${notificationId}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+  deleteNotification: (notificationId) => api.delete(`/notifications/${notificationId}`),
+}
+
 export default api
 

@@ -1,0 +1,232 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { FaBell, FaTimes } from 'react-icons/fa'
+import { formatDistanceToNow } from 'date-fns'
+import zhCN from 'date-fns/locale/zh-CN'
+import enUS from 'date-fns/locale/en-US'
+import ja from 'date-fns/locale/ja'
+import { useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
+import { notificationAPI } from '../services/api'
+import './Inbox.css'
+
+const formatLocale = {
+  zh: zhCN,
+  en: enUS,
+  ja,
+}
+
+const Inbox = () => {
+  const { isAuthenticated } = useAuth()
+  const { t, language } = useLanguage()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [notifications, setNotifications] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const dropdownRef = useRef(null)
+  const intervalRef = useRef(null)
+
+  // 获取未读数量
+  const fetchUnreadCount = async () => {
+    if (!isAuthenticated) return
+    try {
+      const response = await notificationAPI.getUnreadCount()
+      setUnreadCount(response.data.count || 0)
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error)
+    }
+  }
+
+  // 获取通知列表
+  const fetchNotifications = async () => {
+    if (!isAuthenticated) return
+    setLoading(true)
+    try {
+      const response = await notificationAPI.getNotifications({ limit: 20 })
+      setNotifications(response.data.data || [])
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 标记为已读
+  const handleMarkAsRead = async (notificationId, e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    try {
+      await notificationAPI.markAsRead(notificationId)
+      setNotifications(prev =>
+        prev.map(n =>
+          n.id === notificationId ? { ...n, is_read: true } : n
+        )
+      )
+      setUnreadCount(prev => Math.max(0, prev - 1))
+    } catch (error) {
+      console.error('Failed to mark as read:', error)
+    }
+  }
+
+  // 标记全部为已读
+  const handleMarkAllAsRead = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    try {
+      await notificationAPI.markAllAsRead()
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
+      setUnreadCount(0)
+    } catch (error) {
+      console.error('Failed to mark all as read:', error)
+    }
+  }
+
+  // 删除通知
+  const handleDelete = async (notificationId, e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    try {
+      await notificationAPI.deleteNotification(notificationId)
+      setNotifications(prev => prev.filter(n => n.id !== notificationId))
+      // 如果删除的是未读通知，减少计数
+      const deleted = notifications.find(n => n.id === notificationId)
+      if (deleted && !deleted.is_read) {
+        setUnreadCount(prev => Math.max(0, prev - 1))
+      }
+    } catch (error) {
+      console.error('Failed to delete notification:', error)
+    }
+  }
+
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false)
+      }
+    }
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+      fetchNotifications()
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showDropdown, isAuthenticated])
+
+  // 定期更新未读数量
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    fetchUnreadCount()
+    // 每30秒更新一次未读数量
+    intervalRef.current = setInterval(() => {
+      fetchUnreadCount()
+    }, 30000)
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [isAuthenticated])
+
+  if (!isAuthenticated) {
+    return null
+  }
+
+  const formatTime = (dateString) => {
+    try {
+      return formatDistanceToNow(new Date(dateString), {
+        addSuffix: true,
+        locale: formatLocale[language] || zhCN,
+      })
+    } catch {
+      return dateString
+    }
+  }
+
+  return (
+    <div className="inbox-container" ref={dropdownRef}>
+      <button
+        className="inbox-button"
+        onClick={() => setShowDropdown(!showDropdown)}
+        title={t('header.inbox') || '通知'}
+        aria-label={t('header.inbox') || '通知'}
+      >
+        <FaBell />
+        {unreadCount > 0 && (
+          <span className="inbox-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+        )}
+      </button>
+
+      {showDropdown && (
+        <div className="inbox-dropdown">
+          <div className="inbox-header">
+            <h3>{t('header.inbox') || '通知'}</h3>
+            {unreadCount > 0 && (
+              <button
+                className="inbox-mark-all-read"
+                onClick={handleMarkAllAsRead}
+              >
+                {t('header.markAllRead') || '全部已读'}
+              </button>
+            )}
+          </div>
+
+          <div className="inbox-list">
+            {loading ? (
+              <div className="inbox-loading">
+                {t('header.loading') || '加载中...'}
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="inbox-empty">
+                {t('header.noNotifications') || '暂无通知'}
+              </div>
+            ) : (
+              notifications.map((notification) => (
+                <Link
+                  key={notification.id}
+                  to={notification.related_post_id ? `/post/${notification.related_post_id}` : '#'}
+                  className={`inbox-item ${!notification.is_read ? 'unread' : ''}`}
+                  onClick={() => {
+                    if (!notification.is_read) {
+                      handleMarkAsRead(notification.id, { preventDefault: () => {}, stopPropagation: () => {} })
+                    }
+                    setShowDropdown(false)
+                  }}
+                >
+                  <div className="inbox-item-content">
+                    <div className="inbox-item-title">{notification.title}</div>
+                    {notification.content && (
+                      <div className="inbox-item-text">{notification.content}</div>
+                    )}
+                    <div className="inbox-item-time">
+                      {formatTime(notification.created_at)}
+                    </div>
+                  </div>
+                  <div className="inbox-item-actions">
+                    {!notification.is_read && (
+                      <button
+                        className="inbox-item-mark-read"
+                        onClick={(e) => handleMarkAsRead(notification.id, e)}
+                        title={t('header.markAsRead') || '标记为已读'}
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Inbox
+

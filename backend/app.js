@@ -13,6 +13,7 @@ import commentRoutes from './routes/comments.js';
 import categoryRoutes from './routes/categories.js';
 import tagRoutes from './routes/tags.js';
 import uploadRoutes from './routes/upload.js';
+import notificationRoutes from './routes/notifications.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -85,6 +86,7 @@ app.use('/api', commentRoutes); // 评论路由：/api/posts/:postId/comments �
 app.use('/api/categories', categoryRoutes);
 app.use('/api/tags', tagRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 处理
 app.use((req, res) => {
