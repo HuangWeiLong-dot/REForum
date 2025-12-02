@@ -942,6 +942,23 @@ DELETE /api/posts/:postId - 删除帖子（需要认证，仅限作者）
 
 ---
 
+## 14. 顶部导航与通知体验优化
+
+### 修改内容
+- ✅ 修复桌面端语言切换按钮在悬浮后难以点击的问题，菜单仅在点击外部或选择语言后关闭
+- ✅ 移除评论回复层级提示文案，达到层级上限时不再额外弹出提示
+- ✅ 再次优化移动端通知下拉菜单的高度与滚动行为，确保长列表在小屏幕上也能完整浏览
+
+### 修改文件
+- `frontend/src/components/Header.jsx` - 调整语言切换按钮的打开 / 关闭逻辑
+- `frontend/src/components/Header.css` - 细节样式调整
+- `frontend/src/components/CommentList.jsx` - 移除层级提示文案展示
+- `frontend/src/context/LanguageContext.jsx` - 删除与回复层级相关的多语言文案
+- `backend/controllers/commentController.js` - 统一层级校验错误文案
+- `frontend/src/components/Inbox.css` - 调整移动端通知下拉菜单最大高度与列表滚动
+
+---
+
 ## 更新日期
 
 2025/12/02

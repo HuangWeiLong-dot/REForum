@@ -72,6 +72,7 @@
   justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .inbox-header h3 {
@@ -218,8 +219,14 @@
     left: 1rem;
     width: auto;
     max-width: calc(100vw - 2rem);
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - 100px);
     bottom: 1rem;
+  }
+  
+  .inbox-list {
+    max-height: none;
+    flex: 1;
+    min-height: 0;
   }
 }
 
@@ -228,12 +235,13 @@
     right: 0.5rem;
     left: 0.5rem;
     max-width: calc(100vw - 1rem);
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 80px);
     bottom: 0.5rem;
   }
   
   .inbox-header {
     padding: 0.75rem;
+    flex-shrink: 0;
   }
   
   .inbox-header h3 {
@@ -262,7 +270,9 @@
   }
   
   .inbox-list {
-    max-height: calc(100vh - 200px);
+    max-height: none;
+    flex: 1;
+    min-height: 0;
   }
 }
 

@@ -5,6 +5,45 @@ import './Fixes.css'
 const fixes = [
   {
     date: '2025-12-02',
+    version: '1.5.7',
+    translations: {
+      zh: {
+        title: '语言切换菜单与移动端通知显示问题',
+        description: '修复桌面端语言切换菜单难以点击，以及部分设备上通知列表仍然显示不全的问题。',
+        details: [
+          '移除语言切换菜单对鼠标悬浮事件的依赖，仅通过点击按钮打开 / 关闭菜单',
+          '使用全局点击监听在点击外部区域或选择语言后关闭菜单，避免误触导致菜单瞬间消失',
+          '再次调整移动端通知下拉菜单的最大高度，减少多余留白，并为列表提供更大的可滚动区域',
+          '移除通知列表内部的固定 max-height，改为使用 flex: 1 自动分配高度，长列表可完整浏览',
+          '为通知头部区域添加 flex-shrink: 0，确保标题在极端屏幕下也不会被压缩或遮挡',
+        ],
+      },
+      en: {
+        title: 'Language Menu Clickability & Mobile Notification Visibility',
+        description: 'Fixed issues where the language switcher menu was hard to click on desktop and notification lists were still partially hidden on some mobile devices.',
+        details: [
+          'Removed hover-based open/close behavior for the language switcher and switched to click-only toggling',
+          'Added global click handling so the language menu closes only when clicking outside or after selecting a language',
+          'Adjusted mobile notification dropdown max-height to reduce excessive padding and provide more space for the list',
+          'Removed fixed max-height from the notification list itself and used flex: 1 so long lists can scroll fully within the container',
+          'Added flex-shrink: 0 to the notification header to prevent it from being squashed on very small screens',
+        ],
+      },
+      ja: {
+        title: '言語メニューのクリック性とモバイル通知の表示改善',
+        description: 'デスクトップで言語切替メニューがクリックしづらい問題と、一部モバイル端末で通知リストが依然として完全に表示されない問題を修正しました。',
+        details: [
+          '言語切替メニューの開閉をホバー依存からクリックのみに変更し、誤って閉じてしまう状況を防止',
+          '外側のクリックまたは言語選択時にのみメニューを閉じるよう、グローバルクリックハンドリングを追加',
+          'モバイル通知ドロップダウンの最大高さを調整し、余計な余白を減らしてリストの表示領域を拡大',
+          '通知リストに設定されていた固定 max-height を撤廃し、flex: 1 によってコンテナ内で十分なスクロール領域を確保',
+          '非常に小さい画面でもヘッダーが押しつぶされないよう、通知ヘッダーに flex-shrink: 0 を追加',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-02',
     version: '1.5.5',
     translations: {
       zh: {

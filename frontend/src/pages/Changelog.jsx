@@ -28,6 +28,42 @@ const changelogCopy = {
 const updates = [
   {
     date: '2025-12-02',
+    version: '1.5.7',
+    translations: {
+      zh: {
+        title: '顶部导航与通知体验优化',
+        description: '优化语言切换菜单交互，并进一步改进移动端通知下拉菜单的可见性与滚动体验。',
+        features: [
+          '语言切换按钮不再依赖鼠标悬浮开关，菜单只在点击按钮时打开，在点击外部或选择语言后关闭',
+          '重构语言菜单的事件处理逻辑，避免因为细小空隙导致菜单瞬间消失，提升可点击性',
+          '移除评论回复层级达到上限时的提示文案，界面更加干净简洁',
+          '再次优化移动端通知下拉菜单的最大高度和列表滚动行为，在小屏幕上长列表也能完整浏览',
+        ],
+      },
+      en: {
+        title: 'Top Navigation & Notification UX Improvements',
+        description: 'Improved language switcher interactions and further refined mobile notification dropdown visibility and scrolling behavior.',
+        features: [
+          'Language switcher menu no longer relies on hover events; it now opens on button click and closes only when clicking outside or after selecting a language',
+          'Refactored language menu event handling to avoid accidental closing when moving the cursor between button and menu',
+          'Removed depth limit hint text for comment replies to keep the interface clean',
+          'Further optimized mobile notification dropdown max-height and list scrolling so long lists remain fully browsable on small screens',
+        ],
+      },
+      ja: {
+        title: 'トップナビゲーションと通知のユーザー体験改善',
+        description: '言語切替メニューのインタラクションを改善し、モバイル通知ドロップダウンの表示とスクロール体験をさらに最適化しました。',
+        features: [
+          '言語切替メニューはホバーではなくクリックで開閉し、外側をクリックするか言語を選択したときのみ閉じるように変更',
+          'ボタンとメニューの間にあるわずかな隙間でもメニューがすぐ閉じないよう、イベント処理ロジックを調整',
+          'コメント返信の階層制限メッセージを削除し、インターフェースをよりシンプルに',
+          'モバイルでの通知ドロップダウンの最大高さとリストスクロールを再調整し、小さな画面でも長い一覧を最後まで確認可能に',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-02',
     version: '1.5.6',
     translations: {
       zh: {
