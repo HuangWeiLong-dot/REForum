@@ -119,6 +119,13 @@
   white-space: nowrap;
 }
 
+/* 统一图标按钮样式 */
+.theme-toggle-button,
+.inbox-button {
+  padding: 0.625rem;
+  font-size: 1.25rem;
+}
+
 .login-button {
   background-color: transparent;
   color: var(--primary-color);
@@ -164,11 +171,12 @@
   color: var(--text-primary);
   border: none;
   padding: 0.625rem;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: color 0.2s;
   border-radius: var(--radius-md);
+  font-size: 1.25rem;
 }
 
 .theme-toggle-button:hover {

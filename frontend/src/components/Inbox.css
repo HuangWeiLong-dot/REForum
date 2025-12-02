@@ -15,6 +15,10 @@
   justify-content: center;
   transition: color 0.2s;
   border-radius: var(--radius-md);
+  width: auto;
+  height: auto;
+  min-width: auto;
+  min-height: auto;
 }
 
 .inbox-button:hover {
