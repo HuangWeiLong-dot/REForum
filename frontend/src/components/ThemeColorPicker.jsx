@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { FaEyeDropper } from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
 import './ThemeColorPicker.css'
@@ -13,6 +14,10 @@ const ThemeColorPicker = () => {
   const hueSliderRef = useRef(null)
   const slSliderRef = useRef(null)
   const isInternalUpdate = useRef(false)
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.innerWidth <= 768
+  })
 
   // 将hex转换为HSL
   const hexToHsl = (hex) => {
@@ -88,22 +93,40 @@ const ThemeColorPicker = () => {
     setLightness(l)
   }, [themeColor])
 
-  // 点击外部关闭
+  // 监听窗口大小变化
   useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === 'undefined') return
+      setIsMobile(window.innerWidth <= 768)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // 点击外部关闭（仅桌面端需要）
+  useEffect(() => {
+    if (!isOpen || isMobile) return
     const handleClickOutside = (event) => {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
         setIsOpen(false)
       }
     }
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isOpen])
+  }, [isOpen, isMobile])
+
+  // 打开浮层时锁定滚动
+  useEffect(() => {
+    if (!isMobile || !isOpen) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isMobile, isOpen])
 
   // 处理色相滑块
   const handleHueChange = (e) => {
@@ -163,80 +186,110 @@ const ThemeColorPicker = () => {
     hsl(${hue}, 0%, 50%), 
     hsl(${hue}, 0%, 100%))`
 
+  const closePicker = () => setIsOpen(false)
+
+  const pickerContent = (
+    <>
+      <div className="color-picker-controls">
+        <button
+          className="eyedropper-button"
+          onClick={handleEyedropper}
+          title="取色器"
+        >
+          <FaEyeDropper />
+        </button>
+        <div className="slider-group">
+          <div className="slider-container">
+            <div
+              className="hue-slider"
+              style={{ background: hueGradient }}
+              ref={hueSliderRef}
+            >
+              <input
+                type="range"
+                min="0"
+                max="360"
+                value={hue}
+                onChange={handleHueChange}
+                className="slider-input"
+              />
+              <div
+                className="slider-handle"
+                style={{ left: `${(hue / 360) * 100}%` }}
+              />
+            </div>
+          </div>
+          <div className="slider-container">
+            <div
+              className="sl-slider"
+              style={{ background: slGradient }}
+              ref={slSliderRef}
+              onMouseDown={(e) => {
+                e.preventDefault()
+                handleSLChange(e)
+                const handleMouseMove = (moveEvent) => {
+                  moveEvent.preventDefault()
+                  handleSLChange(moveEvent)
+                }
+                const handleMouseUp = () => {
+                  document.removeEventListener('mousemove', handleMouseMove)
+                  document.removeEventListener('mouseup', handleMouseUp)
+                }
+                document.addEventListener('mousemove', handleMouseMove)
+                document.addEventListener('mouseup', handleMouseUp)
+              }}
+            >
+              <div
+                className="sl-handle"
+                style={{
+                  left: `${saturation}%`,
+                  bottom: `${lightness}%`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
+  const renderPicker = () => {
+    if (!isOpen) return null
+
+    if (isMobile) {
+      return createPortal(
+        <div className="theme-picker-overlay" onClick={closePicker}>
+          <div className="theme-picker-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="theme-picker-header">
+              <span>主题颜色</span>
+              <button className="theme-picker-close" onClick={closePicker} aria-label="Close">
+                ×
+              </button>
+            </div>
+            {pickerContent}
+          </div>
+        </div>,
+        document.body
+      )
+    }
+
+    return (
+      <div className="theme-color-picker" ref={pickerRef}>
+        {pickerContent}
+      </div>
+    )
+  }
+
   return (
     <div className="theme-color-picker-wrapper" ref={pickerRef}>
       <button
         className="theme-color-button icon-button"
         onClick={() => setIsOpen(!isOpen)}
         title="主题颜色"
-        style={{ backgroundColor: themeColor }}
       >
         <FaEyeDropper />
       </button>
-      {isOpen && (
-        <div className="theme-color-picker">
-          <div className="color-picker-controls">
-            <button
-              className="eyedropper-button"
-              onClick={handleEyedropper}
-              title="取色器"
-            >
-              <FaEyeDropper />
-            </button>
-            <div className="slider-group">
-              <div className="slider-container">
-                <div
-                  className="hue-slider"
-                  style={{ background: hueGradient }}
-                  ref={hueSliderRef}
-                >
-                  <input
-                    type="range"
-                    min="0"
-                    max="360"
-                    value={hue}
-                    onChange={handleHueChange}
-                    className="slider-input"
-                  />
-                  <div
-                    className="slider-handle"
-                    style={{ left: `${(hue / 360) * 100}%` }}
-                  />
-                </div>
-              </div>
-              <div className="slider-container">
-                <div
-                  className="sl-slider"
-                  style={{ background: slGradient }}
-                  ref={slSliderRef}
-                  onMouseDown={(e) => {
-                    e.preventDefault()
-                    handleSLChange(e)
-                    const handleMouseMove = (moveEvent) => {
-                      moveEvent.preventDefault()
-                      handleSLChange(moveEvent)
-                    }
-                    const handleMouseUp = () => {
-                      document.removeEventListener('mousemove', handleMouseMove)
-                      document.removeEventListener('mouseup', handleMouseUp)
-                    }
-                    document.addEventListener('mousemove', handleMouseMove)
-                    document.addEventListener('mouseup', handleMouseUp)
-                  }}
-                >
-                  <div
-                    className="sl-handle"
-                    style={{
-                      left: `${saturation}%`,
-                      bottom: `${lightness}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {renderPicker()}
     </div>
   )
 }

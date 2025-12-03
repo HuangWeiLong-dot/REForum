@@ -145,6 +145,54 @@
   max-width: calc(100vw - 1rem);
 }
 
+.theme-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem;
+  z-index: 1300;
+}
+
+.theme-picker-modal {
+  width: min(420px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--dropdown-background);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 1.25rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.theme-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.theme-picker-close {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+}
+
+.theme-picker-close:hover {
+  background: var(--hover-background);
+  color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
   .theme-color-picker {
     left: auto;
@@ -168,6 +216,10 @@
 
   .theme-color-picker {
     padding: 0.75rem;
+  }
+
+  .theme-picker-modal {
+    padding: 1rem;
   }
 
   .sl-slider {

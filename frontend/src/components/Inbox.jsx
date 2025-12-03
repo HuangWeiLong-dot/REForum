@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { FaBell, FaTimes } from 'react-icons/fa'
 import { formatDistanceToNow } from 'date-fns'
@@ -25,6 +26,10 @@ const Inbox = () => {
   const [loading, setLoading] = useState(false)
   const dropdownRef = useRef(null)
   const intervalRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.innerWidth <= 768
+  })
 
   // 获取未读数量
   const fetchUnreadCount = async () => {
@@ -98,23 +103,41 @@ const Inbox = () => {
     }
   }
 
-  // 点击外部关闭下拉菜单
+  // 监听窗口大小
   useEffect(() => {
+    const handleResize = () => {
+      if (typeof window === 'undefined') return
+      setIsMobile(window.innerWidth <= 768)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // 点击外部关闭下拉菜单（桌面端）
+  useEffect(() => {
+    if (!showDropdown || isMobile) return
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false)
       }
     }
 
-    if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside)
-      fetchNotifications()
-    }
-
+    document.addEventListener('mousedown', handleClickOutside)
+    fetchNotifications()
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [showDropdown, isAuthenticated])
+  }, [showDropdown, isAuthenticated, isMobile])
+
+  // 移动端锁定背景滚动
+  useEffect(() => {
+    if (!showDropdown || !isMobile) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [showDropdown, isMobile])
 
   // 定期更新未读数量
   useEffect(() => {
@@ -170,8 +193,78 @@ const Inbox = () => {
     return notification.title
   }
 
+  const dropdownPanel = (
+    <div className="inbox-dropdown" ref={!isMobile ? dropdownRef : null}>
+      <div className="inbox-header">
+        <h3>{t('header.inbox') || '通知'}</h3>
+        <div className="inbox-header-actions">
+          {unreadCount > 0 && (
+            <button
+              className="inbox-mark-all-read"
+              onClick={handleMarkAllAsRead}
+            >
+              {t('header.markAllRead') || '全部已读'}
+            </button>
+          )}
+          {isMobile && (
+            <button className="inbox-close" onClick={() => setShowDropdown(false)} aria-label="关闭">
+              <FaTimes />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="inbox-list">
+        {loading ? (
+          <div className="inbox-loading">
+            {t('header.loading') || '加载中...'}
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="inbox-empty">
+            {t('header.noNotifications') || '暂无通知'}
+          </div>
+        ) : (
+          notifications.map((notification) => (
+            <Link
+              key={notification.id}
+              to={notification.related_post_id ? `/post/${notification.related_post_id}` : '#'}
+              className={`inbox-item ${!notification.is_read ? 'unread' : ''}`}
+              onClick={() => {
+                if (!notification.is_read) {
+                  handleMarkAsRead(notification.id, { preventDefault: () => {}, stopPropagation: () => {} })
+                }
+                setShowDropdown(false)
+              }}
+            >
+              <div className="inbox-item-content">
+                <div className="inbox-item-title">{formatNotificationTitle(notification)}</div>
+                {notification.content && (
+                  <div className="inbox-item-text">{notification.content}</div>
+                )}
+                <div className="inbox-item-time">
+                  {formatTime(notification.created_at)}
+                </div>
+              </div>
+              <div className="inbox-item-actions">
+                {!notification.is_read && (
+                  <button
+                    className="inbox-item-mark-read"
+                    onClick={(e) => handleMarkAsRead(notification.id, e)}
+                    title={t('header.markAsRead') || '标记为已读'}
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+    </div>
+  )
+
   return (
-    <div className="inbox-container" ref={dropdownRef}>
+    <div className="inbox-container">
       <button
         className="inbox-button"
         onClick={() => setShowDropdown(!showDropdown)}
@@ -184,68 +277,17 @@ const Inbox = () => {
         )}
       </button>
 
-      {showDropdown && (
-        <div className="inbox-dropdown">
-          <div className="inbox-header">
-            <h3>{t('header.inbox') || '通知'}</h3>
-            {unreadCount > 0 && (
-              <button
-                className="inbox-mark-all-read"
-                onClick={handleMarkAllAsRead}
-              >
-                {t('header.markAllRead') || '全部已读'}
-              </button>
-            )}
-          </div>
-
-          <div className="inbox-list">
-            {loading ? (
-              <div className="inbox-loading">
-                {t('header.loading') || '加载中...'}
-              </div>
-            ) : notifications.length === 0 ? (
-              <div className="inbox-empty">
-                {t('header.noNotifications') || '暂无通知'}
-              </div>
-            ) : (
-              notifications.map((notification) => (
-                <Link
-                  key={notification.id}
-                  to={notification.related_post_id ? `/post/${notification.related_post_id}` : '#'}
-                  className={`inbox-item ${!notification.is_read ? 'unread' : ''}`}
-                  onClick={() => {
-                    if (!notification.is_read) {
-                      handleMarkAsRead(notification.id, { preventDefault: () => {}, stopPropagation: () => {} })
-                    }
-                    setShowDropdown(false)
-                  }}
-                >
-                  <div className="inbox-item-content">
-                    <div className="inbox-item-title">{formatNotificationTitle(notification)}</div>
-                    {notification.content && (
-                      <div className="inbox-item-text">{notification.content}</div>
-                    )}
-                    <div className="inbox-item-time">
-                      {formatTime(notification.created_at)}
-                    </div>
-                  </div>
-                  <div className="inbox-item-actions">
-                    {!notification.is_read && (
-                      <button
-                        className="inbox-item-mark-read"
-                        onClick={(e) => handleMarkAsRead(notification.id, e)}
-                        title={t('header.markAsRead') || '标记为已读'}
-                      >
-                        <FaTimes />
-                      </button>
-                    )}
-                  </div>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      {showDropdown &&
+        (isMobile
+          ? createPortal(
+              <div className="inbox-overlay" onClick={() => setShowDropdown(false)}>
+                <div className="inbox-modal" onClick={(e) => e.stopPropagation()}>
+                  {dropdownPanel}
+                </div>
+              </div>,
+              document.body
+            )
+          : dropdownPanel)}
     </div>
   )
 }
