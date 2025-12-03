@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || '登录失败，请检查用户名和密码',
+        error: error.response?.data?.message || 'error.loginFailed',
       }
     }
   }
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || '注册失败，请检查输入信息',
+        error: error.response?.data?.message || 'error.registerFailed',
       }
     }
   }

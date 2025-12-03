@@ -19,8 +19,12 @@ docker-compose down
 # 4. 重新构建镜像（不使用缓存，确保使用最新代码）
 docker-compose build --no-cache
 
+docker-compose build --no-cache frontend
+
 # 5. 启动容器
 docker-compose up -d
+
+docker-compose up -d frontend
 
 # 6. 查看容器状态
 docker-compose ps

@@ -541,21 +541,21 @@
     flex-wrap: wrap;
     align-items: center;
   }
-  
+
   .header-button {
     padding: 0.5rem 0.75rem;
     font-size: 0.8125rem;
     flex: 0 0 auto;
     white-space: nowrap;
   }
-  
+
   .theme-toggle-button,
   .language-toggle-button {
     padding: 0.5rem;
     min-width: 2.5rem;
     flex-shrink: 0;
   }
-  
+
   .theme-toggle-button svg,
   .language-toggle-button svg {
     font-size: 1rem;
@@ -566,7 +566,7 @@
     font-size: 0.8125rem;
     white-space: nowrap;
   }
-  
+
   .create-button svg {
     font-size: 0.8125rem;
     margin-right: 0.25rem;

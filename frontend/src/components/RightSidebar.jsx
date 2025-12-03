@@ -366,7 +366,7 @@ const RightSidebar = () => {
         <>
           {/* 提示文字 */}
           <div className="tag-container-header">
-            <p className="tag-container-hint">装满会发生什么</p>
+            <p className="tag-container-hint">{t('right.containerFullHint')}</p>
           </div>
           
           {/* 物理容器 */}

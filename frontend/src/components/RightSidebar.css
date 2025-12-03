@@ -143,7 +143,7 @@
   }
 
   .tag-container-hint {
-    font-size: 0.75rem;
+  font-size: 0.75rem;
   }
 
   .tag-date {
@@ -166,7 +166,7 @@
   .tag-container {
     height: calc(100% - 55px); /* 减去头部高度 */
     min-height: 295px;
-  }
+}
 
   .tag-container-header {
     padding: 0.5rem;
@@ -189,10 +189,10 @@
 @media (max-width: 480px) {
   .right-sidebar {
     height: 300px;
-    margin-top: 0.5rem;
+  margin-top: 0.5rem;
     /* 确保不影响其他内容 */
     flex-shrink: 0;
-  }
+}
 
   .tag-container {
     height: calc(100% - 50px); /* 减去头部高度 */

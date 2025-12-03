@@ -4,6 +4,60 @@
 
 ---
 
+## 2025-12-03 - v1.5.8
+
+### Bug #010: 错误提示信息未支持多语言
+
+**严重程度**: 低  
+**影响范围**: 所有非中文用户  
+**状态**: ✅ 已修复
+
+**问题描述**:
+- 错误提示信息（如"加载失败"、"服务器错误"、"登录失败"等）硬编码为中文
+- 非中文用户无法理解错误信息，影响用户体验
+- 板块分类名称未支持多语言，始终显示中文名称
+- 右侧标签容器提示文本未支持多语言
+
+**复现步骤**:
+1. 将语言切换为英文或日文
+2. 触发任意错误（如网络错误、登录失败等）
+3. 发现错误提示仍为中文
+4. 查看板块分类，发现名称仍为中文
+
+**根本原因**:
+- 错误提示信息直接硬编码在组件中，未使用翻译系统
+- 板块分类名称直接从数据库读取，未进行翻译处理
+- 部分UI文本未添加到翻译系统中
+
+**修复方案**:
+- 在 LanguageContext 中添加完整的错误提示翻译键（`error.*`）
+- 为板块分类名称创建翻译映射（`category.*`）
+- 更新所有组件使用翻译函数显示错误信息和分类名称
+- 添加 `getCategoryName()` 函数处理分类名称翻译
+- 在组件层面实现错误消息的自动翻译检测
+
+**修复文件**:
+- `frontend/src/context/LanguageContext.jsx`
+- `frontend/src/components/Sidebar.jsx`
+- `frontend/src/components/RightSidebar.jsx`
+- `frontend/src/pages/Home.jsx`
+- `frontend/src/components/ErrorBoundary.jsx`
+- `frontend/src/context/AuthContext.jsx`
+- `frontend/src/components/LoginModal.jsx`
+- `frontend/src/components/RegisterModal.jsx`
+- `frontend/src/pages/CreatePost.jsx`
+- `frontend/src/pages/PostDetail.jsx`
+- `frontend/src/components/PostCard.jsx`
+
+**测试验证**:
+- ✅ 验证错误提示在三种语言下均能正确显示
+- ✅ 验证板块分类名称在三种语言下均能正确显示
+- ✅ 验证右侧标签容器提示文本在三种语言下均能正确显示
+- ✅ 验证默认语言为英文
+- ✅ 验证所有错误场景的提示信息都能正确翻译
+
+---
+
 ## 2025-12-02 - v1.5.5
 
 ### Bug #008: 标签系统缺少物理效果和交互性

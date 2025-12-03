@@ -27,6 +27,81 @@ const changelogCopy = {
 
 const updates = [
   {
+    date: '2025-12-03',
+    version: '1.5.9',
+    translations: {
+      zh: {
+        title: '侧边栏导航增强',
+        description: '在左侧边栏导航中添加隐私政策链接，提升网站导航的完整性和用户体验。',
+        features: [
+          '在左侧边栏导航中添加"隐私政策"链接',
+          '隐私政策链接支持中文、英文、日文三种语言显示',
+          '使用盾牌图标（FaShieldAlt）表示隐私政策，提升视觉识别度',
+          '隐私政策链接放置在"联系我们"和"更新日志"之间，符合逻辑顺序',
+        ],
+      },
+      en: {
+        title: 'Sidebar Navigation Enhancement',
+        description: 'Added Privacy Policy link to the left sidebar navigation, improving site navigation completeness and user experience.',
+        features: [
+          'Added Privacy Policy link to the left sidebar navigation',
+          'Privacy Policy link supports display in Chinese, English, and Japanese',
+          'Used shield icon (FaShieldAlt) for Privacy Policy to improve visual recognition',
+          'Placed Privacy Policy link between Contact and Changelog for logical ordering',
+        ],
+      },
+      ja: {
+        title: 'サイドバーナビゲーションの強化',
+        description: '左側サイドバーのナビゲーションにプライバシーポリシーリンクを追加し、サイトナビゲーションの完全性とユーザー体験を向上させました。',
+        features: [
+          '左側サイドバーのナビゲーションにプライバシーポリシーリンクを追加',
+          'プライバシーポリシーリンクは中国語、英語、日本語の3言語表示に対応',
+          'プライバシーポリシーにシールドアイコン（FaShieldAlt）を使用し、視覚的な認識を向上',
+          'プライバシーポリシーリンクを「お問い合わせ」と「更新履歴」の間に配置し、論理的な順序を実現',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.5.8',
+    translations: {
+      zh: {
+        title: '多语言支持全面优化',
+        description: '将默认语言改为英文，并为板块分类和所有错误提示添加完整的多语言支持。',
+        features: [
+          '网页默认显示为英文界面，提升国际化体验',
+          '板块分类名称根据选择的语言显示对应翻译（中文、英文、日文）',
+          '所有错误提示信息（加载失败、服务器错误、登录失败等）均支持多语言显示',
+          '右侧标签容器提示文本支持多语言切换',
+          '统一错误处理机制，确保所有用户可见的错误信息都能正确翻译',
+        ],
+      },
+      en: {
+        title: 'Comprehensive Multilingual Support Enhancement',
+        description: 'Changed default language to English and added complete multilingual support for category names and all error messages.',
+        features: [
+          'Website now defaults to English interface for better internationalization',
+          'Category names display in the selected language (Chinese, English, Japanese)',
+          'All error messages (load failures, server errors, login failures, etc.) support multilingual display',
+          'Right sidebar tag container hint text supports language switching',
+          'Unified error handling mechanism ensures all user-visible error messages are properly translated',
+        ],
+      },
+      ja: {
+        title: '多言語サポートの包括的強化',
+        description: 'デフォルト言語を英語に変更し、カテゴリ名とすべてのエラーメッセージに完全な多言語サポートを追加しました。',
+        features: [
+          'ウェブサイトは国際化体験を向上させるため、デフォルトで英語インターフェースを表示',
+          'カテゴリ名は選択された言語（中国語、英語、日本語）に対応した翻訳を表示',
+          'すべてのエラーメッセージ（読み込み失敗、サーバーエラー、ログイン失敗など）が多言語表示に対応',
+          '右側のタグコンテナのヒントテキストが言語切り替えに対応',
+          '統一されたエラー処理メカニズムにより、ユーザーに表示されるすべてのエラーメッセージが正しく翻訳されることを保証',
+        ],
+      },
+    },
+  },
+  {
     date: '2025-12-02',
     version: '1.5.7',
     translations: {

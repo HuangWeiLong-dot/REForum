@@ -25,6 +25,7 @@ const translations = {
     'sidebar.home': '首页',
     'sidebar.about': '关于我们',
     'sidebar.contact': '联系我们',
+    'sidebar.privacy': '隐私政策',
     'sidebar.changelog': '更新日志',
     'sidebar.fixes': '问题修复',
     'right.categoriesTitle': '版块分类',
@@ -33,6 +34,14 @@ const translations = {
     'right.emptyCategories': '暂无版块',
     'right.emptyTags': '暂无标签',
     'right.postsSuffix': '帖子',
+    'right.containerFullHint': '装满会发生什么',
+
+    // 分类名称翻译
+    'category.技术讨论': '技术讨论',
+    'category.问答求助': '问答求助',
+    'category.资源分享': '资源分享',
+    'category.闲聊灌水': '闲聊灌水',
+    'category.项目展示': '项目展示',
 
     'home.latest': '最新',
     'home.hot': '热门',
@@ -119,6 +128,42 @@ const translations = {
     'image.previewError': '上传失败',
     'image.delete': '删除',
     'image.alt': '预览 {index}',
+    'cookie.title': 'Cookie 使用提示',
+    'cookie.description': '我们使用 Cookie 来改善您的浏览体验、分析网站流量并个性化内容。继续使用本网站即表示您同意我们的 Cookie 政策。了解更多信息，请查看我们的',
+    'cookie.privacyLink': '隐私政策',
+    'cookie.accept': '接受',
+    'cookie.decline': '拒绝',
+    'age.title': '年龄验证',
+
+    // 错误提示
+    'error.loadFailed': '加载失败',
+    'error.detail': '详情:',
+    'error.retry': '重试',
+    'error.networkHint': '提示：请确保后端服务正在运行',
+    'error.checkSteps': '检查步骤：',
+    'error.checkStep1': '确认后端服务已启动（通常在 http://localhost:3000）',
+    'error.checkStep2': '检查浏览器控制台的网络请求错误',
+    'error.checkStep3': '查看后端日志是否有错误信息',
+    'error.serverError': '服务器错误，可能是数据库连接问题',
+    'error.cannotConnect': '无法连接到服务器，请检查后端服务是否运行',
+    'error.loadPostsFailed': '加载帖子失败',
+    'error.serverInternalError': '服务器内部错误',
+    'error.occurred': '出现错误',
+    'error.pageLoadError': '页面加载时出现错误',
+    'error.refreshPage': '刷新页面',
+    'error.loginFailed': '登录失败，请检查用户名和密码',
+    'error.registerFailed': '注册失败，请检查输入信息',
+    'error.rateLimit': '请求过于频繁，请 {retryAfter} 秒后再试',
+    'age.description': '根据相关法律法规，您需要确认您已年满 18 岁才能访问本网站。',
+    'age.birthDate': '出生日期',
+    'age.year': '年份',
+    'age.month': '月份',
+    'age.day': '日期',
+    'age.verify': '验证',
+    'age.exit': '退出',
+    'age.error.required': '请填写完整的出生日期',
+    'age.error.invalid': '请输入有效的日期',
+    'age.error.underage': '抱歉，您必须年满 18 岁才能访问本网站',
   },
   en: {
     'common.loading': 'Loading...',
@@ -142,6 +187,7 @@ const translations = {
     'sidebar.home': 'Home',
     'sidebar.about': 'About',
     'sidebar.contact': 'Contact',
+    'sidebar.privacy': 'Privacy Policy',
     'sidebar.changelog': 'Changelog',
     'sidebar.fixes': 'Fixes',
     'right.categoriesTitle': 'Categories',
@@ -150,6 +196,14 @@ const translations = {
     'right.emptyCategories': 'No categories yet',
     'right.emptyTags': 'No tags yet',
     'right.postsSuffix': 'posts',
+    'right.containerFullHint': 'What happens when it\'s full?',
+
+    // Category name translations
+    'category.技术讨论': 'Tech Discussion',
+    'category.问答求助': 'Q&A Help',
+    'category.资源分享': 'Resource Sharing',
+    'category.闲聊灌水': 'Casual Chat',
+    'category.项目展示': 'Project Showcase',
 
     'home.latest': 'Latest',
     'home.hot': 'Hot',
@@ -236,6 +290,42 @@ const translations = {
     'image.previewError': 'Upload failed',
     'image.delete': 'Remove',
     'image.alt': 'Preview {index}',
+    'cookie.title': 'Cookie Notice',
+    'cookie.description': 'We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By continuing to use this site, you consent to our use of cookies. To learn more, please see our',
+    'cookie.privacyLink': 'Privacy Policy',
+    'cookie.accept': 'Accept',
+    'cookie.decline': 'Decline',
+    'age.title': 'Age Verification',
+
+    // Error messages
+    'error.loadFailed': 'Failed to load',
+    'error.detail': 'Details:',
+    'error.retry': 'Retry',
+    'error.networkHint': '💡 Tip: Please ensure the backend service is running',
+    'error.checkSteps': 'Check steps:',
+    'error.checkStep1': '1. Confirm the backend service is started (usually at http://localhost:3000)',
+    'error.checkStep2': '2. Check the network request errors in the browser console',
+    'error.checkStep3': '3. Check the backend logs for error messages',
+    'error.serverError': 'Server error, possibly a database connection issue',
+    'error.cannotConnect': 'Cannot connect to server, please check if the backend service is running',
+    'error.loadPostsFailed': 'Failed to load posts',
+    'error.serverInternalError': 'Internal server error',
+    'error.occurred': 'An error occurred',
+    'error.pageLoadError': 'An error occurred while loading the page',
+    'error.refreshPage': 'Refresh page',
+    'error.loginFailed': 'Login failed, please check your username and password',
+    'error.registerFailed': 'Registration failed, please check your input',
+    'error.rateLimit': 'Too many requests, please try again in {retryAfter} seconds',
+    'age.description': 'According to applicable laws and regulations, you must confirm that you are at least 18 years old to access this website.',
+    'age.birthDate': 'Date of Birth',
+    'age.year': 'Year',
+    'age.month': 'Month',
+    'age.day': 'Day',
+    'age.verify': 'Verify',
+    'age.exit': 'Exit',
+    'age.error.required': 'Please enter your complete date of birth',
+    'age.error.invalid': 'Please enter a valid date',
+    'age.error.underage': 'Sorry, you must be at least 18 years old to access this website',
   },
   ja: {
     'common.loading': '読み込み中...',
@@ -259,6 +349,7 @@ const translations = {
     'sidebar.home': 'ホーム',
     'sidebar.about': '私たちについて',
     'sidebar.contact': 'お問い合わせ',
+    'sidebar.privacy': 'プライバシーポリシー',
     'sidebar.changelog': '更新履歴',
     'sidebar.fixes': '修正情報',
     'right.categoriesTitle': 'カテゴリー',
@@ -267,6 +358,14 @@ const translations = {
     'right.emptyCategories': 'カテゴリーがありません',
     'right.emptyTags': 'タグがありません',
     'right.postsSuffix': '件',
+    'right.containerFullHint': '満杯になったらどうなる？',
+
+    // カテゴリー名の翻訳
+    'category.技术讨论': '技術討論',
+    'category.问答求助': '質問・ヘルプ',
+    'category.资源分享': 'リソース共有',
+    'category.闲聊灌水': '雑談',
+    'category.项目展示': 'プロジェクト展示',
 
     'home.latest': '最新',
     'home.hot': '人気',
@@ -353,18 +452,54 @@ const translations = {
     'image.previewError': 'アップロード失敗',
     'image.delete': '削除',
     'image.alt': 'プレビュー {index}',
+    'cookie.title': 'Cookie 使用について',
+    'cookie.description': '当サイトでは、閲覧体験の向上、サイトトラフィックの分析、コンテンツのパーソナライズのために Cookie を使用しています。サイトを引き続きご利用いただくことで、Cookie の使用に同意したものとみなされます。詳細については、',
+    'cookie.privacyLink': 'プライバシーポリシー',
+    'cookie.accept': '同意する',
+    'cookie.decline': '拒否する',
+
+    // エラーメッセージ
+    'error.loadFailed': '読み込み失敗',
+    'error.detail': '詳細:',
+    'error.retry': '再試行',
+    'error.networkHint': '💡 ヒント：バックエンドサービスが実行されていることを確認してください',
+    'error.checkSteps': '確認手順：',
+    'error.checkStep1': '1. バックエンドサービスが起動していることを確認（通常は http://localhost:3000）',
+    'error.checkStep2': '2. ブラウザのコンソールでネットワークリクエストエラーを確認',
+    'error.checkStep3': '3. バックエンドログにエラーメッセージがないか確認',
+    'error.serverError': 'サーバーエラー、データベース接続の問題の可能性があります',
+    'error.cannotConnect': 'サーバーに接続できません。バックエンドサービスが実行されているか確認してください',
+    'error.loadPostsFailed': '投稿の読み込みに失敗しました',
+    'error.serverInternalError': 'サーバー内部エラー',
+    'error.occurred': 'エラーが発生しました',
+    'error.pageLoadError': 'ページの読み込み中にエラーが発生しました',
+    'error.refreshPage': 'ページを更新',
+    'error.loginFailed': 'ログインに失敗しました。ユーザー名とパスワードを確認してください',
+    'error.registerFailed': '登録に失敗しました。入力内容を確認してください',
+    'error.rateLimit': 'リクエストが多すぎます。{retryAfter} 秒後にもう一度お試しください',
+    'age.title': '年齢確認',
+    'age.description': '関連する法律および規制に基づき、本サイトにアクセスするには 18 歳以上であることを確認する必要があります。',
+    'age.birthDate': '生年月日',
+    'age.year': '年',
+    'age.month': '月',
+    'age.day': '日',
+    'age.verify': '確認',
+    'age.exit': '終了',
+    'age.error.required': '生年月日をすべて入力してください',
+    'age.error.invalid': '有効な日付を入力してください',
+    'age.error.underage': '申し訳ございませんが、本サイトにアクセスするには 18 歳以上である必要があります',
   },
 }
 
 const LanguageContext = createContext({
-  language: 'zh',
+  language: 'en',
   setLanguage: () => {},
   t: (key) => key,
 })
 
 const getInitialLanguage = () => {
-  if (typeof window === 'undefined') return 'zh'
-  return localStorage.getItem(STORAGE_KEY) || 'zh'
+  if (typeof window === 'undefined') return 'en'
+  return localStorage.getItem(STORAGE_KEY) || 'en'
 }
 
 export const LanguageProvider = ({ children }) => {
@@ -376,12 +511,20 @@ export const LanguageProvider = ({ children }) => {
   }, [language])
 
   const t = (key) => {
-    const dict = translations[language] || translations.zh
-    return dict[key] || translations.zh[key] || key
+    const dict = translations[language] || translations.en
+    return dict[key] || translations.en[key] || key
+  }
+
+  // 获取分类名称的翻译
+  const getCategoryName = (categoryName) => {
+    const key = `category.${categoryName}`
+    const translated = t(key)
+    // 如果翻译键不存在，返回原始名称
+    return translated === key ? categoryName : translated
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, getCategoryName }}>
       {children}
     </LanguageContext.Provider>
   )

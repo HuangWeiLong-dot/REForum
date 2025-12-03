@@ -5,6 +5,8 @@ import { useLanguage } from './context/LanguageContext'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import RightSidebar from './components/RightSidebar'
+import CookieConsent from './components/CookieConsent'
+import AgeVerification from './components/AgeVerification'
 import Home from './pages/Home'
 import Search from './pages/Search'
 import PostDetail from './pages/PostDetail'
@@ -32,6 +34,7 @@ function App() {
 
   return (
     <div className="app">
+      <AgeVerification />
       <Header />
       <div className="app-container">
         <Sidebar />
@@ -52,6 +55,7 @@ function App() {
         </main>
         <RightSidebar />
       </div>
+      <CookieConsent />
     </div>
   )
 }

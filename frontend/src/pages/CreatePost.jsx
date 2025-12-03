@@ -19,7 +19,7 @@ const CreatePost = () => {
   const [images, setImages] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const { t } = useLanguage()
+  const { t, getCategoryName } = useLanguage()
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -161,7 +161,7 @@ const CreatePost = () => {
               <option value="">{t('create.fieldCategory')}</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
-                  {category.name}
+                  {getCategoryName(category.name)}
                 </option>
               ))}
             </select>

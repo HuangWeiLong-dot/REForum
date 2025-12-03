@@ -12,7 +12,7 @@ import './PostDetail.css'
 const PostDetail = () => {
   const { postId } = useParams()
   const { isAuthenticated, user } = useAuth()
-  const { t } = useLanguage()
+  const { t, getCategoryName } = useLanguage()
   const [post, setPost] = useState(null)
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -135,7 +135,7 @@ const PostDetail = () => {
           <div className="post-header">
             {post.category && (
               <>
-                <span className="post-category">{post.category.name}</span>
+                <span className="post-category">{getCategoryName(post.category.name)}</span>
                 <span className="post-separator">•</span>
               </>
             )}

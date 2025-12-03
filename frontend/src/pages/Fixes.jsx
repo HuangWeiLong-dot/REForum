@@ -4,6 +4,51 @@ import './Fixes.css'
 
 const fixes = [
   {
+    date: '2025-12-03',
+    version: '1.5.8',
+    translations: {
+      zh: {
+        title: '错误提示信息多语言支持',
+        description: '修复错误提示信息未支持多语言的问题，所有错误提示现在都能根据用户选择的语言正确显示。',
+        details: [
+          '在 LanguageContext 中添加完整的错误提示翻译键（error.*），涵盖所有用户可见的错误场景',
+          '为板块分类名称创建翻译映射（category.*），支持中文、英文、日文三种语言',
+          '更新所有组件使用翻译函数显示错误信息和分类名称',
+          '添加 getCategoryName() 函数处理分类名称翻译，自动根据当前语言返回对应翻译',
+          '在组件层面实现错误消息的自动翻译检测，如果错误消息是翻译键则自动翻译',
+          '修改默认语言为英文，新用户首次访问时看到英文界面',
+          '更新 Home.jsx、ErrorBoundary.jsx、AuthContext.jsx 等所有涉及错误提示的组件',
+        ],
+      },
+      en: {
+        title: 'Error Message Multilingual Support',
+        description: 'Fixed issue where error messages were not multilingual; all error messages now display correctly based on user-selected language.',
+        details: [
+          'Added complete error message translation keys (error.*) in LanguageContext covering all user-visible error scenarios',
+          'Created translation mapping for category names (category.*) supporting Chinese, English, and Japanese',
+          'Updated all components to use translation functions for error messages and category names',
+          'Added getCategoryName() function to handle category name translation, automatically returning translation based on current language',
+          'Implemented automatic translation detection at component level - if error message is a translation key, it is automatically translated',
+          'Changed default language to English so new users see English interface on first visit',
+          'Updated all components involving error messages including Home.jsx, ErrorBoundary.jsx, AuthContext.jsx, etc.',
+        ],
+      },
+      ja: {
+        title: 'エラーメッセージの多言語サポート',
+        description: 'エラーメッセージが多言語に対応していなかった問題を修正し、すべてのエラーメッセージがユーザーが選択した言語で正しく表示されるようになりました。',
+        details: [
+          'LanguageContext に完全なエラーメッセージの翻訳キー（error.*）を追加し、ユーザーに表示されるすべてのエラーシナリオをカバー',
+          'カテゴリ名の翻訳マッピング（category.*）を作成し、中国語、英語、日本語の3言語をサポート',
+          'すべてのコンポーネントを更新し、エラーメッセージとカテゴリ名に翻訳関数を使用',
+          'getCategoryName() 関数を追加してカテゴリ名の翻訳を処理し、現在の言語に基づいて自動的に翻訳を返す',
+          'コンポーネントレベルでエラーメッセージの自動翻訳検出を実装 - エラーメッセージが翻訳キーの場合、自動的に翻訳される',
+          'デフォルト言語を英語に変更し、新規ユーザーが初回訪問時に英語インターフェースを表示',
+          'Home.jsx、ErrorBoundary.jsx、AuthContext.jsx など、エラーメッセージに関連するすべてのコンポーネントを更新',
+        ],
+      },
+    },
+  },
+  {
     date: '2025-12-02',
     version: '1.5.7',
     translations: {

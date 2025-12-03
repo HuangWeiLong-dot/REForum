@@ -26,7 +26,9 @@ const LoginModal = ({ onClose, onSwitchToRegister }) => {
       onClose()
       navigate('/')
     } else {
-      setError(result.error)
+      // 如果错误消息是翻译键，则翻译；否则直接显示
+      const errorMsg = result.error?.startsWith('error.') ? t(result.error) : result.error
+      setError(errorMsg)
     }
     
     setLoading(false)

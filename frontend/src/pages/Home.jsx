@@ -64,20 +64,20 @@ const Home = () => {
           // 网络错误，后端可能未运行
           setError({
             type: 'network',
-            message: '无法连接到服务器，请检查后端服务是否运行',
+            message: t('error.cannotConnect'),
             detail: error.message
           })
         } else if (error.response.status === 500) {
           // 服务器内部错误
           setError({
             type: 'server',
-            message: '服务器错误，可能是数据库连接问题',
-            detail: error.response.data?.message || '服务器内部错误'
+            message: t('error.serverError'),
+            detail: error.response.data?.message || t('error.serverInternalError')
           })
         } else {
           setError({
             type: 'unknown',
-            message: '加载帖子失败',
+            message: t('error.loadPostsFailed'),
             detail: error.response.data?.message || error.message
           })
         }
@@ -148,11 +148,11 @@ const Home = () => {
             borderRadius: '8px',
             margin: '1rem 0'
           }}>
-            <h3 style={{ color: '#856404', marginBottom: '0.5rem' }}>⚠️ 加载失败</h3>
+            <h3 style={{ color: '#856404', marginBottom: '0.5rem' }}>⚠️ {t('error.loadFailed')}</h3>
             <p style={{ color: '#856404', marginBottom: '0.5rem' }}>{error.message}</p>
             {error.detail && (
               <p style={{ fontSize: '0.85rem', color: '#856404', marginBottom: '1rem' }}>
-                详情: {error.detail}
+                {t('error.detail')} {error.detail}
               </p>
             )}
             <button
@@ -170,16 +170,16 @@ const Home = () => {
                 fontSize: '0.9rem'
               }}
             >
-              重试
+              {t('error.retry')}
             </button>
             {error.type === 'network' && (
               <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#856404' }}>
-                <p>💡 提示：请确保后端服务正在运行</p>
+                <p>{t('error.networkHint')}</p>
                 <p style={{ marginTop: '0.5rem' }}>
-                  检查步骤：
-                  <br />1. 确认后端服务已启动（通常在 http://localhost:3000）
-                  <br />2. 检查浏览器控制台的网络请求错误
-                  <br />3. 查看后端日志是否有错误信息
+                  {t('error.checkSteps')}
+                  <br />{t('error.checkStep1')}
+                  <br />{t('error.checkStep2')}
+                  <br />{t('error.checkStep3')}
                 </p>
               </div>
             )}

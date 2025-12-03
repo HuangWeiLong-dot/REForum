@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../services/api'
+import { useLanguage } from '../context/LanguageContext'
 import './Modal.css'
 
 const RegisterModal = ({ onClose, onSwitchToLogin }) => {
@@ -18,6 +19,7 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
   const [codeSent, setCodeSent] = useState(false)
   const [countdown, setCountdown] = useState(0)
   const { register } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
 
   const handleSendCode = async () => {
@@ -91,7 +93,9 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
       onClose()
       navigate('/')
     } else {
-      setError(result.error)
+      // 如果错误消息是翻译键，则翻译；否则直接显示
+      const errorMsg = result.error?.startsWith('error.') ? t(result.error) : result.error
+      setError(errorMsg)
     }
     
     setLoading(false)

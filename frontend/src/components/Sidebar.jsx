@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { FaHome, FaInfoCircle, FaEnvelope, FaHistory } from 'react-icons/fa'
+import { FaHome, FaInfoCircle, FaEnvelope, FaHistory, FaShieldAlt } from 'react-icons/fa'
 import { FaBug } from 'react-icons/fa'
 import { useLanguage } from '../context/LanguageContext'
 import { categoryAPI } from '../services/api'
@@ -14,7 +14,7 @@ const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
 const Sidebar = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { t } = useLanguage()
+  const { t, getCategoryName } = useLanguage()
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -71,6 +71,13 @@ const Sidebar = () => {
           <span>{t('sidebar.contact')}</span>
         </Link>
         <Link
+          to="/privacy"
+          className={`nav-item ${location.pathname === '/privacy' ? 'active' : ''}`}
+        >
+          <FaShieldAlt className="nav-icon" />
+          <span>{t('sidebar.privacy')}</span>
+        </Link>
+        <Link
           to="/changelog"
           className={`nav-item ${location.pathname === '/changelog' ? 'active' : ''}`}
         >
@@ -121,7 +128,7 @@ const Sidebar = () => {
                       style={{ backgroundColor: category.color || '#6366f1' }}
                     />
                     <div className="category-info">
-                      <span className="category-name">{category.name}</span>
+                      <span className="category-name">{getCategoryName(category.name)}</span>
                       <span className="category-count">
                         {category.postCount || 0} {t('right.postsSuffix')}
                       </span>

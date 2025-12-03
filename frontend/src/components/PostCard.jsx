@@ -5,10 +5,12 @@ import zhCN from 'date-fns/locale/zh-CN'
 import { useAuth } from '../context/AuthContext'
 import { postAPI } from '../services/api'
 import { FaComment, FaHeart, FaRegHeart } from 'react-icons/fa'
+import { useLanguage } from '../context/LanguageContext'
 import './PostCard.css'
 
 const PostCard = ({ post }) => {
   const { isAuthenticated } = useAuth()
+  const { getCategoryName } = useLanguage()
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.likeCount || 0)
   const [liking, setLiking] = useState(false)
@@ -76,7 +78,7 @@ const PostCard = ({ post }) => {
           {post.category && (
             <>
               <span className="post-category">
-                {post.category.name}
+                {getCategoryName(post.category.name)}
               </span>
               <span className="post-separator">•</span>
             </>

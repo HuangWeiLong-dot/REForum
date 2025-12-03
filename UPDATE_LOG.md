@@ -6,7 +6,85 @@
 
 ---
 
-## 最新更新：板块分类设计简化
+## 最新更新：侧边栏添加隐私政策链接
+
+### 更新日期
+2025-12-03
+
+### 版本号
+v1.5.9
+
+### 更新内容
+- ✅ **侧边栏导航增强**：在左侧边栏导航中添加"隐私政策"链接
+- ✅ **多语言支持**：隐私政策链接支持中文、英文、日文三种语言显示
+- ✅ **图标优化**：使用盾牌图标（FaShieldAlt）表示隐私政策，提升视觉识别度
+- ✅ **导航顺序优化**：隐私政策链接放置在"联系我们"和"更新日志"之间，符合逻辑顺序
+
+### 修改文件
+- `frontend/src/components/Sidebar.jsx` - 添加隐私政策导航链接
+- `frontend/src/context/LanguageContext.jsx` - 添加隐私政策翻译键
+- `frontend/src/pages/Changelog.jsx` - 更新版本日志（v1.5.9）
+- `UPDATE_LOG.md` - 记录本次更新
+
+### 技术实现
+- **图标导入**：从 `react-icons/fa` 导入 `FaShieldAlt` 图标组件
+- **路由配置**：链接指向 `/privacy` 路由（已存在的隐私政策页面）
+- **翻译键添加**：在 LanguageContext 中添加 `sidebar.privacy` 翻译键，支持三种语言
+- **样式继承**：使用现有的 `nav-item` 样式类，保持视觉一致性
+
+### 对用户的影响
+- 用户可以更方便地从侧边栏访问隐私政策页面
+- 隐私政策链接会根据用户选择的语言自动显示对应文本
+- 提升了网站导航的完整性和用户体验
+
+---
+
+## 历史更新：多语言支持全面优化
+
+### 更新日期
+2025-12-03
+
+### 版本号
+v1.5.8
+
+### 更新内容
+- ✅ **默认语言改为英文**：网页默认显示为英文界面，提升国际化体验
+- ✅ **板块分类多语言支持**：板块分类名称根据选择的语言显示对应翻译（中文、英文、日文）
+- ✅ **错误提示多语言化**：所有错误提示信息（加载失败、服务器错误、登录失败等）均支持多语言显示
+- ✅ **右侧标签容器提示多语言**：右侧"装满会发生什么"提示文本支持多语言切换
+- ✅ **统一错误处理机制**：优化错误消息的翻译处理逻辑，确保所有用户可见的错误信息都能正确翻译
+
+### 修改文件
+- `frontend/src/context/LanguageContext.jsx` - 添加分类名称和错误提示的翻译，默认语言改为英文
+- `frontend/src/components/Sidebar.jsx` - 使用分类名称翻译函数
+- `frontend/src/components/RightSidebar.jsx` - 使用翻译键显示提示文本
+- `frontend/src/pages/CreatePost.jsx` - 使用分类名称翻译
+- `frontend/src/pages/PostDetail.jsx` - 使用分类名称翻译
+- `frontend/src/components/PostCard.jsx` - 使用分类名称翻译
+- `frontend/src/pages/Home.jsx` - 所有错误提示使用翻译
+- `frontend/src/components/ErrorBoundary.jsx` - 错误边界组件支持多语言
+- `frontend/src/context/AuthContext.jsx` - 登录/注册错误消息使用翻译键
+- `frontend/src/components/LoginModal.jsx` - 错误消息翻译处理
+- `frontend/src/components/RegisterModal.jsx` - 错误消息翻译处理
+- `frontend/src/pages/Changelog.jsx` - 更新版本日志（v1.5.8）
+- `UPDATE_LOG.md` - 记录本次更新
+
+### 技术实现
+- **分类名称翻译映射**：在 LanguageContext 中为每个分类名称创建翻译键（`category.分类名`），支持中文、英文、日文三种语言
+- **错误提示翻译系统**：添加完整的错误提示翻译键（`error.*`），涵盖所有用户可见的错误场景
+- **翻译函数扩展**：新增 `getCategoryName()` 函数，自动根据当前语言返回对应的分类名称翻译
+- **错误消息处理**：在组件层面检查错误消息是否为翻译键，如果是则自动翻译，否则直接显示
+- **默认语言配置**：修改 `getInitialLanguage()` 函数，默认返回 `'en'` 而不是 `'zh'`
+
+### 对用户的影响
+- 新用户首次访问时看到的是英文界面，更符合国际化标准
+- 板块分类名称会根据语言设置自动切换，提升多语言用户体验
+- 所有错误提示都能以用户选择的语言显示，减少理解障碍
+- 整体多语言支持更加完善和统一
+
+---
+
+## 历史更新：板块分类设计简化
 
 ### 更新日期
 2025-12-02
