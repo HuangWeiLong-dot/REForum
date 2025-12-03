@@ -760,10 +760,6 @@
     display: none;
   }
 
-  .create-button-label {
-    display: none;
-  }
-
   .create-button svg {
     font-size: 0.8125rem;
     margin-right: 0.25rem;
