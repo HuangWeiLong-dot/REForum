@@ -1,3 +1,9 @@
+# REForum - Modern Forum System
+
+An open-source, modern forum platform with a **separated frontend and backend** architecture.
+
+---
+
 # REForum - 现代论坛系统
 
 一个论坛社区系统，采用 **前后端分离** 架构。
