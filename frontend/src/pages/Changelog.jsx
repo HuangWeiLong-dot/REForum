@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { format } from 'date-fns'
 import zhCN from 'date-fns/locale/zh-CN'
 import enUS from 'date-fns/locale/en-US'
 import ja from 'date-fns/locale/ja'
 import { useLanguage } from '../context/LanguageContext'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
+import { fixes } from './Fixes'
 import './Changelog.css'
+import './Fixes.css'
 
 const changelogCopy = {
   zh: {
@@ -28,36 +31,188 @@ const changelogCopy = {
 const updates = [
   {
     date: '2025-12-03',
+    version: '1.6.2',
+    translations: {
+      zh: {
+        title: '首屏加载动画现代化',
+        description:
+          '重塑 IntroLoader，让圆环进度、品牌文案与页面基调保持一致，并在加载完成时平滑过渡到首页。',
+        features: [
+          '加载进度缩短至 1 秒，圆环实时显示百分比',
+          '新增 RE / FORUM 标识，字体与主页保持一致',
+          '移除厚重背景与装饰，改为简洁的径向渐变',
+          '加载结束后 Header、主内容和按钮栏依次淡入',
+          '加载动画背景与进度条/文字颜色全面接入主题变量，修复灰色方块残影问题',
+        ],
+      },
+      en: {
+        title: 'Modernized Intro Loader',
+        description:
+          'Refined the initial loading overlay so the circular progress, branding, and timing match the overall visual tone, then fade the app in smoothly.',
+        features: [
+          'Progress simulation now finishes in 1s with live percentage',
+          'Added RE / FORUM wordmark above the ring for consistent branding',
+          'Removed bulky glass backgrounds in favor of a subtle radial gradient',
+          'Header, main content, and action bar fade in sequentially after loading',
+          'Hooked the loader background, ring, and label colors into theme tokens and removed the gray box artifact around the progress ring',
+        ],
+      },
+      ja: {
+        title: '初期ローディングアニメのモダン化',
+        description:
+          'IntroLoader を再設計し、円形プログレスとブランド表記をサイト全体の雰囲気に合わせ、読み込み後は滑らかにページへ遷移します。',
+        features: [
+          '進行度シミュレーションを 1 秒で完了し、パーセンテージを即時表示',
+          'リング上部に RE / FORUM ロゴタイプを追加しブランド性を統一',
+          '重たい装飾背景を排除し、控えめな放射状グラデーションに変更',
+          'ローディング完了後にヘッダー・メイン・ボタン列が順番にフェードイン',
+          'ロード画面の背景とリング/テキストの色をテーマ変数に接続し、進捗リング周りのグレーボックス残像を解消',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.6.1',
+    translations: {
+      zh: {
+        title: '顶部搜索与时间展示重构',
+        description: '重排 Header 结构，将搜索框移动到 Logo 旁，并新增居中实时日期时间展示，同时全面修复响应式布局错位问题。',
+        features: [
+          '搜索框现在紧贴 Logo，左侧区域更整齐',
+          '顶部中央新增实时时间，自动使用当前语言显示',
+          '日期和时间样式重新设计，更贴近整体风格',
+          '桌面到手机的各尺寸下，搜索、按钮和时间都能稳稳对齐',
+        ],
+      },
+      en: {
+        title: 'Header Search & Time Display Revamp',
+        description:
+          'Rebuilt the header layout so the search input sits next to the logo, added a centered real-time date/time module, and fixed all responsive misalignments.',
+        features: [
+          'Search bar lives next to the logo to create a tidy left side',
+          'A live clock now appears in the middle and follows your language settings',
+          'Date and time styling feel more modern and match the rest of the site',
+          'Desktop, tablet, and phone layouts keep search, buttons, and time perfectly aligned',
+        ],
+      },
+      ja: {
+        title: 'ヘッダー検索と時間表示の再設計',
+        description:
+          'ヘッダー構造を再編し、検索ボックスをロゴの横に移動。中央にリアルタイムの日時表示を追加し、レスポンシブのずれを全面的に修正しました。',
+        features: [
+          '検索ボックスをロゴのすぐ横に移動し、左側がすっきりしました',
+          '中央にライブ時計を追加し、使用中の言語で日付と時間を表示',
+          '日付と時間のデザインを全体テーマに合わせて刷新',
+          'PC からスマホまで、検索・ボタン・時計がきれいに並ぶよう再調整',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.6.0',
+    translations: {
+      zh: {
+        title: '帖子展示优化、日历视图和发布日期显示',
+        description: '优化帖子展示模式，添加日历视图功能，支持日期筛选，并在帖子卡片中显示发布日期。',
+        features: [
+          '最新与热门区块更精简，只展示重点帖子',
+          '热门排序改为综合点赞、浏览和评论，榜单更可信',
+          '新增日历视图，可在周/月之间切换',
+          '点击日历日期即可查看当天所有帖子',
+          '帖子卡片会显示完整发布日期',
+          '日历与日期展示支持多语言',
+          '提供 25 条演示数据方便预览',
+        ],
+      },
+      en: {
+        title: 'Post Display Optimization, Calendar View & Publish Date',
+        description: 'Optimized post display modes, added calendar view with date filtering, and display publish date on post cards.',
+        features: [
+          'Latest and Hot sections spotlight just a few key posts',
+          'Hot ranking now weighs likes, views, and comments for fairer results',
+          'Calendar view arrives with week/month toggle',
+          'Tap any date to jump to posts from that day',
+          'Each post card now shows its publish date',
+          'Calendar texts follow your selected language',
+          'Includes 25 sample posts for quick previews',
+        ],
+      },
+      ja: {
+        title: '投稿表示の最適化、カレンダービューと公開日の表示',
+        description: '投稿表示モードを最適化し、カレンダービュー機能を追加、日付フィルタリングをサポートし、投稿カードに公開日を表示します。',
+        features: [
+          '最新・人気セクションは厳選した投稿のみ表示',
+          '人気ランキングはいいね・閲覧・コメントを総合して算出',
+          'カレンダービューを追加し、週/月の切り替えに対応',
+          '日付をタップするとその日の投稿一覧へ移動',
+          '投稿カードに公開日が表示されるように変更',
+          'カレンダー表示は選択中の言語に追従',
+          'プレビュー用に 25 件のサンプル投稿を同梱',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.5.10',
+    translations: {
+      zh: {
+        title: '通知和用户资料页面多语言支持',
+        description: '为通知消息、用户资料页面和帖子卡片添加完整的多语言支持。',
+        features: [
+          '通知消息标题支持多语言显示',
+          '用户资料页面所有文本支持多语言',
+          '帖子卡片统计信息支持多语言',
+        ],
+      },
+      en: {
+        title: 'Notification & User Profile Multilingual Support',
+        description: 'Added complete multilingual support for notification messages, user profile pages, and post cards.',
+        features: [
+          'Notification titles support multilingual display',
+          'All user profile page text supports multilingual',
+          'Post card statistics support multilingual',
+        ],
+      },
+      ja: {
+        title: '通知とユーザープロフィールページの多言語サポート',
+        description: '通知メッセージ、ユーザープロフィールページ、投稿カードに完全な多言語サポートを追加しました。',
+        features: [
+          '通知タイトルが多言語表示に対応',
+          'ユーザープロフィールページのすべてのテキストが多言語に対応',
+          '投稿カードの統計情報が多言語に対応',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
     version: '1.5.9',
     translations: {
       zh: {
         title: '侧边栏导航增强',
-        description: '在左侧边栏导航中添加隐私政策链接，提升网站导航的完整性和用户体验。',
+        description: '在左侧边栏导航中添加隐私政策链接。',
         features: [
-          '在左侧边栏导航中添加"隐私政策"链接',
-          '隐私政策链接支持中文、英文、日文三种语言显示',
-          '使用盾牌图标（FaShieldAlt）表示隐私政策，提升视觉识别度',
-          '隐私政策链接放置在"联系我们"和"更新日志"之间，符合逻辑顺序',
+          '添加隐私政策链接',
+          '支持多语言显示',
         ],
       },
       en: {
         title: 'Sidebar Navigation Enhancement',
-        description: 'Added Privacy Policy link to the left sidebar navigation, improving site navigation completeness and user experience.',
+        description: 'Added Privacy Policy link to the left sidebar navigation.',
         features: [
-          'Added Privacy Policy link to the left sidebar navigation',
-          'Privacy Policy link supports display in Chinese, English, and Japanese',
-          'Used shield icon (FaShieldAlt) for Privacy Policy to improve visual recognition',
-          'Placed Privacy Policy link between Contact and Changelog for logical ordering',
+          'Added Privacy Policy link',
+          'Supports multilingual display',
         ],
       },
       ja: {
         title: 'サイドバーナビゲーションの強化',
-        description: '左側サイドバーのナビゲーションにプライバシーポリシーリンクを追加し、サイトナビゲーションの完全性とユーザー体験を向上させました。',
+        description: '左側サイドバーのナビゲーションにプライバシーポリシーリンクを追加しました。',
         features: [
-          '左側サイドバーのナビゲーションにプライバシーポリシーリンクを追加',
-          'プライバシーポリシーリンクは中国語、英語、日本語の3言語表示に対応',
-          'プライバシーポリシーにシールドアイコン（FaShieldAlt）を使用し、視覚的な認識を向上',
-          'プライバシーポリシーリンクを「お問い合わせ」と「更新履歴」の間に配置し、論理的な順序を実現',
+          'プライバシーポリシーリンクを追加',
+          '多言語表示に対応',
         ],
       },
     },
@@ -70,33 +225,27 @@ const updates = [
         title: '多语言支持全面优化',
         description: '将默认语言改为英文，并为板块分类和所有错误提示添加完整的多语言支持。',
         features: [
-          '网页默认显示为英文界面，提升国际化体验',
-          '板块分类名称根据选择的语言显示对应翻译（中文、英文、日文）',
-          '所有错误提示信息（加载失败、服务器错误、登录失败等）均支持多语言显示',
-          '右侧标签容器提示文本支持多语言切换',
-          '统一错误处理机制，确保所有用户可见的错误信息都能正确翻译',
+          '默认语言改为英文',
+          '板块分类名称支持多语言',
+          '所有错误提示支持多语言',
         ],
       },
       en: {
         title: 'Comprehensive Multilingual Support Enhancement',
         description: 'Changed default language to English and added complete multilingual support for category names and all error messages.',
         features: [
-          'Website now defaults to English interface for better internationalization',
-          'Category names display in the selected language (Chinese, English, Japanese)',
-          'All error messages (load failures, server errors, login failures, etc.) support multilingual display',
-          'Right sidebar tag container hint text supports language switching',
-          'Unified error handling mechanism ensures all user-visible error messages are properly translated',
+          'Default language changed to English',
+          'Category names support multilingual',
+          'All error messages support multilingual',
         ],
       },
       ja: {
         title: '多言語サポートの包括的強化',
         description: 'デフォルト言語を英語に変更し、カテゴリ名とすべてのエラーメッセージに完全な多言語サポートを追加しました。',
         features: [
-          'ウェブサイトは国際化体験を向上させるため、デフォルトで英語インターフェースを表示',
-          'カテゴリ名は選択された言語（中国語、英語、日本語）に対応した翻訳を表示',
-          'すべてのエラーメッセージ（読み込み失敗、サーバーエラー、ログイン失敗など）が多言語表示に対応',
-          '右側のタグコンテナのヒントテキストが言語切り替えに対応',
-          '統一されたエラー処理メカニズムにより、ユーザーに表示されるすべてのエラーメッセージが正しく翻訳されることを保証',
+          'デフォルト言語を英語に変更',
+          'カテゴリ名が多言語に対応',
+          'すべてのエラーメッセージが多言語に対応',
         ],
       },
     },
@@ -107,32 +256,26 @@ const updates = [
     translations: {
       zh: {
         title: '顶部导航与通知体验优化',
-        description: '优化语言切换菜单交互，并进一步改进移动端通知下拉菜单的可见性与滚动体验。',
+        description: '优化语言切换菜单交互，改进移动端通知下拉菜单的可见性与滚动体验。',
         features: [
-          '语言切换按钮不再依赖鼠标悬浮开关，菜单只在点击按钮时打开，在点击外部或选择语言后关闭',
-          '重构语言菜单的事件处理逻辑，避免因为细小空隙导致菜单瞬间消失，提升可点击性',
-          '移除评论回复层级达到上限时的提示文案，界面更加干净简洁',
-          '再次优化移动端通知下拉菜单的最大高度和列表滚动行为，在小屏幕上长列表也能完整浏览',
+          '语言切换菜单改为点击开关',
+          '优化移动端通知列表显示',
         ],
       },
       en: {
         title: 'Top Navigation & Notification UX Improvements',
-        description: 'Improved language switcher interactions and further refined mobile notification dropdown visibility and scrolling behavior.',
+        description: 'Improved language switcher interactions and mobile notification dropdown visibility and scrolling behavior.',
         features: [
-          'Language switcher menu no longer relies on hover events; it now opens on button click and closes only when clicking outside or after selecting a language',
-          'Refactored language menu event handling to avoid accidental closing when moving the cursor between button and menu',
-          'Removed depth limit hint text for comment replies to keep the interface clean',
-          'Further optimized mobile notification dropdown max-height and list scrolling so long lists remain fully browsable on small screens',
+          'Language switcher menu uses click toggle',
+          'Optimized mobile notification list display',
         ],
       },
       ja: {
         title: 'トップナビゲーションと通知のユーザー体験改善',
-        description: '言語切替メニューのインタラクションを改善し、モバイル通知ドロップダウンの表示とスクロール体験をさらに最適化しました。',
+        description: '言語切替メニューのインタラクションを改善し、モバイル通知ドロップダウンの表示とスクロール体験を最適化しました。',
         features: [
-          '言語切替メニューはホバーではなくクリックで開閉し、外側をクリックするか言語を選択したときのみ閉じるように変更',
-          'ボタンとメニューの間にあるわずかな隙間でもメニューがすぐ閉じないよう、イベント処理ロジックを調整',
-          'コメント返信の階層制限メッセージを削除し、インターフェースをよりシンプルに',
-          'モバイルでの通知ドロップダウンの最大高さとリストスクロールを再調整し、小さな画面でも長い一覧を最後まで確認可能に',
+          '言語切替メニューをクリック切り替えに変更',
+          'モバイル通知リストの表示を最適化',
         ],
       },
     },
@@ -143,35 +286,26 @@ const updates = [
     translations: {
       zh: {
         title: '板块分类设计简化',
-        description: '简化板块分类设计，移除装饰效果，使其与整体设计风格保持一致。',
+        description: '简化板块分类设计，移除装饰效果。',
         features: [
-          '移除气泡样式、背景色、边框、阴影等装饰效果',
-          '板块分类样式与导航项保持一致，符合整体简洁基调',
-          '分类信息改为横向排列，名称和数量在同一行显示',
-          '简化交互效果，只保留颜色变化和左侧指示条',
-          '优化颜色点尺寸，移除阴影和缩放动画',
+          '移除装饰效果，统一设计风格',
+          '优化布局和交互',
         ],
       },
       en: {
         title: 'Category Design Simplification',
-        description: 'Simplified category design, removed decorative effects to match overall design style.',
+        description: 'Simplified category design, removed decorative effects.',
         features: [
-          'Removed bubble style, background color, borders, shadows and other decorative effects',
-          'Category styles consistent with navigation items, matching overall clean design',
-          'Category information changed to horizontal layout with name and count on same line',
-          'Simplified interaction effects, only color change and left indicator bar',
-          'Optimized color dot size, removed shadows and scale animations',
+          'Removed decorative effects, unified design style',
+          'Optimized layout and interactions',
         ],
       },
       ja: {
         title: 'カテゴリデザインの簡素化',
-        description: 'カテゴリデザインを簡素化し、装飾効果を削除して全体的なデザインスタイルと一致させました。',
+        description: 'カテゴリデザインを簡素化し、装飾効果を削除しました。',
         features: [
-          'バブルスタイル、背景色、ボーダー、シャドウなどの装飾効果を削除',
-          'カテゴリスタイルをナビゲーション項目と一致させ、全体的なシンプルなデザインに合わせる',
-          'カテゴリ情報を横向きレイアウトに変更し、名前と数を同じ行に表示',
-          'インタラクション効果を簡素化し、色の変化と左側のインジケーターバーのみ',
-          'カラードットのサイズを最適化し、シャドウとスケールアニメーションを削除',
+          '装飾効果を削除し、デザインスタイルを統一',
+          'レイアウトとインタラクションを最適化',
         ],
       },
     },
@@ -182,41 +316,26 @@ const updates = [
     translations: {
       zh: {
         title: '标签物理引擎系统重构',
-        description: '使用Matter.js物理引擎实现标签的真实物理效果，标签从上方掉落并具有真实的物理属性。',
+        description: '使用Matter.js物理引擎实现标签的真实物理效果。',
         features: [
-          '集成Matter.js物理引擎，实现真实的物理模拟（重力、碰撞、摩擦、弹性）',
-          '标签从容器上方掉落，受重力影响自然下落并堆叠',
-          '支持鼠标和触摸拖拽标签，标签之间会发生真实碰撞',
-          '简化标签样式，移除色块和装饰，改为简洁的纯文字样式',
-          '减小标签占地面积，提高标签密度',
-          '在移动端正常显示，不影响其他内容布局',
-          '容器样式与整体页面样式统一，使用主题变量',
+          '集成物理引擎，实现真实物理模拟',
+          '支持拖拽和碰撞交互',
         ],
       },
       en: {
         title: 'Tag Physics Engine System Refactor',
-        description: 'Implemented real physics effects for tags using Matter.js physics engine, tags fall from top with real physical properties.',
+        description: 'Implemented real physics effects for tags using Matter.js physics engine.',
         features: [
-          'Integrated Matter.js physics engine for real physics simulation (gravity, collision, friction, restitution)',
-          'Tags fall from top of container, naturally drop and stack under gravity',
-          'Support mouse and touch drag for tags with real collision detection',
-          'Simplified tag styles, removed color blocks and decorations, using clean text-only style',
-          'Reduced tag footprint, increased tag density',
-          'Properly displayed on mobile devices without affecting other content layout',
-          'Container styles unified with overall page styles using theme variables',
+          'Integrated physics engine for real physics simulation',
+          'Support drag and collision interactions',
         ],
       },
       ja: {
         title: 'タグ物理エンジンシステムのリファクタリング',
-        description: 'Matter.js物理エンジンを使用してタグのリアルな物理効果を実装し、タグが上から落下し、リアルな物理属性を持ちます。',
+        description: 'Matter.js物理エンジンを使用してタグのリアルな物理効果を実装しました。',
         features: [
-          'Matter.js物理エンジンを統合し、リアルな物理シミュレーション（重力、衝突、摩擦、弾性）を実現',
-          'タグがコンテナの上から落下し、重力の影響で自然に落下して積み重なる',
-          'マウスとタッチでタグをドラッグ可能で、タグ間でリアルな衝突が発生',
-          'タグスタイルを簡素化し、色ブロックと装飾を削除し、シンプルなテキストのみのスタイルに変更',
-          'タグの占有面積を削減し、タグ密度を向上',
-          'モバイルデバイスで正常に表示され、他のコンテンツレイアウトに影響しない',
-          'コンテナスタイルを全体ページスタイルと統一し、テーマ変数を使用',
+          '物理エンジンを統合し、リアルな物理シミュレーションを実現',
+          'ドラッグと衝突のインタラクションをサポート',
         ],
       },
     },
@@ -227,35 +346,23 @@ const updates = [
     translations: {
       zh: {
         title: 'Header左右边距对称修复',
-        description: '修复Header中左侧Logo与左侧边缘的距离和右侧按钮组合与右侧边缘的距离不一致的历史遗留问题。',
+        description: '修复Header左右边距不一致的问题。',
         features: [
-          '使用 minmax(0, 1fr) 确保Grid布局中左右列严格等宽',
-          '移除Logo和按钮组合的额外margin和padding，确保紧贴边缘',
-          '添加 width: fit-content 确保元素紧贴各自列的边缘',
-          '在所有响应式断点下保持左右对称',
-          '这是一个历史遗留问题，多个版本更新迭代都未修复，本次彻底解决',
+          '优化Grid布局确保左右对称',
         ],
       },
       en: {
         title: 'Header Left-Right Margin Symmetry Fix',
-        description: 'Fixed historical issue where the distance from left logo to left edge and right button group to right edge were inconsistent.',
+        description: 'Fixed inconsistent left-right margins in Header.',
         features: [
-          'Used minmax(0, 1fr) to ensure strict equal width for left and right columns in Grid layout',
-          'Removed extra margin and padding from logo and button group to ensure they align to edges',
-          'Added width: fit-content to ensure elements align to their column edges',
-          'Maintained left-right symmetry at all responsive breakpoints',
-          'This was a historical issue that persisted through multiple version updates, now completely resolved',
+          'Optimized Grid layout for symmetry',
         ],
       },
       ja: {
         title: 'ヘッダーの左右マージン対称性の修正',
-        description: '左側のロゴと左端の距離、右側のボタングループと右端の距離が一致しない歴史的な問題を修正しました。',
+        description: 'ヘッダーの左右マージンの不一致を修正しました。',
         features: [
-          'minmax(0, 1fr) を使用してGridレイアウトで左右の列の幅を厳密に等しく設定',
-          'ロゴとボタングループの余分なマージンとパディングを削除し、端に揃えるように調整',
-          'width: fit-content を追加して要素が各列の端に揃うように設定',
-          'すべてのレスポンシブブレークポイントで左右対称を維持',
-          'これは複数のバージョン更新を経ても修正されなかった歴史的な問題でしたが、今回完全に解決しました',
+          'Gridレイアウトを最適化し対称性を確保',
         ],
       },
     },
@@ -266,35 +373,23 @@ const updates = [
     translations: {
       zh: {
         title: '响应式Header布局优化',
-        description: '修复语言切换按钮移到右上角后，在响应式设备上出现的按钮排版错乱问题。',
+        description: '修复响应式设备上按钮排版错乱问题。',
         features: [
-          '优化992px、768px、576px、480px断点的按钮布局和间距',
-          '确保按钮在所有断点下都能正确换行和排列，不会重叠或溢出',
-          '统一图标按钮和文字按钮的尺寸，保持视觉一致性',
-          '优化语言菜单在小屏幕上的定位，确保不会超出视口',
-          '改进搜索框在超小屏幕上的显示效果',
+          '优化各断点的按钮布局',
         ],
       },
       en: {
         title: 'Responsive Header Layout Optimization',
-        description: 'Fixed button layout issues on responsive devices after moving language switcher to top-right corner.',
+        description: 'Fixed button layout issues on responsive devices.',
         features: [
-          'Optimized button layout and spacing for 992px, 768px, 576px, and 480px breakpoints',
-          'Ensured buttons wrap correctly and align properly at all breakpoints without overlapping or overflow',
-          'Unified icon button and text button sizes for visual consistency',
-          'Optimized language menu positioning on small screens to prevent viewport overflow',
-          'Improved search box display on extra small screens',
+          'Optimized button layout for all breakpoints',
         ],
       },
       ja: {
         title: 'レスポンシブヘッダーレイアウトの最適化',
-        description: '言語切替ボタンを右上に移動した後、レスポンシブデバイスで発生したボタンのレイアウト問題を修正しました。',
+        description: 'レスポンシブデバイスでのボタンのレイアウト問題を修正しました。',
         features: [
-          '992px、768px、576px、480pxのブレークポイントでボタンレイアウトと余白を最適化',
-          'すべてのブレークポイントでボタンが正しく折り返し、整列し、重なりやオーバーフローが発生しないように調整',
-          '視覚的一貫性のため、アイコンボタンとテキストボタンのサイズを統一',
-          '小画面での言語メニューの位置を最適化し、ビューポートを超えないように調整',
-          '超小画面での検索ボックスの表示を改善',
+          'すべてのブレークポイントでボタンレイアウトを最適化',
         ],
       },
     },
@@ -305,32 +400,23 @@ const updates = [
     translations: {
       zh: {
         title: '标签位置缓存优化',
-        description: '修复路由切换时标签位置和动画参数被重置的问题，提升用户体验。',
+        description: '修复路由切换时标签位置被重置的问题。',
         features: [
-          '使用 useMemo 和 useRef 缓存标签位置，仅在标签数据真正改变时重新生成',
-          '动画参数（持续时间、延迟、方向）持久化，避免每次渲染都重新生成',
-          '标签签名机制确保相同标签数据使用相同位置',
-          '切换页面时标签保持连续浮动，不会中断或重置',
+          '使用缓存机制保持标签位置',
         ],
       },
       en: {
         title: 'Tag Position Cache Optimization',
-        description: 'Fixed issue where tag positions and animation parameters were reset on route changes, improving user experience.',
+        description: 'Fixed issue where tag positions were reset on route changes.',
         features: [
-          'Used useMemo and useRef to cache tag positions, regenerating only when tag data actually changes',
-          'Animation parameters (duration, delay, direction) persist across renders',
-          'Tag signature mechanism ensures same tag data uses same positions',
-          'Tags maintain continuous floating animation when switching pages without interruption',
+          'Used caching mechanism to preserve tag positions',
         ],
       },
       ja: {
         title: 'タグ位置キャッシュ最適化',
-        description: 'ルート切替時にタグ位置とアニメーションパラメータがリセットされる問題を修正し、ユーザー体験を向上させました。',
+        description: 'ルート切替時にタグ位置がリセットされる問題を修正しました。',
         features: [
-          'useMemo と useRef を使用してタグ位置をキャッシュし、タグデータが実際に変更された場合のみ再生成',
-          'アニメーションパラメータ（継続時間、遅延、方向）を永続化し、毎回のレンダリングで再生成を防止',
-          'タグ署名メカニズムにより、同じタグデータは同じ位置を使用',
-          'ページ切替時もタグが連続的に浮遊し、中断やリセットが発生しない',
+          'キャッシュメカニズムでタグ位置を保持',
         ],
       },
     },
@@ -1127,17 +1213,171 @@ const formatPattern = {
 const Changelog = () => {
   const { language } = useLanguage()
   const copy = changelogCopy[language] || changelogCopy.zh
+  const [expandedMonths, setExpandedMonths] = useState(new Set())
+  const [expandedVersions, setExpandedVersions] = useState(new Set())
+  const [expandedDates, setExpandedDates] = useState(new Set())
   const locale = formatLocale[language] || zhCN
   const datePattern = formatPattern[language] || formatPattern.zh
 
+  const monthFormatPattern = {
+    zh: 'yyyy年MM月',
+    en: 'MMMM yyyy',
+    ja: 'yyyy年MM月',
+  }
+  const monthPattern = monthFormatPattern[language] || monthFormatPattern.zh
+
+  // 处理更新日志数据
   const localizedUpdates = updates.map((entry) => {
     const translation = entry.translations[language] || entry.translations.zh
     return {
       date: entry.date,
       version: entry.version,
+      type: 'update',
       ...translation,
     }
   })
+
+  // 处理问题修复数据
+  const localizedFixes = fixes.map((item) => {
+    const translation = item.translations[language] || item.translations.zh
+    return {
+      date: item.date,
+      version: item.version,
+      issue: item.issue,
+      type: 'fix',
+      ...translation,
+    }
+  })
+
+  // 合并并按月份和版本分组
+  const groupedByMonth = useMemo(() => {
+    const allItems = [...localizedUpdates, ...localizedFixes]
+    const grouped = {}
+
+    allItems.forEach((item) => {
+      // 跳过无效日期
+      if (!item.date) return
+      
+      const date = new Date(item.date)
+      // 检查日期是否有效
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date in changelog:', item.date)
+        return
+      }
+      
+      const monthKey = format(date, 'yyyy-MM', { locale })
+      const monthLabel = format(date, monthPattern, { locale })
+      
+      // 获取版本号（只取前两部分，如 1.5.10 -> 1.5）
+      const versionKey = item.version ? item.version.split('.').slice(0, 2).join('.') : 'unknown'
+
+      if (!grouped[monthKey]) {
+        grouped[monthKey] = {
+          monthKey,
+          monthLabel,
+          versions: {},
+        }
+      }
+      
+      if (!grouped[monthKey].versions[versionKey]) {
+        grouped[monthKey].versions[versionKey] = {
+          version: versionKey,
+          dates: {},
+        }
+      }
+      
+      // 按日期分组
+      const dateKey = item.date
+      if (!grouped[monthKey].versions[versionKey].dates[dateKey]) {
+        grouped[monthKey].versions[versionKey].dates[dateKey] = {
+          date: dateKey,
+          items: [],
+        }
+      }
+      
+      grouped[monthKey].versions[versionKey].dates[dateKey].items.push(item)
+    })
+
+    // 在每个版本内按日期排序（最新的在前）
+    Object.keys(grouped).forEach((monthKey) => {
+      Object.keys(grouped[monthKey].versions).forEach((versionKey) => {
+        // 将日期对象转换为数组并按日期排序（最新的在前）
+        const version = grouped[monthKey].versions[versionKey]
+        version.dateList = Object.values(version.dates).sort((a, b) => {
+          return new Date(b.date) - new Date(a.date)
+        })
+        
+        // 在每个日期内，项目按类型排序（更新在前，修复在后）
+        version.dateList.forEach((dateGroup) => {
+          dateGroup.items.sort((a, b) => {
+            if (a.type === 'update' && b.type === 'fix') return -1
+            if (a.type === 'fix' && b.type === 'update') return 1
+            return 0
+          })
+        })
+      })
+      
+      // 将版本对象转换为数组并按版本号排序（最新的在前）
+      grouped[monthKey].versionList = Object.values(grouped[monthKey].versions).sort((a, b) => {
+        // 比较版本号，如 "1.5" vs "1.3"
+        const aParts = a.version.split('.').map(Number)
+        const bParts = b.version.split('.').map(Number)
+        for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+          const aPart = aParts[i] || 0
+          const bPart = bParts[i] || 0
+          if (bPart !== aPart) {
+            return bPart - aPart
+          }
+        }
+        return 0
+      })
+    })
+
+    // 返回排序后的月份数组
+    return Object.values(grouped).sort((a, b) => {
+      return b.monthKey.localeCompare(a.monthKey)
+    })
+  }, [localizedUpdates, localizedFixes, monthPattern, locale])
+
+  // 默认手风琴关闭状态，不自动展开
+
+  const toggleMonth = (monthKey) => {
+    setExpandedMonths((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(monthKey)) {
+        newSet.delete(monthKey)
+      } else {
+        newSet.add(monthKey)
+      }
+      return newSet
+    })
+  }
+
+  const toggleVersion = (monthKey, version) => {
+    const versionKey = `${monthKey}-${version}`
+    setExpandedVersions((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(versionKey)) {
+        newSet.delete(versionKey)
+      } else {
+        newSet.add(versionKey)
+      }
+      return newSet
+    })
+  }
+
+  const toggleDate = (monthKey, version, date) => {
+    const dateKey = `${monthKey}-${version}-${date}`
+    setExpandedDates((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(dateKey)) {
+        newSet.delete(dateKey)
+      } else {
+        newSet.add(dateKey)
+      }
+      return newSet
+    })
+  }
 
   const formatDate = (dateString) => {
     try {
@@ -1147,6 +1387,24 @@ const Changelog = () => {
     }
   }
 
+  const monthLabels = {
+    zh: { items: '项' },
+    en: { items: 'items' },
+    ja: { items: '件' },
+  }
+  const monthLabel = monthLabels[language] || monthLabels.zh
+
+  // 硬编码：直接使用 updates 数组的第一项作为最新更新
+  const latestItem = localizedUpdates.length > 0 ? localizedUpdates[0] : null
+  const latestFormattedDate = latestItem?.date ? formatDate(latestItem.date) : null
+
+  const latestLabels = {
+    zh: { title: '最新更新', showAll: '查看全部' },
+    en: { title: 'Latest Updates', showAll: 'View All' },
+    ja: { title: '最新の更新', showAll: 'すべて表示' },
+  }
+  const latestLabel = latestLabels[language] || latestLabels.zh
+
   return (
     <div className="changelog-page">
       <div className="changelog-header">
@@ -1154,24 +1412,205 @@ const Changelog = () => {
         <p className="changelog-intro">{copy.intro}</p>
       </div>
 
-      <div className="changelog-list">
-        {localizedUpdates.map((update) => (
-          <div key={`${update.version}-${update.date}`} className="changelog-item">
-            <div className="changelog-item-header">
-              <div className="changelog-item-title-section">
-                <h2 className="changelog-item-title">{update.title}</h2>
-                <span className="changelog-item-version">v{update.version}</span>
-              </div>
-              <span className="changelog-item-date">{formatDate(update.date)}</span>
-            </div>
-            <p className="changelog-item-description">{update.description}</p>
-            <ul className="changelog-item-features">
-              {update.features.map((feature, featureIndex) => (
-                <li key={featureIndex}>{feature}</li>
-              ))}
-            </ul>
+      {latestItem && (
+        <div className="changelog-latest">
+          <div className="changelog-latest-header">
+            <h2 className="changelog-latest-title">{latestLabel.title}</h2>
+            {latestFormattedDate && (
+              <span className="changelog-latest-date" title={latestItem.date}>
+                {latestFormattedDate}
+              </span>
+            )}
           </div>
-        ))}
+          <div className="changelog-latest-items">
+            {latestItem.type === 'update' ? (
+              <div className="changelog-item">
+                <div className="changelog-item-header">
+                  <div className="changelog-item-title-section">
+                    <h2 className="changelog-item-title">{latestItem.title}</h2>
+                    <span className="changelog-item-version">v{latestItem.version}</span>
+                    <span className="changelog-item-type-badge">
+                      {language === 'zh' ? '更新' : language === 'ja' ? '更新' : 'Update'}
+                    </span>
+                  </div>
+                </div>
+                <p className="changelog-item-description">{latestItem.description}</p>
+                <ul className="changelog-item-features">
+                  {latestItem.features?.map((feature, featureIndex) => (
+                    <li key={featureIndex}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <article className="fix-card changelog-fix-item">
+                <div className="fix-header">
+                  <div className="fix-meta">
+                    {latestItem.version && (
+                      <span className="fix-version">
+                        v{latestItem.version}
+                      </span>
+                    )}
+                    {latestItem.issue && (
+                      <span className="fix-issue">
+                        Issue {Array.isArray(latestItem.issue) ? latestItem.issue.map(i => `#${i}`).join(', ') : `#${latestItem.issue}`}
+                      </span>
+                    )}
+                    <span className="changelog-item-type-badge fix-badge">
+                      {language === 'zh' ? '修复' : language === 'ja' ? '修正' : 'Fix'}
+                    </span>
+                  </div>
+                  <h2 className="fix-name">{latestItem.title}</h2>
+                </div>
+                <p className="fix-desc">{latestItem.description}</p>
+                {latestItem.details?.length > 0 && (
+                  <ul className="fix-details">
+                    {latestItem.details.map((detail, detailIndex) => (
+                      <li key={detailIndex}>{detail}</li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="changelog-months">
+        {groupedByMonth.map((monthGroup) => {
+          const isExpanded = expandedMonths.has(monthGroup.monthKey)
+          return (
+            <div key={monthGroup.monthKey} className="changelog-month-group">
+              <button
+                type="button"
+                className="changelog-month-header"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  toggleMonth(monthGroup.monthKey)
+                }}
+              >
+                <span className="changelog-month-title">{monthGroup.monthLabel}</span>
+                <span className="changelog-month-count">
+                  ({monthGroup.versionList ? monthGroup.versionList.reduce((sum, v) => sum + (v.dateList ? v.dateList.reduce((dSum, d) => dSum + d.items.length, 0) : 0), 0) : 0} {monthLabel.items})
+                </span>
+                {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+
+              {isExpanded && (
+                <div className="changelog-list">
+                  {monthGroup.versionList.map((versionGroup) => {
+                    const versionKey = `${monthGroup.monthKey}-${versionGroup.version}`
+                    const isVersionExpanded = expandedVersions.has(versionKey)
+                    return (
+                      <div key={`${monthGroup.monthKey}-${versionGroup.version}`} className="changelog-version-group">
+                        <button
+                          type="button"
+                          className="changelog-version-header"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            toggleVersion(monthGroup.monthKey, versionGroup.version)
+                          }}
+                        >
+                          <span className="changelog-version-title">v{versionGroup.version}</span>
+                          <span className="changelog-version-count">
+                            ({versionGroup.dateList ? versionGroup.dateList.reduce((sum, d) => sum + d.items.length, 0) : 0} {monthLabel.items})
+                          </span>
+                          {isVersionExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                        </button>
+                        {isVersionExpanded && (
+                          <div className="changelog-version-items">
+                            {versionGroup.dateList?.map((dateGroup) => {
+                              const dateKey = `${monthGroup.monthKey}-${versionGroup.version}-${dateGroup.date}`
+                              const isDateExpanded = expandedDates.has(dateKey)
+                              return (
+                                <div key={dateKey} className="changelog-date-group">
+                                  <button
+                                    type="button"
+                                    className="changelog-date-header"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      toggleDate(monthGroup.monthKey, versionGroup.version, dateGroup.date)
+                                    }}
+                                  >
+                                    <span className="changelog-date-title">{formatDate(dateGroup.date)}</span>
+                                    <span className="changelog-date-count">
+                                      ({dateGroup.items.length} {monthLabel.items})
+                                    </span>
+                                    {isDateExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                                  </button>
+                                  {isDateExpanded && (
+                                    <div className="changelog-date-items">
+                                      {dateGroup.items.map((item, index) => {
+                                        if (item.type === 'update') {
+                                          return (
+                                            <div key={`update-${item.version}-${item.date}-${index}`} className="changelog-item">
+                                              <div className="changelog-item-header">
+                                                <div className="changelog-item-title-section">
+                                                  <h2 className="changelog-item-title">{item.title}</h2>
+                                                  <span className="changelog-item-version">v{item.version}</span>
+                                                  <span className="changelog-item-type-badge">
+                                                    {language === 'zh' ? '更新' : language === 'ja' ? '更新' : 'Update'}
+                                                  </span>
+                                                </div>
+                                              </div>
+                                              <p className="changelog-item-description">{item.description}</p>
+                                              <ul className="changelog-item-features">
+                                                {item.features?.map((feature, featureIndex) => (
+                                                  <li key={featureIndex}>{feature}</li>
+                                                ))}
+                                              </ul>
+                                            </div>
+                                          )
+                                        } else {
+                                          return (
+                                            <article key={`fix-${item.date}-${item.title}-${index}`} className="fix-card changelog-fix-item">
+                                              <div className="fix-header">
+                                                <div className="fix-meta">
+                                                  {item.version && (
+                                                    <span className="fix-version">
+                                                      v{item.version}
+                                                    </span>
+                                                  )}
+                                                  {item.issue && (
+                                                    <span className="fix-issue">
+                                                      Issue {Array.isArray(item.issue) ? item.issue.map(i => `#${i}`).join(', ') : `#${item.issue}`}
+                                                    </span>
+                                                  )}
+                                                  <span className="changelog-item-type-badge fix-badge">
+                                                    {language === 'zh' ? '修复' : language === 'ja' ? '修正' : 'Fix'}
+                                                  </span>
+                                                </div>
+                                                <h2 className="fix-name">{item.title}</h2>
+                                              </div>
+                                              <p className="fix-desc">{item.description}</p>
+                                              {item.details?.length > 0 && (
+                                                <ul className="fix-details">
+                                                  {item.details.map((detail, detailIndex) => (
+                                                    <li key={detailIndex}>{detail}</li>
+                                                  ))}
+                                                </ul>
+                                              )}
+                                            </article>
+                                          )
+                                        }
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       <div className="changelog-footer">

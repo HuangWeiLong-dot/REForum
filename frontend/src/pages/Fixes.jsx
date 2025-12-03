@@ -1,49 +1,144 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
+import { format } from 'date-fns'
+import zhCN from 'date-fns/locale/zh-CN'
+import enUS from 'date-fns/locale/en-US'
+import ja from 'date-fns/locale/ja'
 import { useLanguage } from '../context/LanguageContext'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import './Fixes.css'
 
-const fixes = [
+export const fixes = [
+  {
+    date: '2025-12-03',
+    version: '1.6.1',
+    issue: 13,
+    translations: {
+      zh: {
+        title: '加载动画主题适配与灰色方块残影问题',
+        description:
+          '修复首页加载动画在切换“整体页面基调”后颜色未同步，以及进度条周围出现灰色方块残影的问题。',
+        details: [
+          '将 Intro 加载页背景改为直接使用主题背景变量，跟随右上角主题色变化',
+          '进度条圆环、百分比文字和 LOADING 文案统一使用主题主色系变量渲染',
+          '移除进度条的模糊阴影，消除灰色方块感，视觉更干净',
+        ],
+      },
+      en: {
+        title: 'Loading Overlay Theme Sync & Gray Box Artifact',
+        description:
+          'Fixed the issue where the initial loading animation did not follow the global theme color and showed a gray box around the progress ring.',
+        details: [
+          'Intro screen background now uses the themed background token so it changes with the global color baseline',
+          'Progress ring, percentage text, and LOADING label all render with theme-driven primary colors',
+          'Removed the blur shadow around the ring to eliminate the gray block artifact and keep visuals clean',
+        ],
+      },
+      ja: {
+        title: 'ロードアニメーションのテーマ連動とグレーボックス残像の修正',
+        description:
+          '「全体のカラー基調」を変更してもロードアニメーションの色が追従せず、進捗リングの周りにグレーの四角い残像が出ていた問題を修正しました。',
+        details: [
+          'イントロロード画面の背景をテーマ背景トークンに切り替え、右上のテーマ色変更に連動',
+          '進捗リング・パーセンテージ表示・LOADING テキストをテーマのプライマリカラーで描画',
+          'リング周辺のぼかしシャドウを削除し、グレーの四角い残像をなくしてスッキリした見た目に調整',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.6.1',
+    issue: 12,
+    translations: {
+      zh: {
+        title: '更新日志最新条目日期缺失与徽章对比度低',
+        description: '修复更新日志页面“最新更新”区域没有显示发布日期、且“更新”徽章在浅色背景下难以辨认的问题。',
+        details: [
+          '在“最新更新”标题旁展示符合当前语言格式的发布日期',
+          '“更新/Update”徽章改为高对比度的胶囊样式，明暗主题都能清晰辨认',
+          '日期标签重新设计为渐变芯片风格，整体视觉更现代',
+        ],
+      },
+      en: {
+        title: 'Changelog Latest Block Date & Badge Contrast',
+        description:
+          'Fixed the issue where the changelog’s “Latest Updates” block failed to show the release date and the Update badge looked washed out.',
+        details: [
+          'Shows the release date next to the heading in the correct locale format',
+          'Gives the “Update” badge a high-contrast pill design that works in light/dark themes',
+          'Refreshes the date chip styling with a modern gradient treatment',
+        ],
+      },
+      ja: {
+        title: '更新履歴の最新セクションでの日付表示とバッジ視認性',
+        description:
+          '更新履歴ページの「最新の更新」ブロックに日付が表示されず、アップデートバッジのコントラストが低かった問題を修正しました。',
+        details: [
+          '見出し横に現在の言語フォーマットで公開日を表示',
+          '「更新/Update」バッジを高コントラストのピル形状に刷新し、ライト/ダーク両テーマで読みやすく調整',
+          '日付チップをグラデーションを使ったモダンなスタイルに再設計',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-03',
+    version: '1.5.10',
+    issue: 11,
+    translations: {
+      zh: {
+        title: '通知和用户资料页面文本多语言支持',
+        description: '修复通知消息、用户资料页面和帖子卡片中文本未支持多语言的问题。',
+        details: [
+          '通知列表里的文字会随着语言切换而改变',
+          '个人资料页和帖子卡片的固定文案都补全了翻译',
+        ],
+      },
+      en: {
+        title: 'Notification & User Profile Text Multilingual Support',
+        description: 'Fixed issue where notification messages, user profile pages, and post card texts were not multilingual.',
+        details: [
+          'Notification items now translate together with the rest of the site',
+          'Profile pages and post cards have complete language coverage',
+        ],
+      },
+      ja: {
+        title: '通知とユーザープロフィールテキストの多言語サポート',
+        description: '通知メッセージ、ユーザープロフィールページ、投稿カードのテキストが多言語に対応していなかった問題を修正しました。',
+        details: [
+          '通知一覧の文言が選択中の言語に合わせて切り替わるようになりました',
+          'プロフィールや投稿カードの固定テキストもすべて翻訳を追加しました',
+        ],
+      },
+    },
+  },
   {
     date: '2025-12-03',
     version: '1.5.8',
+    issue: 10,
     translations: {
       zh: {
         title: '错误提示信息多语言支持',
-        description: '修复错误提示信息未支持多语言的问题，所有错误提示现在都能根据用户选择的语言正确显示。',
+        description: '修复错误提示信息未支持多语言的问题。',
         details: [
-          '在 LanguageContext 中添加完整的错误提示翻译键（error.*），涵盖所有用户可见的错误场景',
-          '为板块分类名称创建翻译映射（category.*），支持中文、英文、日文三种语言',
-          '更新所有组件使用翻译函数显示错误信息和分类名称',
-          '添加 getCategoryName() 函数处理分类名称翻译，自动根据当前语言返回对应翻译',
-          '在组件层面实现错误消息的自动翻译检测，如果错误消息是翻译键则自动翻译',
-          '修改默认语言为英文，新用户首次访问时看到英文界面',
-          '更新 Home.jsx、ErrorBoundary.jsx、AuthContext.jsx 等所有涉及错误提示的组件',
+          '所有错误提示都能按语言显示，不再只出现中文',
+          '板块分类名称也会自动翻译，界面更加统一',
         ],
       },
       en: {
         title: 'Error Message Multilingual Support',
-        description: 'Fixed issue where error messages were not multilingual; all error messages now display correctly based on user-selected language.',
+        description: 'Fixed issue where error messages were not multilingual.',
         details: [
-          'Added complete error message translation keys (error.*) in LanguageContext covering all user-visible error scenarios',
-          'Created translation mapping for category names (category.*) supporting Chinese, English, and Japanese',
-          'Updated all components to use translation functions for error messages and category names',
-          'Added getCategoryName() function to handle category name translation, automatically returning translation based on current language',
-          'Implemented automatic translation detection at component level - if error message is a translation key, it is automatically translated',
-          'Changed default language to English so new users see English interface on first visit',
-          'Updated all components involving error messages including Home.jsx, ErrorBoundary.jsx, AuthContext.jsx, etc.',
+          'Error messages now appear in the language you select',
+          'Category names match the current language across the site',
         ],
       },
       ja: {
         title: 'エラーメッセージの多言語サポート',
-        description: 'エラーメッセージが多言語に対応していなかった問題を修正し、すべてのエラーメッセージがユーザーが選択した言語で正しく表示されるようになりました。',
+        description: 'エラーメッセージが多言語に対応していなかった問題を修正しました。',
         details: [
-          'LanguageContext に完全なエラーメッセージの翻訳キー（error.*）を追加し、ユーザーに表示されるすべてのエラーシナリオをカバー',
-          'カテゴリ名の翻訳マッピング（category.*）を作成し、中国語、英語、日本語の3言語をサポート',
-          'すべてのコンポーネントを更新し、エラーメッセージとカテゴリ名に翻訳関数を使用',
-          'getCategoryName() 関数を追加してカテゴリ名の翻訳を処理し、現在の言語に基づいて自動的に翻訳を返す',
-          'コンポーネントレベルでエラーメッセージの自動翻訳検出を実装 - エラーメッセージが翻訳キーの場合、自動的に翻訳される',
-          'デフォルト言語を英語に変更し、新規ユーザーが初回訪問時に英語インターフェースを表示',
-          'Home.jsx、ErrorBoundary.jsx、AuthContext.jsx など、エラーメッセージに関連するすべてのコンポーネントを更新',
+          'エラーメッセージが選択中の言語で表示されるようになりました',
+          'カテゴリ名もすべてのページで同じ言語に揃いました',
         ],
       },
     },
@@ -51,38 +146,30 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.7',
+    issue: [5, 6],
     translations: {
       zh: {
         title: '语言切换菜单与移动端通知显示问题',
-        description: '修复桌面端语言切换菜单难以点击，以及部分设备上通知列表仍然显示不全的问题。',
+        description: '修复桌面端语言切换菜单难以点击，以及移动端通知列表显示不全的问题。',
         details: [
-          '移除语言切换菜单对鼠标悬浮事件的依赖，仅通过点击按钮打开 / 关闭菜单',
-          '使用全局点击监听在点击外部区域或选择语言后关闭菜单，避免误触导致菜单瞬间消失',
-          '再次调整移动端通知下拉菜单的最大高度，减少多余留白，并为列表提供更大的可滚动区域',
-          '移除通知列表内部的固定 max-height，改为使用 flex: 1 自动分配高度，长列表可完整浏览',
-          '为通知头部区域添加 flex-shrink: 0，确保标题在极端屏幕下也不会被压缩或遮挡',
+          '语言切换菜单改为点击开关',
+          '优化移动端通知列表布局',
         ],
       },
       en: {
         title: 'Language Menu Clickability & Mobile Notification Visibility',
-        description: 'Fixed issues where the language switcher menu was hard to click on desktop and notification lists were still partially hidden on some mobile devices.',
+        description: 'Fixed issues where the language switcher menu was hard to click on desktop and notification lists were partially hidden on mobile devices.',
         details: [
-          'Removed hover-based open/close behavior for the language switcher and switched to click-only toggling',
-          'Added global click handling so the language menu closes only when clicking outside or after selecting a language',
-          'Adjusted mobile notification dropdown max-height to reduce excessive padding and provide more space for the list',
-          'Removed fixed max-height from the notification list itself and used flex: 1 so long lists can scroll fully within the container',
-          'Added flex-shrink: 0 to the notification header to prevent it from being squashed on very small screens',
+          'Language switcher menu uses click toggle',
+          'Optimized mobile notification list layout',
         ],
       },
       ja: {
         title: '言語メニューのクリック性とモバイル通知の表示改善',
-        description: 'デスクトップで言語切替メニューがクリックしづらい問題と、一部モバイル端末で通知リストが依然として完全に表示されない問題を修正しました。',
+        description: 'デスクトップで言語切替メニューがクリックしづらい問題と、モバイル端末で通知リストが完全に表示されない問題を修正しました。',
         details: [
-          '言語切替メニューの開閉をホバー依存からクリックのみに変更し、誤って閉じてしまう状況を防止',
-          '外側のクリックまたは言語選択時にのみメニューを閉じるよう、グローバルクリックハンドリングを追加',
-          'モバイル通知ドロップダウンの最大高さを調整し、余計な余白を減らしてリストの表示領域を拡大',
-          '通知リストに設定されていた固定 max-height を撤廃し、flex: 1 によってコンテナ内で十分なスクロール領域を確保',
-          '非常に小さい画面でもヘッダーが押しつぶされないよう、通知ヘッダーに flex-shrink: 0 を追加',
+          '言語切替メニューをクリック切り替えに変更',
+          'モバイル通知リストのレイアウトを最適化',
         ],
       },
     },
@@ -90,44 +177,36 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.5',
+    issue: 8,
     translations: {
       zh: {
         title: '标签系统物理效果和交互性增强',
         description: '集成Matter.js物理引擎，实现标签的真实物理效果和拖拽交互功能。',
         details: [
-          '使用Matter.js物理引擎实现真实的物理模拟（重力、碰撞、摩擦、弹性）',
-          '标签从容器上方掉落，受重力影响自然下落并堆叠',
-          '支持鼠标和触摸拖拽标签，标签之间会发生真实碰撞',
-          '简化标签样式，移除色块和装饰，改为简洁的纯文字样式',
-          '减小标签占地面积，提高标签密度',
-          '优化响应式布局，确保在移动端正常显示且不影响其他内容',
-          '容器样式与整体页面样式统一，使用主题变量',
+          '标签会像真物一样漂浮、堆叠，互动更有趣',
+          '支持鼠标或触屏拖拽，松开后会自然弹回',
+          '外观改成简洁文字，保留更多空间展示内容',
+          '在手机端也能流畅显示，不会遮挡其他模块',
         ],
       },
       en: {
         title: 'Tag System Physics Effects and Interactivity Enhancement',
         description: 'Integrated Matter.js physics engine to implement real physics effects and drag interaction for tags.',
         details: [
-          'Used Matter.js physics engine for real physics simulation (gravity, collision, friction, restitution)',
-          'Tags fall from top of container, naturally drop and stack under gravity',
-          'Support mouse and touch drag for tags with real collision detection',
-          'Simplified tag styles, removed color blocks and decorations, using clean text-only style',
-          'Reduced tag footprint, increased tag density',
-          'Optimized responsive layout to ensure proper display on mobile devices without affecting other content',
-          'Container styles unified with overall page styles using theme variables',
+          'Tags now float and stack with playful physics, making the area feel alive',
+          'You can drag tags with mouse or touch and watch them bounce back',
+          'Visuals switch to clean text badges so more tags fit in view',
+          'Mobile layout stays smooth and doesn’t cover other content',
         ],
       },
       ja: {
         title: 'タグシステムの物理効果とインタラクティブ性の強化',
         description: 'Matter.js物理エンジンを統合し、タグのリアルな物理効果とドラッグインタラクション機能を実装しました。',
         details: [
-          'Matter.js物理エンジンを使用してリアルな物理シミュレーション（重力、衝突、摩擦、弾性）を実現',
-          'タグがコンテナの上から落下し、重力の影響で自然に落下して積み重なる',
-          'マウスとタッチでタグをドラッグ可能で、タグ間でリアルな衝突が発生',
-          'タグスタイルを簡素化し、色ブロックと装飾を削除し、シンプルなテキストのみのスタイルに変更',
-          'タグの占有面積を削減し、タグ密度を向上',
-          'レスポンシブレイアウトを最適化し、モバイルデバイスで正常に表示され、他のコンテンツに影響しないことを確認',
-          'コンテナスタイルを全体ページスタイルと統一し、テーマ変数を使用',
+          'タグがふわふわ動いて積み重なるようになり、眺めていて楽しくなりました',
+          'マウスやタッチでタグをドラッグでき、放すと自然に戻ります',
+          '色ブロックをなくし、テキスト中心のスッキリした見た目に変更',
+          'モバイルでも他の内容を邪魔せず、滑らかに表示されます',
         ],
       },
     },
@@ -135,38 +214,30 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.4',
+    issue: 7,
     translations: {
       zh: {
         title: 'Header左右边距不对称问题',
         description: '修复Header中左侧Logo与左侧边缘的距离和右侧按钮组合与右侧边缘的距离不一致的历史遗留问题。',
         details: [
-          '使用 minmax(0, 1fr) 确保Grid布局中左右列严格等宽',
-          '移除Logo和按钮组合的额外margin和padding，确保紧贴边缘',
-          '添加 width: fit-content 确保元素紧贴各自列的边缘',
-          '在所有响应式断点下保持左右对称',
-          '这是一个历史遗留问题，多个版本更新迭代都未修复',
+          '重新校准左右两侧的间距，让 Logo 与按钮距离边缘一样宽',
+          '清理多余留白，顶栏在所有尺寸下都保持对称',
         ],
       },
       en: {
         title: 'Header Left-Right Margin Asymmetry',
         description: 'Fixed historical issue where the distance from left logo to left edge and right button group to right edge were inconsistent.',
         details: [
-          'Used minmax(0, 1fr) to ensure strict equal width for left and right columns in Grid layout',
-          'Removed extra margin and padding from logo and button group to ensure they align to edges',
-          'Added width: fit-content to ensure elements align to their column edges',
-          'Maintained left-right symmetry at all responsive breakpoints',
-          'This was a historical issue that persisted through multiple version updates',
+          'Rebalanced the spacing so the logo and buttons sit the same distance from each edge',
+          'Cleaned up stray padding so the header stays symmetric on every screen size',
         ],
       },
       ja: {
         title: 'ヘッダーの左右マージンの非対称性',
         description: '左側のロゴと左端の距離、右側のボタングループと右端の距離が一致しない歴史的な問題を修正しました。',
         details: [
-          'minmax(0, 1fr) を使用してGridレイアウトで左右の列の幅を厳密に等しく設定',
-          'ロゴとボタングループの余分なマージンとパディングを削除し、端に揃えるように調整',
-          'width: fit-content を追加して要素が各列の端に揃うように設定',
-          'すべてのレスポンシブブレークポイントで左右対称を維持',
-          'これは複数のバージョン更新を経ても修正されなかった歴史的な問題でした',
+          '左右の余白を揃え、ロゴとボタンが同じ距離で並ぶように調整',
+          '不要な余白を削除し、どの画面サイズでも対称に表示されるようにしました',
         ],
       },
     },
@@ -174,41 +245,33 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.3',
+    issue: 6,
     translations: {
       zh: {
         title: '响应式设备上Header按钮排版错乱',
         description: '修复语言切换按钮移到右上角后，在响应式设备上出现的按钮排版错乱问题。',
         details: [
-          '优化992px、768px、576px、480px断点的按钮布局',
-          '确保按钮在所有断点下都能正确换行和排列，不会重叠或溢出',
-          '调整按钮padding和font-size，确保在小屏幕上可读且协调',
-          '优化语言菜单在小屏幕上的定位，确保不会超出视口',
-          '统一图标按钮和文字按钮的尺寸，保持视觉一致性',
-          '改进搜索框在超小屏幕上的显示效果',
+          '在不同屏幕宽度下重新安排按钮顺序和换行，避免堆叠',
+          '缩放按钮与图标，让小屏也能看清并方便点击',
+          '语言菜单和搜索框在手机上不会再跑出屏幕',
         ],
       },
       en: {
         title: 'Header Button Layout Issues on Responsive Devices',
         description: 'Fixed button layout issues on responsive devices after moving language switcher to top-right corner.',
         details: [
-          'Optimized button layout for 992px, 768px, 576px, and 480px breakpoints',
-          'Ensured buttons wrap correctly and align properly at all breakpoints without overlapping or overflow',
-          'Adjusted button padding and font-size for readability and consistency on small screens',
-          'Optimized language menu positioning on small screens to prevent viewport overflow',
-          'Unified icon button and text button sizes for visual consistency',
-          'Improved search box display on extra small screens',
+          'Buttons reorder gracefully across desktop, tablet, and phone widths',
+          'Sizes and spacing were tuned so icons stay readable on small screens',
+          'Language menu and search bar stay within the viewport on mobile',
         ],
       },
       ja: {
         title: 'レスポンシブデバイスでのヘッダーボタンのレイアウト問題',
         description: '言語切替ボタンを右上に移動した後、レスポンシブデバイスで発生したボタンのレイアウト問題を修正しました。',
         details: [
-          '992px、768px、576px、480pxのブレークポイントでボタンレイアウトを最適化',
-          'すべてのブレークポイントでボタンが正しく折り返し、整列し、重なりやオーバーフローが発生しないように調整',
-          '小画面での可読性と一貫性のため、ボタンのパディングとフォントサイズを調整',
-          '小画面での言語メニューの位置を最適化し、ビューポートを超えないように調整',
-          '視覚的一貫性のため、アイコンボタンとテキストボタンのサイズを統一',
-          '超小画面での検索ボックスの表示を改善',
+          '画面サイズごとにボタンの並びと折り返しを調整し、重ならないようにしました',
+          '小さな画面でも文字とアイコンが読みやすい大きさに統一',
+          '言語メニューや検索バーがスマホ画面からはみ出さないように調整',
         ],
       },
     },
@@ -216,38 +279,30 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.2',
+    issue: 5,
     translations: {
       zh: {
         title: '路由切换时标签位置重置',
         description: '修复切换页面（如更新日志、问题修复等）时，右侧标签浮动位置和动画参数被重置的问题。',
         details: [
-          '使用 useMemo 和 useRef 缓存标签位置和动画参数',
-          '仅在标签数据真正改变时才重新生成位置',
-          '标签签名机制确保相同标签数据使用相同位置',
-          '动画参数（持续时间、延迟、方向）持久化，避免每次渲染重新生成',
-          '切换页面时标签保持连续浮动，不会中断或重置',
+          '切换页面后标签不再瞬间换位置，浮动效果保持连贯',
+          '只有在标签内容真的更新时才会重新排列，视觉更稳定',
         ],
       },
       en: {
         title: 'Tag Position Reset on Route Change',
         description: 'Fixed issue where tag positions and animation parameters were reset when navigating between pages (e.g., changelog, fixes).',
         details: [
-          'Used useMemo and useRef to cache tag positions and animation parameters',
-          'Positions regenerate only when tag data actually changes',
-          'Tag signature mechanism ensures same tag data uses same positions',
-          'Animation parameters (duration, delay, direction) persist across renders',
-          'Tags maintain continuous floating animation when switching pages without interruption',
+          'Switching between pages no longer causes the floating tags to jump around',
+          'Tags only reshuffle when their data truly changes, keeping the motion smooth',
         ],
       },
       ja: {
         title: 'ルート切替時のタグ位置リセット',
         description: 'ページを切り替える際（更新履歴、問題修正など）に、右側のタグの浮遊位置とアニメーションパラメータがリセットされる問題を修正しました。',
         details: [
-          'useMemo と useRef を使用してタグ位置とアニメーションパラメータをキャッシュ',
-          'タグデータが実際に変更された場合のみ位置を再生成',
-          'タグ署名メカニズムにより、同じタグデータは同じ位置を使用',
-          'アニメーションパラメータ（継続時間、遅延、方向）を永続化し、毎回のレンダリングで再生成を防止',
-          'ページ切替時もタグが連続的に浮遊し、中断やリセットが発生しない',
+          'ページを移動してもタグの配置がリセットされず、動きが途切れなくなりました',
+          'タグ内容が変わったときだけ並び替わるので、見た目が安定しています',
         ],
       },
     },
@@ -255,44 +310,40 @@ const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.1',
+    issue: 1,
     translations: {
       zh: {
         title: '移动端通知下拉菜单显示不全',
         description: '修复移动设备上通知下拉菜单被截断或显示不完整的问题。',
         details: [
-          '通知下拉菜单在移动端改为固定定位，确保完全显示在视口内',
-          '调整下拉菜单的宽度和位置，适配不同屏幕尺寸',
-          '优化通知项的字体大小和内边距，提升移动端可读性',
-          '改进最大高度计算，避免内容被底部导航栏遮挡',
-          '添加 768px 和 480px 断点的响应式样式',
+          '通知列表会根据屏幕自动调节高度，不会被截断',
+          '在手机上阅读通知时字体和间距更加合适',
+          '列表始终完整显示，不再被底部区域遮住',
         ],
       },
       en: {
         title: 'Mobile Notification Dropdown Truncation',
         description: 'Fixed notification dropdown being cut off or incompletely displayed on mobile devices.',
         details: [
-          'Changed notification dropdown to fixed positioning on mobile for full visibility',
-          'Adjusted dropdown width and position to fit different screen sizes',
-          'Optimized notification item font sizes and padding for mobile readability',
-          'Improved max-height calculation to prevent content being blocked by bottom navigation',
-          'Added responsive styles for 768px and 480px breakpoints',
+          'Notification drawer now fits the screen and stays fully visible',
+          'Text sizes and spacing were tuned for easy reading on phones',
+          'Long lists scroll naturally without being hidden behind the bottom bar',
         ],
       },
       ja: {
         title: 'モバイル通知ドロップダウンの表示不全',
         description: 'モバイルデバイスで通知ドロップダウンが切り詰められたり不完全に表示される問題を修正しました。',
         details: [
-          'モバイルで通知ドロップダウンを固定配置に変更し、完全表示を確保',
-          'ドロップダウンの幅と位置を調整し、異なる画面サイズに対応',
-          '通知項目のフォントサイズと余白を最適化し、モバイルでの可読性を向上',
-          '最大高さの計算を改善し、コンテンツが下部ナビゲーションに遮られないように調整',
-          '768px と 480px のブレークポイントにレスポンシブスタイルを追加',
+          '通知ドロップダウンが画面サイズに合わせて表示され、途中で切れなくなりました',
+          'スマホでも読みやすい文字サイズと余白に調整',
+          '長いリストでも下部に隠れず最後までスクロールできます',
         ],
       },
     },
   },
   {
     date: '2025-12-01',
+    version: '1.3.2',
     translations: {
       zh: {
         title: '移动端响应式布局问题',
@@ -331,6 +382,7 @@ const fixes = [
   },
   {
     date: '2025-12-01',
+    version: '1.3.1',
     translations: {
       zh: {
         title: '频繁请求导致后端数据加载失败',
@@ -366,6 +418,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '问题修复列表排版统一',
@@ -395,6 +448,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '夜间模式下修复页和下拉菜单不可见',
@@ -424,6 +478,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '夜间模式表单文字发灰',
@@ -453,6 +508,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '导航按钮在小屏挤成竖排',
@@ -482,6 +538,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '移动端资料页排版错乱',
@@ -511,6 +568,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '搜索结果无法匹配关键词',
@@ -540,6 +598,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '图片跨域策略导致无法显示',
@@ -569,6 +628,7 @@ const fixes = [
   },
   {
     date: '2025-11-13',
+    version: '1.4.0',
     translations: {
       zh: {
         title: '图片地址拼接成 https://uploads/',
@@ -598,6 +658,7 @@ const fixes = [
   },
   {
     date: '2025-11-12',
+    version: '1.3.0',
     translations: {
       zh: {
         title: '删除帖子后标签仍显示',
@@ -642,40 +703,333 @@ const pageCopy = {
   },
 }
 
+const formatLocale = {
+  zh: zhCN,
+  en: enUS,
+  ja,
+}
+
+const formatPattern = {
+  zh: 'yyyy年MM月dd日',
+  en: 'MMM dd, yyyy',
+  ja: 'yyyy年MM月dd日',
+}
+
+const monthFormatPattern = {
+  zh: 'yyyy年MM月',
+  en: 'MMMM yyyy',
+  ja: 'yyyy年MM月',
+}
+
 const Fixes = () => {
   const { language } = useLanguage()
   const copy = pageCopy[language] || pageCopy.zh
+  const [expandedMonths, setExpandedMonths] = useState(new Set())
+  const [expandedVersions, setExpandedVersions] = useState(new Set())
+  const [expandedDates, setExpandedDates] = useState(new Set())
+  const locale = formatLocale[language] || zhCN
+  const datePattern = formatPattern[language] || formatPattern.zh
+  const monthPattern = monthFormatPattern[language] || monthFormatPattern.zh
 
   const localizedFixes = fixes.map((item) => {
     const translation = item.translations[language] || item.translations.zh
     return {
       date: item.date,
+      version: item.version,
+      issue: item.issue,
       ...translation,
     }
   })
+
+  // 按月份、版本和日期分组
+  const groupedByMonth = useMemo(() => {
+    const grouped = {}
+
+    localizedFixes.forEach((fix) => {
+      const date = new Date(fix.date)
+      const monthKey = format(date, 'yyyy-MM', { locale })
+      const monthLabel = format(date, monthPattern, { locale })
+      
+      // 版本号保持完整（如 1.5.10）
+      const versionKey = fix.version || 'unknown'
+      const dateKey = fix.date
+
+      if (!grouped[monthKey]) {
+        grouped[monthKey] = {
+          monthKey,
+          monthLabel,
+          versions: {},
+        }
+      }
+      
+      if (!grouped[monthKey].versions[versionKey]) {
+        grouped[monthKey].versions[versionKey] = {
+          version: versionKey,
+          dates: {},
+        }
+      }
+      
+      if (!grouped[monthKey].versions[versionKey].dates[dateKey]) {
+        grouped[monthKey].versions[versionKey].dates[dateKey] = {
+          date: dateKey,
+          items: [],
+        }
+      }
+      
+      grouped[monthKey].versions[versionKey].dates[dateKey].items.push(fix)
+    })
+
+    // 在每个版本内按日期排序（最新的在前）
+    Object.keys(grouped).forEach((monthKey) => {
+      Object.keys(grouped[monthKey].versions).forEach((versionKey) => {
+        const version = grouped[monthKey].versions[versionKey]
+        version.dateList = Object.values(version.dates).sort((a, b) => {
+          return new Date(b.date) - new Date(a.date)
+        })
+      })
+      
+      // 将版本对象转换为数组并按版本号排序（最新的在前）
+      grouped[monthKey].versionList = Object.values(grouped[monthKey].versions).sort((a, b) => {
+        const aParts = a.version.split('.').map(Number)
+        const bParts = b.version.split('.').map(Number)
+        for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+          const aPart = aParts[i] || 0
+          const bPart = bParts[i] || 0
+          if (bPart !== aPart) {
+            return bPart - aPart
+          }
+        }
+        return 0
+      })
+    })
+
+    // 返回排序后的月份数组
+    return Object.values(grouped).sort((a, b) => {
+      return b.monthKey.localeCompare(a.monthKey)
+    })
+  }, [localizedFixes, monthPattern, locale])
+
+  // 默认手风琴关闭状态，不自动展开
+
+  const toggleMonth = (monthKey) => {
+    setExpandedMonths((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(monthKey)) {
+        newSet.delete(monthKey)
+      } else {
+        newSet.add(monthKey)
+      }
+      return newSet
+    })
+  }
+
+  const toggleVersion = (monthKey, version) => {
+    const versionKey = `${monthKey}-${version}`
+    setExpandedVersions((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(versionKey)) {
+        newSet.delete(versionKey)
+      } else {
+        newSet.add(versionKey)
+      }
+      return newSet
+    })
+  }
+
+  const toggleDate = (monthKey, version, date) => {
+    const dateKey = `${monthKey}-${version}-${date}`
+    setExpandedDates((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(dateKey)) {
+        newSet.delete(dateKey)
+      } else {
+        newSet.add(dateKey)
+      }
+      return newSet
+    })
+  }
+
+  const formatDate = (dateString) => {
+    try {
+      return format(new Date(dateString), datePattern, { locale })
+    } catch {
+      return dateString
+    }
+  }
+
+  const monthLabels = {
+    zh: { items: '项' },
+    en: { items: 'items' },
+    ja: { items: '件' },
+  }
+  const monthLabel = monthLabels[language] || monthLabels.zh
+
+  // 获取最新的修复项（只取第一个）
+  const latestFix = useMemo(() => {
+    if (groupedByMonth.length === 0) return null
+    const firstMonth = groupedByMonth[0]
+    if (!firstMonth.versionList || firstMonth.versionList.length === 0) return null
+    const firstVersion = firstMonth.versionList[0]
+    if (!firstVersion.dateList || firstVersion.dateList.length === 0) return null
+    const firstDate = firstVersion.dateList[0]
+    if (!firstDate.items || firstDate.items.length === 0) return null
+    return firstDate.items[0] || null
+  }, [groupedByMonth])
+
+  const latestLabels = {
+    zh: { title: '最新修复' },
+    en: { title: 'Latest Fixes' },
+    ja: { title: '最新の修正' },
+  }
+  const latestLabel = latestLabels[language] || latestLabels.zh
 
   return (
     <div className="fixes-page">
       <h1 className="fixes-title">{copy.title}</h1>
       <p className="fixes-subtitle">{copy.subtitle}</p>
 
-      <div className="fixes-list">
-        {localizedFixes.map((fix) => (
-          <article className="fix-card" key={`${fix.date}-${fix.title}`}>
-            <div className="fix-header">
-              <span className="fix-date">{fix.date}</span>
-              <h2 className="fix-name">{fix.title}</h2>
+      {latestFix && (
+        <div className="fixes-latest">
+          <h2 className="fixes-latest-title">{latestLabel.title}</h2>
+          <div className="fixes-latest-items">
+            <article className="fix-card">
+              <div className="fix-header">
+                <div className="fix-meta">
+                  {latestFix.version && (
+                    <span className="fix-version">
+                      v{latestFix.version}
+                    </span>
+                  )}
+                  {latestFix.issue && (
+                    <span className="fix-issue">
+                      Issue {Array.isArray(latestFix.issue) ? latestFix.issue.map(i => `#${i}`).join(', ') : `#${latestFix.issue}`}
+                    </span>
+                  )}
+                </div>
+                <h2 className="fix-name">{latestFix.title}</h2>
+              </div>
+              <p className="fix-desc">{latestFix.description}</p>
+              {latestFix.details?.length > 0 && (
+                <ul className="fix-details">
+                  {latestFix.details.map((detail, detailIndex) => (
+                    <li key={detailIndex}>{detail}</li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          </div>
+        </div>
+      )}
+
+      <div className="fixes-months">
+        {groupedByMonth.map((monthGroup) => {
+          const isExpanded = expandedMonths.has(monthGroup.monthKey)
+          return (
+            <div key={monthGroup.monthKey} className="fixes-month-group">
+              <button
+                type="button"
+                className="fixes-month-header"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  toggleMonth(monthGroup.monthKey)
+                }}
+              >
+                <span className="fixes-month-title">{monthGroup.monthLabel}</span>
+                <span className="fixes-month-count">
+                  ({monthGroup.versionList ? monthGroup.versionList.reduce((sum, v) => sum + (v.dateList ? v.dateList.reduce((dSum, d) => dSum + d.items.length, 0) : 0), 0) : 0} {monthLabel.items})
+                </span>
+                {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+
+              {isExpanded && (
+                <div className="fixes-list">
+                  {monthGroup.versionList.map((versionGroup) => {
+                    const versionKey = `${monthGroup.monthKey}-${versionGroup.version}`
+                    const isVersionExpanded = expandedVersions.has(versionKey)
+                    return (
+                      <div key={`${monthGroup.monthKey}-${versionGroup.version}`} className="fixes-version-group">
+                        <button
+                          type="button"
+                          className="fixes-version-header"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            toggleVersion(monthGroup.monthKey, versionGroup.version)
+                          }}
+                        >
+                          <span className="fixes-version-title">v{versionGroup.version}</span>
+                          <span className="fixes-version-count">
+                            ({versionGroup.dateList ? versionGroup.dateList.reduce((sum, d) => sum + d.items.length, 0) : 0} {monthLabel.items})
+                          </span>
+                          {isVersionExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                        </button>
+                        {isVersionExpanded && (
+                          <div className="fixes-version-items">
+                            {versionGroup.dateList?.map((dateGroup) => {
+                              const dateKey = `${monthGroup.monthKey}-${versionGroup.version}-${dateGroup.date}`
+                              const isDateExpanded = expandedDates.has(dateKey)
+                              return (
+                                <div key={dateKey} className="fixes-date-group">
+                                  <button
+                                    type="button"
+                                    className="fixes-date-header"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      toggleDate(monthGroup.monthKey, versionGroup.version, dateGroup.date)
+                                    }}
+                                  >
+                                    <span className="fixes-date-title">{formatDate(dateGroup.date)}</span>
+                                    <span className="fixes-date-count">
+                                      ({dateGroup.items.length} {monthLabel.items})
+                                    </span>
+                                    {isDateExpanded ? <FaChevronUp /> : <FaChevronDown />}
+                                  </button>
+                                  {isDateExpanded && (
+                                    <div className="fixes-date-items">
+                                      {dateGroup.items.map((fix, index) => (
+                                        <article className="fix-card" key={`${fix.date}-${fix.title}-${index}`}>
+                                          <div className="fix-header">
+                                            <div className="fix-meta">
+                                              {fix.version && (
+                                                <span className="fix-version">
+                                                  v{fix.version}
+                                                </span>
+                                              )}
+                                              {fix.issue && (
+                                                <span className="fix-issue">
+                                                  Issue {Array.isArray(fix.issue) ? fix.issue.map(i => `#${i}`).join(', ') : `#${fix.issue}`}
+                                                </span>
+                                              )}
+                                            </div>
+                                            <h2 className="fix-name">{fix.title}</h2>
+                                          </div>
+                                          <p className="fix-desc">{fix.description}</p>
+                                          {fix.details?.length > 0 && (
+                                            <ul className="fix-details">
+                                              {fix.details.map((detail, detailIndex) => (
+                                                <li key={detailIndex}>{detail}</li>
+                                              ))}
+                                            </ul>
+                                          )}
+                                        </article>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
-            <p className="fix-desc">{fix.description}</p>
-            {fix.details?.length > 0 && (
-              <ul className="fix-details">
-                {fix.details.map((detail) => (
-                  <li key={detail}>{detail}</li>
-                ))}
-              </ul>
-            )}
-          </article>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
