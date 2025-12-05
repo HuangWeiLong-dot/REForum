@@ -15,6 +15,7 @@ REForum/
 ├── frontend/              # React 前端应用（Vite）
 ├── backend/               # Node.js/Express 后端服务
 ├── docs/                  # 部署与更新说明文档
+├── logs/                  # 更新日志与 Bug 跟踪文档
 ├── openapi.yaml           # API 规范文档（OpenAPI 3）
 ├── docker-compose.yml     # Docker 编排配置
 └── README.md
@@ -50,12 +51,15 @@ REForum/
 - ✅ 帖子点赞、浏览统计与热门排序
 - ✅ 版块与标签分类
 - ✅ 搜索（按标题、内容、作者）
+- ✅ 站内通知系统（新帖子通知）
+- ✅ 站外邮箱通知（新帖子发布时自动发送邮件）
 - ✅ 夜间模式与主题记忆
 - ✅ 多语言界面（中/英/日），含协议、隐私、关于等页面
 - ✅ 图片上传与帖子内图片展示
+- ✅ 年龄验证与 Cookie 同意提示
 - ✅ 响应式设计，移动端优化
 
-更多细节可参考 `docs/UPDATE_LOG.md` 与前端 `Changelog` / `Fixes` 页面。
+更多细节可参考 `logs/UPDATE_LOG.md`、`logs/BUG_TRACKER.md` 与前端 `Changelog` / `Fixes` 页面。
 
 ## 本地开发
 
@@ -126,14 +130,15 @@ VITE_API_BASE_URL=/api
 
 - 数据库连接（PostgreSQL）
 - JWT/认证配置
-- 邮件服务（Resend）用于验证码发送
+- 邮件服务（Resend）用于验证码发送和新帖子通知
+- 前端 URL（用于邮件中的链接）
 
 ## 文档
 
 - `openapi.yaml`：完整 API 规范
 - `docs/REDEPLOY.md`：线上环境重新部署指南
-- `docs/UPDATE_LOG.md`：功能更新与修复记录
-- `docs/RATE_LIMITING_EXPLANATION.md`：速率限制与前端防抖/节流设计说明
+- `logs/UPDATE_LOG.md`：功能更新与修复记录
+- `logs/BUG_TRACKER.md`：Bug 跟踪与修复记录
 
 前端站点内还提供「更新日志」「问题修复」等可视化页面，方便非技术用户理解改动。
 
@@ -153,3 +158,7 @@ VITE_API_BASE_URL=/api
 
 - 邮箱：3571676852@qq.com
 - 项目维护者：Ki Re I
+
+## 最后更新日期
+
+2025年12月5日

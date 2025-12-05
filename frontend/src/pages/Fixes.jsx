@@ -11,7 +11,7 @@ export const fixes = [
   {
     date: '2025-12-05',
     version: '1.8.0',
-    issue: 18,
+    issue: 27,
     translations: {
       zh: {
         title: '登录注册弹窗定位、用户协议弹窗闪烁与侧边栏动画卡顿',
@@ -57,7 +57,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.7.2',
-    issue: 17,
+    issue: 26,
     translations: {
       zh: {
         title: '移动端日历头部对齐、Cookie 提示遮挡与通知列表不同步',
@@ -97,7 +97,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.7.1',
-    issue: 15,
+    issue: 25,
     translations: {
       zh: {
         title: '日历按日期筛选与帖子数量徽章在真实数据下失效',
@@ -137,7 +137,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.7.0',
-    issue: 16,
+    issue: 24,
     translations: {
       zh: {
         title: '移动端工具集中的头像菜单被底部按钮遮挡',
@@ -174,7 +174,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.7.0',
-    issue: 14,
+    issue: 23,
     translations: {
       zh: {
         title: '移动端工具集按钮与工具列表排版统一',
@@ -217,7 +217,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.6.1',
-    issue: 13,
+    issue: 22,
     translations: {
       zh: {
         title: '加载动画主题适配与灰色方块残影问题',
@@ -254,7 +254,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.6.1',
-    issue: 12,
+    issue: 21,
     translations: {
       zh: {
         title: '更新日志最新条目日期缺失与徽章对比度低',
@@ -290,7 +290,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.5.10',
-    issue: 11,
+    issue: 20,
     translations: {
       zh: {
         title: '通知和用户资料页面文本多语言支持',
@@ -321,7 +321,7 @@ export const fixes = [
   {
     date: '2025-12-03',
     version: '1.5.8',
-    issue: 10,
+    issue: 19,
     translations: {
       zh: {
         title: '错误提示信息多语言支持',
@@ -352,7 +352,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.7',
-    issue: [5, 6],
+    issue: [17, 18],
     translations: {
       zh: {
         title: '语言切换菜单与移动端通知显示问题',
@@ -383,7 +383,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.5',
-    issue: 8,
+    issue: 16,
     translations: {
       zh: {
         title: '标签系统物理效果和交互性增强',
@@ -420,7 +420,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.4',
-    issue: 7,
+    issue: 15,
     translations: {
       zh: {
         title: 'Header左右边距不对称问题',
@@ -451,7 +451,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.3',
-    issue: 6,
+    issue: 14,
     translations: {
       zh: {
         title: '响应式设备上Header按钮排版错乱',
@@ -485,7 +485,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.2',
-    issue: 5,
+    issue: 13,
     translations: {
       zh: {
         title: '路由切换时标签位置重置',
@@ -516,7 +516,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.5.1',
-    issue: 1,
+    issue: 12,
     translations: {
       zh: {
         title: '移动端通知下拉菜单显示不全',
@@ -550,6 +550,7 @@ export const fixes = [
   {
     date: '2025-12-01',
     version: '1.3.2',
+    issue: 3,
     translations: {
       zh: {
         title: '移动端响应式布局问题',
@@ -589,6 +590,7 @@ export const fixes = [
   {
     date: '2025-12-01',
     version: '1.3.1',
+    issue: 2,
     translations: {
       zh: {
         title: '频繁请求导致数据加载失败',
@@ -625,6 +627,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 4,
     translations: {
       zh: {
         title: '问题修复列表排版统一',
@@ -655,6 +658,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 5,
     translations: {
       zh: {
         title: '夜间模式下修复页和下拉菜单不可见',
@@ -685,6 +689,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 6,
     translations: {
       zh: {
         title: '夜间模式表单文字发灰',
@@ -715,6 +720,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 7,
     translations: {
       zh: {
         title: '导航按钮在小屏挤成竖排',
@@ -745,6 +751,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 8,
     translations: {
       zh: {
         title: '移动端资料页排版错乱',
@@ -775,6 +782,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 9,
     translations: {
       zh: {
         title: '搜索结果无法匹配关键词',
@@ -805,6 +813,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 10,
     translations: {
       zh: {
         title: '图片跨域策略导致无法显示',
@@ -835,6 +844,7 @@ export const fixes = [
   {
     date: '2025-12-02',
     version: '1.4.0',
+    issue: 11,
     translations: {
       zh: {
         title: '图片地址拼接成 https://uploads/',
@@ -865,6 +875,7 @@ export const fixes = [
   {
     date: '2025-12-01',
     version: '1.3.0',
+    issue: 1,
     translations: {
       zh: {
         title: '删除帖子后标签仍显示',
