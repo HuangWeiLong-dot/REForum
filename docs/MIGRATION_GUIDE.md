@@ -49,6 +49,17 @@ psql -U postgres -d reforum -f backend/migrations/add_user_exp_and_received_like
 - 创建 `user_received_likes` 视图（统计用户获赞数）
 - 创建 `idx_users_exp` 索引
 
+#### 2.3 用户称号唯一性约束（必须执行）
+```bash
+psql -U postgres -d reforum -f backend/migrations/add_user_tag_unique_constraint.sql
+```
+**说明**：为 `users` 表的 `tag` 字段添加唯一性约束，确保每个用户的称号都是唯一的。
+
+**变更内容**：
+- 清理可能存在的重复 tag（保留最早用户的 tag）
+- 创建 `idx_users_tag_unique` 唯一索引（允许 NULL 值）
+- 允许多个用户没有称号（NULL），但不允许多个用户使用相同的非空称号
+
 **依赖关系**：此脚本依赖 `post_likes` 表，请确保已执行 `add_post_likes_table.sql`。
 
 ## 完整执行顺序
@@ -71,6 +82,8 @@ docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migration
 # 2. v1.9.0 新功能
 docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_username_tag_update_tracking.sql
 docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_user_exp_and_received_likes.sql
+docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_user_tag_unique_constraint.sql
+docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_user_tag_unique_constraint.sql
 ```
 
 **注意**：请根据实际的容器名称、数据库名称和用户名调整命令。
@@ -86,6 +99,7 @@ psql -U postgres -d reforum -f backend/migrations/add_post_views_table.sql
 # 2. v1.9.0 新功能
 psql -U postgres -d reforum -f backend/migrations/add_username_tag_update_tracking.sql
 psql -U postgres -d reforum -f backend/migrations/add_user_exp_and_received_likes.sql
+psql -U postgres -d reforum -f backend/migrations/add_user_tag_unique_constraint.sql
 ```
 
 ### 从 v1.8.0 升级到 v1.9.0
@@ -96,6 +110,7 @@ psql -U postgres -d reforum -f backend/migrations/add_user_exp_and_received_like
 # v1.9.0 新功能
 psql -U postgres -d reforum -f backend/migrations/add_username_tag_update_tracking.sql
 psql -U postgres -d reforum -f backend/migrations/add_user_exp_and_received_likes.sql
+psql -U postgres -d reforum -f backend/migrations/add_user_tag_unique_constraint.sql
 ```
 
 ## 使用 Docker 执行
@@ -112,6 +127,7 @@ docker ps | grep postgres
 # 如果容器名称是 reforum-db-1：
 docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_username_tag_update_tracking.sql
 docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_user_exp_and_received_likes.sql
+docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migrations/add_user_tag_unique_constraint.sql
 
 # 或者如果容器名称不同，使用以下命令查找：
 # docker ps --format "{{.Names}}" | grep -i db
@@ -128,10 +144,12 @@ docker exec -i reforum-db-1 psql -U HuangWeiLong -d forum_db < backend/migration
 # 复制文件到容器
 docker cp backend/migrations/add_username_tag_update_tracking.sql reforum-db-1:/tmp/
 docker cp backend/migrations/add_user_exp_and_received_likes.sql reforum-db-1:/tmp/
+docker cp backend/migrations/add_user_tag_unique_constraint.sql reforum-db-1:/tmp/
 
 # 在容器内执行
 docker exec -i reforum-db-1 psql -U postgres -d reforum -f /tmp/add_username_tag_update_tracking.sql
 docker exec -i reforum-db-1 psql -U postgres -d reforum -f /tmp/add_user_exp_and_received_likes.sql
+docker exec -i reforum-db-1 psql -U postgres -d reforum -f /tmp/add_user_tag_unique_constraint.sql
 ```
 
 ### 方法 3: 安装 postgresql-client（如果需要在主机上直接执行）
@@ -144,6 +162,7 @@ sudo apt install postgresql-client
 # 然后就可以在主机上直接执行
 psql -h localhost -p 5432 -U postgres -d reforum -f backend/migrations/add_username_tag_update_tracking.sql
 psql -h localhost -p 5432 -U postgres -d reforum -f backend/migrations/add_user_exp_and_received_likes.sql
+psql -h localhost -p 5432 -U postgres -d reforum -f backend/migrations/add_user_tag_unique_constraint.sql
 ```
 
 ## 验证迁移结果

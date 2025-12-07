@@ -74,6 +74,17 @@ class UserController {
             });
           }
         }
+
+        // 检查称号是否已被使用（如果提供了非空 tag）
+        if (tag && tag.trim() !== '') {
+          const existingUser = await User.findByTag(tag);
+          if (existingUser && existingUser.id !== userId) {
+            return res.status(400).json({
+              error: 'TAG_EXISTS',
+              message: '该称号已被使用',
+            });
+          }
+        }
       }
 
       const updatedUser = await User.update(userId, { avatar, bio, username, tag });

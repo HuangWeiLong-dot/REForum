@@ -50,6 +50,24 @@ class User {
     return result.rows[0] || null;
   }
 
+  // 根据称号查找用户
+  static async findByTag(tag) {
+    if (!tag) return null;
+    try {
+      const result = await query(
+        'SELECT id, username, email, avatar, bio, tag, exp, join_date, created_at, updated_at, username_updated_at, tag_updated_at FROM users WHERE tag = $1',
+        [tag]
+      );
+      return result.rows[0] || null;
+    } catch (error) {
+      // 如果 tag 字段不存在（向后兼容）
+      if (error.code === '42703' || error.message.includes('column') || error.message.includes('does not exist')) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
   // 根据用户名或邮箱查找用户（用于登录）
   static async findByUsernameOrEmail(login) {
     const result = await query(
