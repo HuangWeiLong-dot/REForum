@@ -200,7 +200,8 @@ const EditProfileModal = ({ user, onClose, onUpdate }) => {
 
       // 检查是否是测试用户
       const token = localStorage.getItem('token')
-      if (token?.startsWith('test-token-')) {
+      const tokenStr = String(token || '')
+      if (tokenStr.startsWith('test-token-')) {
         // 测试用户：直接更新本地存储
         const testUser = JSON.parse(localStorage.getItem('user') || '{}')
         const updatedUser = {

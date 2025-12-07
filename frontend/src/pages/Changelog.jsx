@@ -31,6 +31,46 @@ const changelogCopy = {
 const updates = [
   {
     date: '2025-12-08',
+    version: '1.9.3',
+    type: 'fix',
+    translations: {
+      zh: {
+        title: 'startsWith 方法调用错误修复',
+        description:
+          '修复用户界面报错 "s.startsWith is not a function" 的问题，确保所有字符串方法调用前都进行类型转换。',
+        details: [
+          '在所有调用 startsWith 方法前，使用 String() 将值转换为字符串',
+          '修复 AuthContext、LoginModal、RegisterModal 等组件中的类型转换问题',
+          '修复 UserProfile、dailyTasks、api、EditProfileModal 中的 startsWith 调用',
+          '确保所有字符串方法调用前都进行类型转换，防止类似错误',
+        ],
+      },
+      en: {
+        title: 'startsWith Method Call Error Fix',
+        description:
+          'Fixed the "s.startsWith is not a function" error in user interface, ensuring all string method calls perform type conversion before execution.',
+        details: [
+          'Use String() to convert values to strings before calling startsWith method',
+          'Fixed type conversion issues in AuthContext, LoginModal, RegisterModal components',
+          'Fixed startsWith calls in UserProfile, dailyTasks, api, EditProfileModal',
+          'Ensure all string method calls perform type conversion to prevent similar errors',
+        ],
+      },
+      ja: {
+        title: 'startsWith メソッド呼び出しエラーの修正',
+        description:
+          'ユーザーインターフェースで発生する "s.startsWith is not a function" エラーを修正し、すべての文字列メソッド呼び出し前に型変換を実行するようにしました。',
+        details: [
+          'startsWith メソッドを呼び出す前に、String() を使用して値を文字列に変換',
+          'AuthContext、LoginModal、RegisterModal などのコンポーネントの型変換問題を修正',
+          'UserProfile、dailyTasks、api、EditProfileModal の startsWith 呼び出しを修正',
+          'すべての文字列メソッド呼び出し前に型変換を実行し、類似のエラーを防止',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-08',
     version: '1.9.2',
     type: 'fix',
     translations: {

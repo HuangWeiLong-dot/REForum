@@ -4,6 +4,55 @@
 
 ---
 
+## 2025-12-08 - v1.9.3
+
+### Bug #035: startsWith 方法调用错误
+
+**严重程度**: 中等  
+**影响范围**: 所有用户（登录、注册、用户资料等功能）  
+**状态**: ✅ 已修复
+
+**问题描述**:
+- 用户界面报错：`error.occurred` 和 `s.startsWith is not a function`
+- 错误发生在多个组件中调用 `startsWith` 方法时
+- 当变量值为 `null`、`undefined` 或非字符串类型时，调用 `startsWith` 方法会抛出错误
+- 影响登录、注册、用户资料、编辑资料等多个功能模块
+
+**复现步骤**:
+1. 访问用户界面，触发登录、注册或查看用户资料等操作
+2. 控制台出现错误：`TypeError: s.startsWith is not a function` 或类似错误
+3. 界面显示 `error.occurred` 错误提示
+
+**根本原因**:
+- 多个组件中直接对可能为 `null`、`undefined` 或非字符串类型的值调用 `startsWith` 方法
+- `token`、`userId`、`user.id`、`result.error` 等变量可能不是字符串类型
+- 使用可选链 `?.` 只能防止 `null`/`undefined` 错误，但不能防止非字符串类型错误
+
+**修复方案**:
+- 在所有调用 `startsWith` 方法前，使用 `String()` 将值转换为字符串
+- 修复 `AuthContext.jsx` 中的 `isTestUser` 函数
+- 修复 `LoginModal.jsx` 和 `RegisterModal.jsx` 中的错误处理逻辑
+- 修复 `UserProfile.jsx`、`dailyTasks.js`、`api.js`、`EditProfileModal.jsx` 中的 `startsWith` 调用
+- 确保所有字符串方法调用前都进行类型转换
+
+**修复文件**:
+- `frontend/src/context/AuthContext.jsx`
+- `frontend/src/components/LoginModal.jsx`
+- `frontend/src/components/RegisterModal.jsx`
+- `frontend/src/pages/UserProfile.jsx`
+- `frontend/src/utils/dailyTasks.js`
+- `frontend/src/services/api.js`
+- `frontend/src/components/EditProfileModal.jsx`
+
+**测试验证**:
+- ✅ 验证登录功能不再出现 `startsWith` 错误
+- ✅ 验证注册功能不再出现 `startsWith` 错误
+- ✅ 验证用户资料页面正常显示
+- ✅ 验证编辑资料功能正常工作
+- ✅ 验证所有使用 `startsWith` 的地方都正确处理了类型转换
+
+---
+
 ## 2025-12-08 - v1.9.2
 
 ### Bug #034: 经验值条显示不正确
@@ -1195,7 +1244,7 @@
 
 ### 按严重程度
 - **高**: 4 个 (#002, #010, #011, #031)
-- **中等**: 19 个 (#003, #007, #008, #009, #012, #013, #014, #017, #021, #023, #025, #026, #027, #028, #032, #033, #034)
+- **中等**: 20 个 (#003, #007, #008, #009, #012, #013, #014, #017, #021, #023, #025, #026, #027, #028, #032, #033, #034, #035)
 - **低**: 11 个 (#001, #004, #005, #006, #015, #016, #019, #022, #024, #029, #030)
 
 ### 按影响范围
@@ -1207,7 +1256,7 @@
 - **非中文用户**: 1 个
 
 ### 按状态
-- **已修复**: 34 个
+- **已修复**: 35 个
 - **待修复**: 0 个
 - **已知问题**: 0 个
 
@@ -1242,4 +1291,6 @@
 - 2025-12-08: 添加 v1.9.2 的 Bug 修复记录（#033, #034）
   - Bug #033: 帖子中作者等级不更新
   - Bug #034: 经验值条显示不正确
+- 2025-12-08: 添加 v1.9.3 的 Bug 修复记录（#035）
+  - Bug #035: startsWith 方法调用错误
 

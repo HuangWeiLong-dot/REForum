@@ -198,7 +198,9 @@ export const AuthProvider = ({ children }) => {
   // 检查是否是测试用户
   const isTestUser = () => {
     if (!token || !user) return false
-    return token.startsWith('test-token-') || user.id?.startsWith('test-user-')
+    const tokenStr = String(token || '')
+    const userId = String(user.id || '')
+    return tokenStr.startsWith('test-token-') || userId.startsWith('test-user-')
   }
 
   const value = {

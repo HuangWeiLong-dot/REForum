@@ -62,10 +62,11 @@ const LoginModal = ({ onClose, onSwitchToRegister }) => {
       navigate('/')
     } else {
       // 存储错误键或原始错误消息
-      if (result.error?.startsWith('error.')) {
-        setErrorKey(result.error)
+      const errorStr = String(result.error || '')
+      if (errorStr.startsWith('error.')) {
+        setErrorKey(errorStr)
       } else {
-        setError(result.error)
+        setError(errorStr)
       }
     }
     

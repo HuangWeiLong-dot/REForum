@@ -80,7 +80,8 @@ export const authAPI = {
 
 // 检查是否是测试用户ID
 const isTestUserId = (userId) => {
-  return userId?.startsWith('test-user-') || userId === 'test-user-001'
+  const userIdStr = String(userId || '')
+  return userIdStr.startsWith('test-user-') || userIdStr === 'test-user-001'
 }
 
 // 生成测试用户数据
@@ -109,7 +110,8 @@ const getTestUserData = (userId) => {
 export const userAPI = {
   getProfile: () => {
     const token = localStorage.getItem('token')
-    if (token?.startsWith('test-token-')) {
+    const tokenStr = String(token || '')
+    if (tokenStr.startsWith('test-token-')) {
       const user = JSON.parse(localStorage.getItem('user') || '{}')
       return getTestUserData(user.id)
     }

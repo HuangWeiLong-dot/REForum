@@ -34,7 +34,8 @@ const UserProfile = () => {
     try {
       // 检查是否是测试用户
       const token = localStorage.getItem('token')
-      const isTestUser = token?.startsWith('test-token-')
+      const tokenStr = String(token || '')
+      const isTestUser = tokenStr.startsWith('test-token-')
       
       if (isTestUser) {
         // 测试用户：使用模拟数据
@@ -185,7 +186,7 @@ const UserProfile = () => {
   const isOwnProfile = isAuthenticated && currentUser && (
     parseInt(userId) === currentUser.id || 
     userId === currentUser.id || 
-    (currentUser.id?.startsWith('test-user-') && userId === currentUser.id)
+    (String(currentUser.id || '').startsWith('test-user-') && userId === currentUser.id)
   )
 
   const handleProfileUpdate = (updatedUser) => {

@@ -133,10 +133,11 @@ const RegisterModal = ({ onClose, onSwitchToLogin }) => {
       navigate('/')
     } else {
       // 存储错误键或原始错误消息
-      if (result.error?.startsWith('error.') || result.error?.startsWith('auth.error.')) {
-        setErrorKey(result.error)
+      const errorStr = String(result.error || '')
+      if (errorStr.startsWith('error.') || errorStr.startsWith('auth.error.')) {
+        setErrorKey(errorStr)
       } else {
-        setError(result.error)
+        setError(errorStr)
       }
     }
     

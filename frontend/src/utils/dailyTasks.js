@@ -64,7 +64,8 @@ export const getUserExp = (user = null) => {
   // 如果传入了用户对象，优先使用用户对象中的 exp
   if (user && (user.exp !== undefined && user.exp !== null)) {
     // 如果是测试用户，并且用户对象中有exp，则使用用户对象中的exp
-    if (user.id?.startsWith('test-user-') || user.id === 'test-user-001') {
+    const userId = String(user.id || '')
+    if (userId.startsWith('test-user-') || userId === 'test-user-001') {
       return user.exp
     }
     // 如果是正常用户，也使用用户对象中的exp（从服务器获取的）
@@ -75,7 +76,8 @@ export const getUserExp = (user = null) => {
   const stored = localStorage.getItem(EXP_STORAGE_KEY)
   // 如果是测试用户，返回70级经验值
   const token = localStorage.getItem('token')
-  if (token?.startsWith('test-token-')) {
+  const tokenStr = String(token || '')
+  if (tokenStr.startsWith('test-token-')) {
     const testUser = JSON.parse(localStorage.getItem('user') || '{}')
     if (testUser.exp !== undefined && testUser.exp !== null) {
       return testUser.exp

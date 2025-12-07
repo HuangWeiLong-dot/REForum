@@ -6,7 +6,36 @@
 
 ---
 
-## 最新更新：帖子作者等级和经验值显示修复
+## 最新更新：startsWith 方法调用错误修复
+
+### 更新日期
+2025-12-08
+
+### 版本号
+v1.9.3
+
+### Bug修复
+- ✅ **startsWith 方法调用错误**：修复用户界面报错 `s.startsWith is not a function` 的问题，确保所有字符串方法调用前都进行类型转换
+
+### 修复内容
+- ✅ **类型安全修复**：在所有调用 `startsWith` 方法前，使用 `String()` 将值转换为字符串
+- ✅ **AuthContext 修复**：修复 `isTestUser` 函数中的 `token` 和 `user.id` 类型转换
+- ✅ **登录注册模块修复**：修复 `LoginModal` 和 `RegisterModal` 中的错误处理逻辑
+- ✅ **用户资料模块修复**：修复 `UserProfile`、`dailyTasks`、`api`、`EditProfileModal` 中的 `startsWith` 调用
+- ✅ **全面类型检查**：确保所有字符串方法调用前都进行类型转换，防止类似错误
+
+### 修改文件
+- `frontend/src/context/AuthContext.jsx` - 修复 isTestUser 函数中的类型转换
+- `frontend/src/components/LoginModal.jsx` - 修复错误处理中的类型转换
+- `frontend/src/components/RegisterModal.jsx` - 修复错误处理中的类型转换
+- `frontend/src/pages/UserProfile.jsx` - 修复 token 和 user.id 的类型转换
+- `frontend/src/utils/dailyTasks.js` - 修复 user.id 和 token 的类型转换
+- `frontend/src/services/api.js` - 修复 userId 和 token 的类型转换
+- `frontend/src/components/EditProfileModal.jsx` - 修复 token 的类型转换
+
+---
+
+## 历史更新：帖子作者等级和经验值显示修复
 
 ### 更新日期
 2025-12-08
@@ -1420,4 +1449,5 @@ DELETE /api/posts/:postId - 删除帖子（需要认证，仅限作者）
 - 2025-12-07: 添加 v1.9.0 的更新记录（用户资料页面重新设计、等级系统与经验值功能）
 - 2025-12-07: 添加 v1.9.1 的更新记录（登录和用户资料显示问题修复、编辑资料弹窗错误修复）
 - 2025-12-08: 添加 v1.9.2 的更新记录（帖子作者等级和经验值显示修复）
+- 2025-12-08: 添加 v1.9.3 的更新记录（startsWith 方法调用错误修复）
 
