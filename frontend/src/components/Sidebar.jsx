@@ -164,7 +164,17 @@ const Sidebar = () => {
           >
             <div className="sidebar-categories">
               {loading ? (
-                <p className="categories-loading">{t('right.loading')}</p>
+                <div className="categories-skeleton">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="category-skeleton-item">
+                      <div className="skeleton-dot"></div>
+                      <div className="skeleton-category-info">
+                        <div className="skeleton-line skeleton-line-sm" style={{ width: '80px', marginBottom: '0.25rem' }}></div>
+                        <div className="skeleton-line skeleton-line-sm" style={{ width: '60px' }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : categories.length === 0 ? (
                 <p className="categories-empty">{t('right.emptyCategories')}</p>
               ) : (

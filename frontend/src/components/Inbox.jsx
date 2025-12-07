@@ -221,8 +221,14 @@ const Inbox = ({ showLabel = false }) => {
 
           <div className="inbox-list">
             {loading ? (
-              <div className="inbox-loading">
-                {t('header.loading') || '加载中...'}
+              <div className="inbox-skeleton">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="inbox-item-skeleton">
+                    <div className="skeleton-line skeleton-line-md" style={{ width: '80%', marginBottom: '0.5rem' }}></div>
+                    <div className="skeleton-line skeleton-line-sm" style={{ width: '60%', marginBottom: '0.5rem' }}></div>
+                    <div className="skeleton-line skeleton-line-sm" style={{ width: '40%' }}></div>
+                  </div>
+                ))}
               </div>
             ) : notifications.length === 0 ? (
               <div className="inbox-empty">

@@ -7,6 +7,9 @@ import { postAPI, commentAPI } from '../services/api'
 import { FaComment, FaHeart, FaRegHeart } from 'react-icons/fa'
 import CommentList from '../components/CommentList'
 import { useLanguage } from '../context/LanguageContext'
+import { isOfficialTag, getOfficialTagText } from '../utils/tagUtils'
+import { getUserExp, updateTask } from '../utils/dailyTasks'
+import LevelBadge from '../components/LevelBadge'
 import './PostDetail.css'
 
 const PostDetail = () => {
@@ -100,6 +103,10 @@ const PostDetail = () => {
     try {
       await commentAPI.createComment(postId, { content: commentText })
       setCommentText('')
+      
+      // 更新每日任务：评论
+      updateTask('comment')
+      
       // 重新获取评论和帖子数据
       await Promise.all([fetchComments(), fetchPost()])
     } catch (error) {
@@ -131,7 +138,26 @@ const PostDetail = () => {
           <div className="skeleton-line skeleton-line-lg" />
           <div className="skeleton-line skeleton-line-md" />
           <div className="skeleton-line skeleton-line-md skeleton-line-fade" />
+          <div className="skeleton-line skeleton-line-md skeleton-line-fade" style={{ marginTop: '1rem' }} />
+          <div className="post-skeleton-footer">
+            <div className="skeleton-line skeleton-line-sm" style={{ width: '80px' }} />
+            <div className="skeleton-line skeleton-line-sm" style={{ width: '100px' }} />
+          </div>
         </article>
+        <div className="comment-form-skeleton">
+          <div className="skeleton-line skeleton-line-md" style={{ width: '100%', height: '100px', borderRadius: '8px', marginBottom: '0.75rem' }} />
+          <div className="skeleton-line skeleton-line-sm" style={{ width: '120px', height: '36px', borderRadius: '6px' }} />
+        </div>
+        <div className="comments-skeleton">
+          <div className="skeleton-line skeleton-line-md" style={{ width: '150px', height: '1.5rem', marginBottom: '1.5rem' }} />
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="comment-skeleton-item">
+              <div className="skeleton-line skeleton-line-sm" style={{ width: '100px', marginBottom: '0.5rem' }} />
+              <div className="skeleton-line skeleton-line-md" style={{ width: '100%', marginBottom: '0.25rem' }} />
+              <div className="skeleton-line skeleton-line-md skeleton-line-fade" style={{ width: '80%' }} />
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -151,9 +177,18 @@ const PostDetail = () => {
                 <span className="post-separator">•</span>
               </>
             )}
-            <Link to={`/user/${post.author?.id}`} className="post-author">
-              {post.author?.username || '匿名用户'}
-            </Link>
+            <div className="post-author-wrapper">
+              <Link to={`/user/${post.author?.id}`} className="post-author">
+                {post.author?.username || '匿名用户'}
+              </Link>
+              {post.author?.tag && (
+                <span 
+                  className={`post-author-tag ${isOfficialTag(post.author.tag) ? 'official-tag' : ''}`}
+                >
+                  {isOfficialTag(post.author.tag) ? getOfficialTagText(t) : post.author.tag}
+                </span>
+              )}
+            </div>
             <span className="post-separator">•</span>
             <span className="post-time">{formatDate(post.createdAt)}</span>
           </div>

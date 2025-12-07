@@ -8,6 +8,9 @@ import { useAuth } from '../context/AuthContext'
 import { useLanguage } from '../context/LanguageContext'
 import { postAPI } from '../services/api'
 import { FaComment, FaHeart, FaRegHeart } from 'react-icons/fa'
+import { isOfficialTag, getOfficialTagText } from '../utils/tagUtils'
+import { getUserExp, updateTask } from '../utils/dailyTasks'
+import LevelBadge from '../components/LevelBadge'
 import './PostCard.css'
 
 const PostCard = ({ post }) => {
@@ -114,6 +117,11 @@ const PostCard = ({ post }) => {
       const response = await postAPI.toggleLike(post.id)
       setLiked(response.data.liked)
       setLikeCount(response.data.likeCount)
+      
+      // 更新每日任务：点赞（只在点赞时触发，取消点赞不触发）
+      if (response.data.liked) {
+        updateTask('like')
+      }
     } catch (error) {
       console.error('Failed to toggle like:', error)
       if (error.response?.status === 401) {
@@ -136,9 +144,24 @@ const PostCard = ({ post }) => {
               <span className="post-separator">•</span>
             </>
           )}
-          <Link to={`/user/${post.author?.id}`} className="post-author">
-            {post.author?.username || '匿名用户'}
-          </Link>
+          <div className="post-author-wrapper">
+            <Link to={`/user/${post.author?.id}`} className="post-author">
+              {post.author?.username || '匿名用户'}
+            </Link>
+            {post.author?.tag && (
+              <span 
+                className={`post-author-tag ${isOfficialTag(post.author.tag) ? 'official-tag' : ''}`}
+              >
+                {isOfficialTag(post.author.tag) ? getOfficialTagText(t) : post.author.tag}
+              </span>
+            )}
+            {post.author?.id && (
+              <LevelBadge 
+                exp={post.author?.exp || getUserExp()} 
+                size="small" 
+              />
+            )}
+          </div>
           <span className="post-separator">•</span>
           <span className="post-time">{formatDate(post.createdAt)}</span>
         </div>
@@ -216,31 +239,30 @@ const PostCard = ({ post }) => {
               <span>{post.commentCount || 0} {t('post.commentCountSuffix')}</span>
             </Link>
           </div>
-          <div className="post-stats">
-            <span>{post.viewCount || 0} {t('post.viewSuffix')}</span>
-          </div>
         </div>
 
-        {(post.tags && post.tags.length > 0) || post.createdAt ? (
+        {post.tags && post.tags.length > 0 && (
           <div className="post-tags-row">
-            {post.tags && post.tags.length > 0 && (
-              <div className="post-tags">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag.id || tag.name}
-                    className="post-tag"
-                    style={{ cursor: 'default', pointerEvents: 'none' }}
-                  >
-                    #{tag.name}
-                  </span>
-                ))}
-              </div>
-            )}
-            {post.createdAt && (
-              <span className="post-publish-date">{formatPublishDate(post.createdAt)}</span>
-            )}
+            <div className="post-tags">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag.id || tag.name}
+                  className="post-tag"
+                  style={{ cursor: 'default', pointerEvents: 'none' }}
+                >
+                  #{tag.name}
+                </span>
+              ))}
+            </div>
           </div>
-        ) : null}
+        )}
+
+        {post.createdAt && (
+          <div className="post-publish-date-container">
+            <span className="post-view-count">{post.viewCount || 0} {t('post.viewSuffix')}</span>
+            <span className="post-publish-date">{formatPublishDate(post.createdAt)}</span>
+          </div>
+        )}
       </div>
     </article>
   )

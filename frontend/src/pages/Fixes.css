@@ -43,7 +43,7 @@
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--primary-color);
-  background: linear-gradient(135deg, rgba(248, 113, 113, 0.16), rgba(248, 250, 252, 0.02));
+  background: rgba(248, 113, 113, 0.16);
   border: none;
   border-radius: var(--radius-full);
   padding: 0.4rem 1rem;

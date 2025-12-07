@@ -78,11 +78,50 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),
 }
 
+// 检查是否是测试用户ID
+const isTestUserId = (userId) => {
+  return userId?.startsWith('test-user-') || userId === 'test-user-001'
+}
+
+// 生成测试用户数据
+const getTestUserData = (userId) => {
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+  const testUser = {
+    id: userId || storedUser.id || 'test-user-001',
+    username: storedUser.username || 'testuser',
+    email: storedUser.email || 'test@example.com',
+    avatar: storedUser.avatar || null,
+    bio: storedUser.bio || '这是一个测试用户，用于开发和测试目的。',
+    tag: storedUser.tag || '测试用户',
+    postCount: 3,
+    commentCount: 12,
+    receivedLikes: 25,
+    exp: storedUser.exp || 15000, // 70级经验值
+    joinDate: storedUser.createdAt || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 30天前
+    createdAt: storedUser.createdAt || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    usernameUpdatedAt: storedUser.usernameUpdatedAt || null,
+    tagUpdatedAt: storedUser.tagUpdatedAt || null,
+  }
+  return Promise.resolve({ data: testUser })
+}
+
 // 用户 API
 export const userAPI = {
-  getProfile: () => api.get('/users/profile'),
+  getProfile: () => {
+    const token = localStorage.getItem('token')
+    if (token?.startsWith('test-token-')) {
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      return getTestUserData(user.id)
+    }
+    return api.get('/users/profile')
+  },
   updateProfile: (data) => api.put('/users/profile', data),
-  getUser: (userId) => api.get(`/users/${userId}`),
+  getUser: (userId) => {
+    if (isTestUserId(userId)) {
+      return getTestUserData(userId)
+    }
+    return api.get(`/users/${userId}`)
+  },
 }
 
 // 帖子 API

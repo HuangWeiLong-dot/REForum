@@ -145,12 +145,46 @@
   flex: 1;
 }
 
-.inbox-loading,
 .inbox-empty {
   padding: 2rem;
   text-align: center;
   color: var(--text-secondary);
   font-size: 0.875rem;
+}
+
+.inbox-skeleton {
+  padding: 0.5rem 0;
+}
+
+.inbox-item-skeleton {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.inbox-item-skeleton:last-child {
+  border-bottom: none;
+}
+
+/* Skeleton 动画样式 */
+.inbox-skeleton .skeleton-line {
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.15),
+    rgba(148, 163, 184, 0.35),
+    rgba(148, 163, 184, 0.15)
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .inbox-item {

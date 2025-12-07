@@ -22,10 +22,36 @@ export const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem('token')
       const storedUser = localStorage.getItem('user')
       
+      // 检查测试登录是否被禁用
+      const enableTestLogin = import.meta.env.VITE_ENABLE_TEST_LOGIN !== 'false' && 
+                             (import.meta.env.VITE_ENABLE_TEST_LOGIN === 'true' || 
+                              import.meta.env.DEV || 
+                              import.meta.env.MODE === 'development')
+      
+      // 如果测试登录被禁用，且当前是测试用户，清除登录状态
+      if (!enableTestLogin && storedToken && storedToken.startsWith('test-token-')) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        setToken(null)
+        setUser(null)
+        setLoading(false)
+        return
+      }
+      
       // 如果有存储的用户信息，先使用它（即使后端未运行也能显示界面）
       if (storedUser) {
         try {
-          setUser(JSON.parse(storedUser))
+          const parsedUser = JSON.parse(storedUser)
+          // 如果测试登录被禁用，且是测试用户，清除登录状态
+          if (!enableTestLogin && (parsedUser.id?.startsWith('test-user-') || storedToken?.startsWith('test-token-'))) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+            setToken(null)
+            setUser(null)
+            setLoading(false)
+            return
+          }
+          setUser(parsedUser)
         } catch (error) {
           console.error('Failed to parse stored user:', error)
         }
@@ -122,6 +148,51 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData))
   }
 
+  // 测试登录功能（仅在开发/测试环境启用）
+  const testLogin = (testUserData = null) => {
+    // 检查是否启用测试登录
+    // 如果 VITE_ENABLE_TEST_LOGIN 明确设置为 'false'，则禁用测试登录
+    // 否则，检查是否是开发环境或明确设置为 'true'
+    const enableTestLogin = import.meta.env.VITE_ENABLE_TEST_LOGIN !== 'false' && 
+                           (import.meta.env.VITE_ENABLE_TEST_LOGIN === 'true' || 
+                            import.meta.env.DEV || 
+                            import.meta.env.MODE === 'development')
+    
+    if (!enableTestLogin) {
+      console.warn('Test login is disabled')
+      return { success: false, error: 'Test login is disabled' }
+    }
+
+    // 默认测试用户数据
+          const defaultTestUser = {
+            id: 'test-user-001',
+            username: 'testuser',
+            email: 'test@example.com',
+            avatar: null,
+            tag: '测试用户',
+            exp: 15000, // 70级经验值
+            createdAt: new Date().toISOString(),
+          }
+
+    const userToLogin = testUserData || defaultTestUser
+    const testToken = `test-token-${Date.now()}`
+
+    // 设置用户和 token
+    setToken(testToken)
+    setUser(userToLogin)
+    localStorage.setItem('token', testToken)
+    localStorage.setItem('user', JSON.stringify(userToLogin))
+
+    console.log('Test login successful:', userToLogin)
+    return { success: true, user: userToLogin }
+  }
+
+  // 检查是否是测试用户
+  const isTestUser = () => {
+    if (!token || !user) return false
+    return token.startsWith('test-token-') || user.id?.startsWith('test-user-')
+  }
+
   const value = {
     user,
     token,
@@ -130,6 +201,8 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    testLogin,
+    isTestUser,
     isAuthenticated: !!token && !!user,
   }
 

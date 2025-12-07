@@ -902,6 +902,16 @@ components:
           type: string
           description: 个人简介
           example: "这是一个示例用户简介"
+        tag:
+          type: string
+          description: 用户标签/称号
+          maxLength: 20
+          example: "全栈工程师"
+        exp:
+          type: integer
+          description: 用户经验值，用于等级系统
+          example: 150
+          default: 0
         joinDate:
           type: string
           format: date-time
@@ -912,6 +922,22 @@ components:
         commentCount:
           type: integer
           example: 156
+        receivedLikes:
+          type: integer
+          description: 用户收到的总点赞数（所有帖子获得的点赞）
+          example: 125
+        usernameUpdatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 用户名最后修改时间，用于30天修改限制
+          example: "2023-01-15T10:30:00Z"
+        tagUpdatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 称号最后修改时间，用于30天修改限制
+          example: "2023-01-15T10:30:00Z"
 
     PublicUserProfile:
       type: object
@@ -924,6 +950,14 @@ components:
           type: string
         bio:
           type: string
+        tag:
+          type: string
+          description: 用户标签/称号
+          maxLength: 20
+        exp:
+          type: integer
+          description: 用户经验值，用于等级系统
+          default: 0
         joinDate:
           type: string
           format: date-time
@@ -931,15 +965,30 @@ components:
           type: integer
         commentCount:
           type: integer
+        receivedLikes:
+          type: integer
+          description: 用户收到的总点赞数（所有帖子获得的点赞）
 
     UpdateProfileRequest:
       type: object
       properties:
         avatar:
           type: string
+          description: 头像URL
         bio:
           type: string
           maxLength: 200
+          description: 个人简介
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: '^[a-zA-Z0-9_]+$'
+          description: 用户名（30天内只能修改一次）
+        tag:
+          type: string
+          maxLength: 20
+          description: 用户标签/称号（30天内只能修改一次）
 
     # ==================== 帖子相关 ====================
     CreatePostRequest:

@@ -168,14 +168,14 @@ export const mockTagAPI = {
 
 // 假用户数据
 const mockUsers = [
-  { id: 1, username: '开发者小明', avatar: '/avatars/admin1.jpg' },
-  { id: 2, username: '技术达人', avatar: '/avatars/admin2.jpg' },
-  { id: 3, username: '前端工程师', avatar: null },
-  { id: 4, username: '后端架构师', avatar: null },
-  { id: 5, username: '全栈开发者', avatar: null },
-  { id: 6, username: 'UI设计师', avatar: null },
-  { id: 7, username: '产品经理', avatar: null },
-  { id: 8, username: '测试工程师', avatar: null },
+  { id: 1, username: '开发者小明', avatar: '/avatars/admin1.jpg', tag: 'official' }, // 官方称号
+  { id: 2, username: '技术达人', avatar: '/avatars/admin2.jpg', tag: '全栈工程师' },
+  { id: 3, username: '前端工程师', avatar: null, tag: 'Vue爱好者' },
+  { id: 4, username: '后端架构师', avatar: null, tag: 'Node.js大师' },
+  { id: 5, username: '全栈开发者', avatar: null, tag: 'TypeScript玩家' },
+  { id: 6, username: 'UI设计师', avatar: null, tag: '设计达人' },
+  { id: 7, username: '产品经理', avatar: null, tag: '产品专家' },
+  { id: 8, username: '测试工程师', avatar: null, tag: 'QA工程师' },
 ]
 
 // 生成假帖子数据
@@ -426,6 +426,7 @@ CMD ["node", "server.js"]
         id: author.id,
         username: author.username,
         avatar: author.avatar,
+        tag: author.tag || '',
       },
       category: {
         id: category.id,

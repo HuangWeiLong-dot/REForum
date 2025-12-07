@@ -127,7 +127,21 @@ const Search = () => {
 
       <div className="posts-container">
         {loading ? (
-          <div className="loading">{t('search.loading')}</div>
+          <>
+            {[1, 2, 3].map((index) => (
+              <article key={index} className="post-card post-card-skeleton">
+                <div className="post-content">
+                  <div className="post-skeleton-header">
+                    <div className="skeleton-line skeleton-line-sm" />
+                    <div className="skeleton-line skeleton-line-sm" />
+                  </div>
+                  <div className="skeleton-line skeleton-line-lg" />
+                  <div className="skeleton-line skeleton-line-md" />
+                  <div className="skeleton-line skeleton-line-md skeleton-line-fade" />
+                </div>
+              </article>
+            ))}
+          </>
         ) : !searchQuery ? (
           <div className="empty-state">
             <p>{t('search.enterKeyword')}</p>

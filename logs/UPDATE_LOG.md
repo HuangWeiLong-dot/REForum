@@ -6,7 +6,96 @@
 
 ---
 
-## 最新更新：登录注册弹窗优化、合规提示完善、侧边栏动画优化与站外邮箱通知功能
+## 最新更新：PWA支持、用户资料页面重新设计、等级系统与经验值功能
+
+### 更新日期
+2025-12-07
+
+### 版本号
+v1.9.0
+
+### 小修复
+- ✅ **问题修复页面日期标签样式优化**：将"最新修复"旁边日期标签的渐变背景改为淡红色纯色背景，视觉效果更简洁统一
+
+### 更新内容
+- ✅ **PWA（渐进式 Web 应用）支持**：完整实现 PWA 功能，支持安装到主屏幕、离线访问、自动更新等特性
+- ✅ **PWA 安装提示**：智能安装提示组件，支持多语言，用户可以选择安装或稍后提醒
+- ✅ **Service Worker 自动更新**：使用 VitePWA 插件实现 Service Worker 自动注册和更新，支持离线缓存
+- ✅ **PWA Manifest 配置**：完整的 Web App Manifest，包含应用名称、图标、主题色、快捷方式等
+- ✅ **离线缓存策略**：配置 Workbox 缓存策略，支持静态资源缓存和 Google Fonts 缓存
+- ✅ **用户资料页面重新设计**：采用左右分栏布局，左侧显示头像、等级徽章和经验进度条，右侧显示用户名、称号、编辑按钮、简介和用户数据手风琴
+- ✅ **用户等级系统**：实现1-70级等级系统，每10级一个颜色区间（红、橙、黄、绿、蓝、靛、紫），70级显示彩虹渐变动画
+- ✅ **经验值系统**：用户通过每日任务获得经验值，经验值决定用户等级，经验进度条实时显示升级进度
+- ✅ **用户标签/称号功能**：用户可以自定义标签（最多20字符），支持特殊"官方"标签样式，30天内只能修改一次
+- ✅ **经验进度条**：在用户资料页面显示经验进度条，桌面端进度条从左侧延伸到右侧，显示当前经验进度和到下一级所需经验
+- ✅ **每日任务系统**：新增每日任务功能（发布帖子、点赞帖子、评论帖子），每个任务完成获得5经验值，任务状态通过手风琴展示
+- ✅ **用户数据手风琴**：将统计数据（帖子数、评论数、获赞数、加入时间）放入手风琴组件，默认收起，点击展开查看
+- ✅ **获赞数统计**：新增用户获赞数统计，统计用户所有帖子收到的点赞总数
+- ✅ **头像上传功能**：用户可以在编辑资料中上传头像，支持预览、删除，文件大小限制2MB
+- ✅ **用户简介编辑**：用户可以编辑个人简介，最多200字符，支持字符计数
+- ✅ **后端API更新**：用户资料API新增 `exp`（经验值）和 `receivedLikes`（获赞数）字段
+- ✅ **数据库迁移**：创建迁移脚本添加 `exp` 字段和 `user_received_likes` 视图
+
+### 修改文件
+- `frontend/vite.config.js` - 配置 VitePWA 插件，设置 Manifest 和 Workbox 缓存策略
+- `frontend/index.html` - 添加 PWA Manifest 链接和 Apple Touch Icon
+- `frontend/src/components/PWAInstallPrompt.jsx` - 新增 PWA 安装提示组件
+- `frontend/src/components/PWAInstallPrompt.css` - PWA 安装提示样式
+- `frontend/src/App.jsx` - 集成 PWA 安装提示组件
+- `frontend/src/context/LanguageContext.jsx` - 添加 PWA 安装提示多语言支持
+- `frontend/public/icons/` - 添加完整的 PWA 图标集（72x72 到 512x512）
+- `frontend/src/pages/UserProfile.jsx` - 重新设计用户资料页面布局，集成等级徽章、经验进度条、用户数据手风琴
+- `frontend/src/pages/UserProfile.css` - 优化桌面端和移动端布局，修复多语言下的排版问题
+- `frontend/src/components/EditProfileModal.jsx` - 添加头像上传、简介编辑、标签编辑功能
+- `frontend/src/components/EditProfileModal.css` - 优化编辑资料弹窗样式，修复对比度问题
+- `frontend/src/components/LevelBadge.jsx` - 新增等级徽章组件，支持不同尺寸和70级彩虹动画
+- `frontend/src/components/LevelBadge.css` - 等级徽章样式，包含彩虹渐变动画
+- `frontend/src/components/ExpProgressBar.jsx` - 新增经验进度条组件
+- `frontend/src/components/ExpProgressBar.css` - 经验进度条样式
+- `frontend/src/components/StatsAccordion.jsx` - 新增用户数据手风琴组件
+- `frontend/src/components/StatsAccordion.css` - 手风琴样式
+- `frontend/src/components/DailyTasks.jsx` - 新增每日任务组件
+- `frontend/src/components/DailyTasks.css` - 每日任务样式
+- `frontend/src/utils/levelSystem.js` - 等级系统工具函数（等级计算、颜色生成、彩虹渐变）
+- `frontend/src/utils/dailyTasks.js` - 每日任务工具函数（任务状态、经验值管理）
+- `frontend/src/utils/tagUtils.js` - 用户标签工具函数（官方标签判断）
+- `frontend/src/components/PostCard.jsx` - 添加作者标签和等级徽章显示
+- `frontend/src/components/PostCard.css` - 优化标签和等级徽章样式
+- `frontend/src/pages/PostDetail.jsx` - 添加作者标签和等级徽章显示
+- `frontend/src/context/LanguageContext.jsx` - 添加等级、任务、标签相关翻译
+- `backend/models/User.js` - 更新用户模型，支持 `exp` 字段和 `receivedLikes` 统计
+- `backend/controllers/userController.js` - 更新用户控制器，返回 `exp` 和 `receivedLikes`
+- `backend/migrations/add_user_exp_and_received_likes.sql` - 数据库迁移脚本
+- `openapi.yaml` - 更新API文档，添加新字段说明
+
+### 技术实现
+- **PWA 配置**：使用 VitePWA 插件自动生成 Service Worker 和 Manifest，支持自动更新和离线缓存
+- **安装提示逻辑**：监听 `beforeinstallprompt` 事件，延迟3秒显示提示，用户选择后记录到 localStorage 避免重复提示
+- **缓存策略**：静态资源使用缓存优先策略，Google Fonts 使用缓存优先并设置1年过期时间
+- **等级系统算法**：1级到2级需要30经验，之后每级递增5经验，70级需要15000总经验
+- **颜色渐变系统**：每10级一个颜色区间，在区间内从淡色渐变到深色，70级使用动态彩虹渐变
+- **经验进度计算**：使用 `getLevelProgress` 计算当前等级进度（0-1），`getExpToNextLevel` 计算到下一级所需经验
+- **每日任务系统**：使用 localStorage 存储每日任务状态，每天自动重置，完成任务自动增加经验值
+- **获赞数统计**：通过数据库视图 `user_received_likes` 实时统计用户所有帖子收到的点赞总数
+- **手风琴组件**：使用 React state 控制展开/收起，CSS 动画实现平滑过渡
+- **响应式布局**：桌面端左右分栏，移动端上下堆叠，经验进度条在桌面端延伸整行
+
+### 对用户的影响
+- 用户可以将 REForum 安装到手机主屏幕，像原生应用一样使用，支持离线访问
+- PWA 安装提示会在合适的时机出现，用户可以选择安装或稍后提醒
+- 应用支持自动更新，用户无需手动刷新即可获得最新版本
+- 离线缓存功能让用户在网络不稳定时也能访问已缓存的内容
+- 用户资料页面布局更加清晰，信息层次分明，易于查看和管理
+- 等级系统增加了用户参与度和成就感，通过完成任务提升等级
+- 经验进度条直观显示升级进度，激励用户继续活跃
+- 用户标签功能让用户个性化展示，官方标签突出特殊身份
+- 每日任务系统引导用户参与社区互动，完成任务获得经验奖励
+- 统计数据通过手风琴收起，节省页面空间，需要时展开查看
+- 头像和简介编辑功能完善了用户资料管理能力
+
+---
+
+## 历史更新：登录注册弹窗优化、合规提示完善、侧边栏动画优化与站外邮箱通知功能
 
 ### 更新日期
 2025-12-05
@@ -1277,4 +1366,5 @@ DELETE /api/posts/:postId - 删除帖子（需要认证，仅限作者）
 - 2025-12-03: 添加 v1.5.3、v1.5.4、v1.5.5、v1.5.6、v1.5.7、v1.5.8、v1.5.9、v1.5.10、v1.6.1、v1.7.0、v1.7.1、v1.7.2 的更新记录
 - 2025-12-05: 添加 v1.8.0 的更新记录（登录注册弹窗优化、合规提示完善、侧边栏动画优化与站外邮箱通知功能）
 - 2025-12-05: 简化更新日志和问题修复页面内容，修复版本日期错误，重新分配 issue 号从最早版本开始连续编号
+- 2025-12-07: 添加 v1.9.0 的更新记录（用户资料页面重新设计、等级系统与经验值功能）
 

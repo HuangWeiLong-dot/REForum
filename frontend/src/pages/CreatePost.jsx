@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { postAPI, categoryAPI } from '../services/api'
 import ImageUpload from '../components/ImageUpload'
 import { useLanguage } from '../context/LanguageContext'
+import { updateTask } from '../utils/dailyTasks'
 import './CreatePost.css'
 
 const CreatePost = () => {
@@ -92,6 +93,9 @@ const CreatePost = () => {
       }
 
       const response = await postAPI.createPost(postData)
+      
+      // 更新每日任务：发布帖子
+      updateTask('post')
       
       // 触发自定义事件，通知标签组件有新帖子创建
       window.dispatchEvent(new CustomEvent('postCreated', { 

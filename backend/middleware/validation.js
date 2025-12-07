@@ -64,6 +64,18 @@ export const validateUpdateProfile = [
     .trim()
     .isLength({ max: 200 })
     .withMessage('个人简介不能超过200个字符'),
+  body('username')
+    .optional()
+    .trim()
+    .isLength({ min: 3, max: 20 })
+    .withMessage('用户名长度必须在3-20个字符之间')
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage('用户名只能包含字母、数字和下划线'),
+  body('tag')
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage('称号不能超过20个字符'),
   handleValidationErrors,
 ];
 

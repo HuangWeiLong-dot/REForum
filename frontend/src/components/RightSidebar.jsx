@@ -355,8 +355,17 @@ const RightSidebar = () => {
   return (
     <aside className="right-sidebar">
       {loading ? (
-        <div className="tags-loading-container">
-          <p className="tags-loading">{t('right.loading')}</p>
+        <div className="tags-skeleton-container">
+          <div className="tag-skeleton-hint">
+            <div className="skeleton-line skeleton-line-sm" style={{ width: '80%', height: '0.9rem', marginBottom: '1rem' }}></div>
+          </div>
+          <div className="tag-skeleton-grid">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              <div key={i} className="tag-skeleton-item">
+                <div className="skeleton-line skeleton-line-sm" style={{ width: '60px', height: '24px', borderRadius: '12px' }}></div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : tags.length === 0 ? (
         <div className="tags-empty-container">

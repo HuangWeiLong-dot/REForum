@@ -9,6 +9,120 @@ import './Fixes.css'
 
 export const fixes = [
   {
+    date: '2025-12-07',
+    version: '1.9.0',
+    issue: 30,
+    translations: {
+      zh: {
+        title: '问题修复页面日期标签渐变背景样式',
+        description:
+          '优化问题修复页面"最新修复"旁边日期标签的背景样式，将渐变背景改为淡红色纯色背景。',
+        details: [
+          '日期标签背景从渐变改为淡红色纯色背景，视觉效果更简洁统一',
+          '保持其他样式不变，仅优化背景颜色',
+        ],
+      },
+      en: {
+        title: 'Fixes Page Date Label Gradient Background Style',
+        description:
+          'Optimized the background style of the date label next to "Latest Fixes" on the fixes page, changed from gradient to light red solid background.',
+        details: [
+          'Date label background changed from gradient to light red solid background for cleaner, more unified visual effect',
+          'Other styles remain unchanged, only background color optimized',
+        ],
+      },
+      ja: {
+        title: '問題修正ページの日付ラベルのグラデーション背景スタイル',
+        description:
+          '問題修正ページの「最新修正」の横の日付ラベルの背景スタイルを最適化し、グラデーション背景を淡い赤の単色背景に変更しました。',
+        details: [
+          '日付ラベルの背景をグラデーションから淡い赤の単色背景に変更し、視覚効果をよりシンプルで統一されたものに',
+          '他のスタイルは変更せず、背景色のみを最適化',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-07',
+    version: '1.9.0',
+    issue: 28,
+    translations: {
+      zh: {
+        title: '用户资料页面在特定语言下排版错乱',
+        description:
+          '修复用户资料页面在不同语言（中文、英文、日文）下由于文本长度差异导致的排版错乱问题。',
+        details: [
+          '统计标签文本在长文本语言下不再换行或溢出，使用网格布局自适应',
+          '用户名和称号区域在所有语言下对齐一致',
+          '经验进度条状态文本添加最大宽度限制，防止溢出容器',
+          '所有文本元素支持自动换行，确保在不同语言下都能正确显示',
+        ],
+      },
+      en: {
+        title: 'User Profile Layout Issues in Specific Languages',
+        description:
+          'Fixed layout issues on user profile page caused by text length differences in different languages (Chinese, English, Japanese).',
+        details: [
+          'Statistics labels no longer wrap or overflow in long-text languages, using grid layout for adaptation',
+          'Username and tag areas align consistently across all languages',
+          'Experience progress bar status text has max-width limit to prevent container overflow',
+          'All text elements support automatic line breaks, ensuring correct display in all languages',
+        ],
+      },
+      ja: {
+        title: '特定言語でのユーザープロフィールページのレイアウトの乱れ',
+        description:
+          '異なる言語（中国語、英語、日本語）でのテキスト長の違いによるユーザープロフィールページのレイアウトの問題を修正しました。',
+        details: [
+          '統計ラベルのテキストが長文言語で折り返したり溢れたりしなくなり、グリッドレイアウトで適応',
+          'ユーザー名とタグエリアがすべての言語で一貫して整列',
+          '経験値プログレスバーのステータステキストに最大幅制限を追加し、コンテナの溢れを防止',
+          'すべてのテキスト要素が自動改行をサポートし、すべての言語で正しく表示されることを保証',
+        ],
+      },
+    },
+  },
+  {
+    date: '2025-12-07',
+    version: '1.9.0',
+    issue: 29,
+    translations: {
+      zh: {
+        title: '70级等级徽章彩虹渐变动画方向错误',
+        description:
+          '修复70级等级徽章的彩虹渐变动画在两个方向交替变化的问题，改为单向流动。',
+        details: [
+          '彩虹渐变动画现在单向流动，颜色变化流畅自然',
+          '使用 filter: hue-rotate() 实现单向颜色旋转',
+          '动画持续时间调整为18秒，使颜色变化更平滑',
+          '更新彩虹渐变生成函数，使用时间计算单向色相变化',
+        ],
+      },
+      en: {
+        title: 'Level 70 Badge Rainbow Gradient Animation Direction Error',
+        description:
+          'Fixed rainbow gradient animation on level 70 badge alternating in two directions, changed to unidirectional flow.',
+        details: [
+          'Rainbow gradient animation now flows in one direction with smooth, natural color changes',
+          'Using filter: hue-rotate() to achieve unidirectional color rotation',
+          'Animation duration adjusted to 18 seconds for smoother color transitions',
+          'Updated rainbow gradient generation function to calculate unidirectional hue changes using time',
+        ],
+      },
+      ja: {
+        title: '70レベルバッジの虹グラデーションアニメーションの方向エラー',
+        description:
+          '70レベルバッジの虹グラデーションアニメーションが2方向に交互に変化する問題を修正し、一方向の流れに変更しました。',
+        details: [
+          '虹グラデーションアニメーションは一方向に流れ、色の変化が滑らかで自然',
+          'filter: hue-rotate() を使用して一方向の色回転を実現',
+          'アニメーション継続時間を18秒に調整し、色の変化をより滑らかに',
+          '虹グラデーション生成関数を更新し、時間を使用して一方向の色相変化を計算',
+        ],
+      },
+    },
+  },
+  {
     date: '2025-12-05',
     version: '1.8.0',
     issue: 27,

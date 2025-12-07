@@ -30,6 +30,73 @@ const changelogCopy = {
 
 const updates = [
   {
+    date: '2025-12-07',
+    version: '1.9.0',
+    type: 'update',
+    translations: {
+      zh: {
+        title: 'PWA支持、用户资料页面重新设计、等级系统与经验值功能',
+        description:
+          '完整实现PWA功能，重新设计用户资料页面布局，新增用户等级系统、经验值系统、用户标签功能、每日任务系统和获赞数统计。',
+        details: [
+          '完整实现PWA（渐进式Web应用）功能，支持安装到主屏幕、离线访问、自动更新',
+          '新增PWA安装提示组件，智能提示用户安装，支持多语言，用户可选择安装或稍后提醒',
+          '配置Service Worker自动更新和离线缓存策略，提升用户体验',
+          '用户资料页面采用左右分栏布局，左侧显示头像、等级和经验进度条，右侧显示用户名、称号、简介和统计数据',
+          '新增1-70级等级系统，每10级一个颜色区间，70级显示彩虹渐变动画',
+          '实现经验值系统，用户通过每日任务获得经验值，经验进度条实时显示升级进度',
+          '新增用户标签/称号功能，用户可以自定义标签，支持特殊"官方"标签样式',
+          '经验进度条在桌面端从左侧延伸到右侧，显示当前经验进度和到下一级所需经验',
+          '新增每日任务系统（发布帖子、点赞、评论），每个任务完成获得5经验值',
+          '统计数据通过手风琴组件展示，默认收起，点击展开查看',
+          '新增获赞数统计，统计用户所有帖子收到的点赞总数',
+          '完善头像上传和用户简介编辑功能',
+          '后端API新增经验值和获赞数字段，创建数据库迁移脚本',
+        ],
+      },
+      en: {
+        title: 'PWA Support, User Profile Redesign, Level System & Experience Points',
+        description:
+          'Full PWA implementation, redesigned user profile layout, added level system, experience points, user tags, daily tasks, and received likes statistics.',
+        details: [
+          'Full PWA (Progressive Web App) implementation with install to home screen, offline access, and auto-update support',
+          'Added PWA install prompt component with smart prompting, multi-language support, user can choose to install or dismiss',
+          'Configured Service Worker auto-update and offline caching strategies for better user experience',
+          'User profile page uses left-right column layout: avatar, level, and exp progress on left; username, tag, bio, and stats on right',
+          'Added 1-70 level system with color ranges every 10 levels, level 70 displays rainbow gradient animation',
+          'Implemented experience point system: users gain exp through daily tasks, progress bar shows upgrade progress',
+          'Added user tag/title feature: users can customize tags with special "official" tag styling',
+          'Experience progress bar extends from left to right on desktop, showing current progress and exp needed for next level',
+          'Added daily task system (post, like, comment), each task completion grants 5 exp',
+          'Statistics displayed in accordion component, collapsed by default, click to expand',
+          'Added received likes statistics, counting total likes received on all user posts',
+          'Enhanced avatar upload and bio editing functionality',
+          'Backend API added exp and receivedLikes fields, created database migration script',
+        ],
+      },
+      ja: {
+        title: 'PWAサポート・ユーザープロフィールページの再設計・レベルシステム・経験値機能',
+        description:
+          'PWA機能を完全実装し、ユーザープロフィールページのレイアウトを再設計し、レベルシステム、経験値システム、ユーザータグ機能、デイリータスクシステム、受信いいね統計を追加しました。',
+        details: [
+          'PWA（プログレッシブWebアプリ）機能を完全実装、ホーム画面へのインストール、オフラインアクセス、自動更新をサポート',
+          'PWAインストールプロンプトコンポーネントを追加、スマートなプロンプト、多言語対応、ユーザーはインストールまたは後でを選択可能',
+          'Service Workerの自動更新とオフラインキャッシュ戦略を設定し、ユーザー体験を向上',
+          'ユーザープロフィールページは左右カラムレイアウト：左側にアバター、レベル、経験値プログレスバー、右側にユーザー名、タグ、自己紹介、統計データ',
+          '1-70レベルのレベルシステムを追加、10レベルごとに色の範囲があり、70レベルは虹グラデーションアニメーションを表示',
+          '経験値システムを実装：ユーザーはデイリータスクで経験値を獲得、プログレスバーがアップグレード進捗を表示',
+          'ユーザータグ/称号機能を追加：ユーザーはタグをカスタマイズでき、特別な「公式」タグスタイルをサポート',
+          '経験値プログレスバーはデスクトップで左から右に延び、現在の進捗と次のレベルに必要な経験値を表示',
+          'デイリータスクシステム（投稿、いいね、コメント）を追加、各タスク完了で5経験値を獲得',
+          '統計データはアコーディオンコンポーネントで表示、デフォルトで折りたたみ、クリックで展開',
+          '受信いいね統計を追加、ユーザーのすべての投稿で受け取ったいいねの合計をカウント',
+          'アバターアップロードと自己紹介編集機能を強化',
+          'バックエンドAPIに経験値と受信いいねフィールドを追加、データベース移行スクリプトを作成',
+        ],
+      },
+    },
+  },
+  {
     date: '2025-12-05',
     version: '1.8.0',
     type: 'update',
