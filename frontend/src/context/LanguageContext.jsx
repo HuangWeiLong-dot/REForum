@@ -196,6 +196,12 @@ const translations = {
     'age.bannerAccept': '我已年满 18 岁',
     'age.bannerDecline': '我没满 18 岁',
 
+    // PWA 安装提示
+    'pwa.installTitle': '安装 REForum',
+    'pwa.installDescription': '将 REForum 添加到主屏幕，获得更好的使用体验',
+    'pwa.installButton': '安装',
+    'pwa.dismissButton': '稍后',
+
     // 错误提示
     'error.loadFailed': '加载失败',
     'error.detail': '详情:',
@@ -424,6 +430,12 @@ const translations = {
     'age.bannerAccept': 'I am 18 or older',
     'age.bannerDecline': 'I am under 18',
 
+    // PWA Install Prompt
+    'pwa.installTitle': 'Install REForum',
+    'pwa.installDescription': 'Add REForum to your home screen for a better experience',
+    'pwa.installButton': 'Install',
+    'pwa.dismissButton': 'Later',
+
     // Error messages
     'error.loadFailed': 'Failed to load',
     'error.detail': 'Details:',
@@ -650,6 +662,13 @@ const translations = {
     'age.bannerNote': '18歳未満の場合は、「18歳未満です」を選択してください。未成年者は保護者または後見人の指導のもとでインターネットを利用することをお勧めします。',
     'age.bannerAccept': '18歳以上です',
     'age.bannerDecline': '18歳未満です',
+
+    // PWA インストールプロンプト
+    'pwa.installTitle': 'REForum をインストール',
+    'pwa.installDescription': 'ホーム画面に REForum を追加して、より良い体験を得ましょう',
+    'pwa.installButton': 'インストール',
+    'pwa.dismissButton': '後で',
+
     // エラーメッセージ
     'error.loadFailed': '読み込み失敗',
     'error.detail': '詳細:',

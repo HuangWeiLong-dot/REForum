@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import RightSidebar from './components/RightSidebar'
 import CookieConsent from './components/CookieConsent'
 import AgeVerification from './components/AgeVerification'
+import PWAInstallPrompt from './components/PWAInstallPrompt'
 import Home from './pages/Home'
 import Search from './pages/Search'
 import PostDetail from './pages/PostDetail'
@@ -92,6 +93,7 @@ function App() {
           <RightSidebar />
         </div>
         <CookieConsent />
+        <PWAInstallPrompt />
       </div>
   )
 }

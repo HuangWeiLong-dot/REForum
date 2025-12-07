@@ -1,7 +1,4 @@
 # 重新部署指南
-
-## 📋 部署步骤
-
 ### 在服务器上执行以下命令：
 
 ```bash
@@ -20,6 +17,8 @@ git pull origin v1.5.8
 git pull origin v1.6.2
 
 git pull origin v1.7.0
+
+git pull origin v1.8.0
 
 # 3. 停止现有容器
 docker-compose down
