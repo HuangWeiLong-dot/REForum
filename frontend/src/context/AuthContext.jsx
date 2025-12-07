@@ -29,7 +29,9 @@ export const AuthProvider = ({ children }) => {
                               import.meta.env.MODE === 'development')
       
       // 如果测试登录被禁用，且当前是测试用户，清除登录状态
-      if (!enableTestLogin && storedToken && storedToken.startsWith('test-token-')) {
+      // 确保 storedToken 是字符串
+      const tokenStr = String(storedToken || '')
+      if (!enableTestLogin && storedToken && tokenStr.startsWith('test-token-')) {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         setToken(null)
@@ -43,7 +45,10 @@ export const AuthProvider = ({ children }) => {
         try {
           const parsedUser = JSON.parse(storedUser)
           // 如果测试登录被禁用，且是测试用户，清除登录状态
-          if (!enableTestLogin && (parsedUser.id?.startsWith('test-user-') || storedToken?.startsWith('test-token-'))) {
+          // 确保 id 和 token 都是字符串再调用 startsWith
+          const userId = String(parsedUser.id || '')
+          const tokenStr = String(storedToken || '')
+          if (!enableTestLogin && (userId.startsWith('test-user-') || tokenStr.startsWith('test-token-'))) {
             localStorage.removeItem('token')
             localStorage.removeItem('user')
             setToken(null)
@@ -54,6 +59,8 @@ export const AuthProvider = ({ children }) => {
           setUser(parsedUser)
         } catch (error) {
           console.error('Failed to parse stored user:', error)
+          // 解析失败时清除损坏的数据
+          localStorage.removeItem('user')
         }
       }
       
@@ -72,10 +79,11 @@ export const AuthProvider = ({ children }) => {
           .catch((error) => {
             // API 失败不影响界面显示
             console.warn('Failed to verify token (backend may be unavailable):', error.message)
-            // 如果是网络错误，不清除 token，允许用户继续使用
+            // 如果是网络错误或500错误（可能是数据库迁移未执行），不清除 token，允许用户继续使用
             if (error.response) {
-              // 只有明确的 401 错误才清除 token
-              if (error.response.status === 401) {
+              // 只有明确的 401 或 403 错误才清除 token
+              // 500 错误可能是数据库迁移未执行，不应该清除登录状态
+              if (error.response.status === 401 || error.response.status === 403) {
                 localStorage.removeItem('token')
                 localStorage.removeItem('user')
                 setToken(null)

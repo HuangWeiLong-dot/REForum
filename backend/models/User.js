@@ -4,11 +4,32 @@ import bcrypt from 'bcryptjs';
 class User {
   // 根据 ID 查找用户
   static async findById(id) {
-    const result = await query(
-      'SELECT id, username, email, avatar, bio, tag, exp, join_date, created_at, updated_at, username_updated_at, tag_updated_at FROM users WHERE id = $1',
-      [id]
-    );
-    return result.rows[0] || null;
+    try {
+      // 尝试查询包含新字段的完整信息
+      const result = await query(
+        'SELECT id, username, email, avatar, bio, tag, exp, join_date, created_at, updated_at, username_updated_at, tag_updated_at FROM users WHERE id = $1',
+        [id]
+      );
+      return result.rows[0] || null;
+    } catch (error) {
+      // 如果新字段不存在（数据库迁移未执行），回退到基本查询
+      if (error.code === '42703' || error.message.includes('column') || error.message.includes('does not exist')) {
+        console.warn('新字段不存在，使用向后兼容查询:', error.message);
+        const result = await query(
+          'SELECT id, username, email, avatar, bio, tag, join_date, created_at, updated_at FROM users WHERE id = $1',
+          [id]
+        );
+        const user = result.rows[0] || null;
+        if (user) {
+          // 为缺失的字段设置默认值
+          user.exp = 0;
+          user.username_updated_at = null;
+          user.tag_updated_at = null;
+        }
+        return user;
+      }
+      throw error;
+    }
   }
 
   // 根据用户名查找用户
@@ -75,6 +96,18 @@ class User {
     const updates = [];
     const values = [];
     let paramCount = 1;
+    let hasNewFields = false;
+
+    // 检查新字段是否存在
+    try {
+      const checkResult = await query('SELECT username_updated_at, tag_updated_at FROM users WHERE id = $1 LIMIT 1', [id]);
+      if (checkResult.rows.length > 0) {
+        hasNewFields = checkResult.rows[0].hasOwnProperty('username_updated_at');
+      }
+    } catch (error) {
+      // 字段不存在，使用向后兼容模式
+      hasNewFields = false;
+    }
 
     if (avatar !== undefined) {
       updates.push(`avatar = $${paramCount++}`);
@@ -86,13 +119,17 @@ class User {
     }
     if (username !== undefined) {
       updates.push(`username = $${paramCount++}`);
-      updates.push(`username_updated_at = CURRENT_TIMESTAMP`);
       values.push(username);
+      if (hasNewFields) {
+        updates.push(`username_updated_at = CURRENT_TIMESTAMP`);
+      }
     }
     if (tag !== undefined) {
       updates.push(`tag = $${paramCount++}`);
-      updates.push(`tag_updated_at = CURRENT_TIMESTAMP`);
       values.push(tag);
+      if (hasNewFields) {
+        updates.push(`tag_updated_at = CURRENT_TIMESTAMP`);
+      }
     }
 
     if (updates.length === 0) {
@@ -100,14 +137,43 @@ class User {
     }
 
     values.push(id);
-    const result = await query(
-      `UPDATE users 
-       SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${paramCount} 
-       RETURNING id, username, email, avatar, bio, tag, exp, join_date, created_at, updated_at, username_updated_at, tag_updated_at`,
-      values
-    );
-    return result.rows[0];
+    try {
+      const result = await query(
+        `UPDATE users 
+         SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP 
+         WHERE id = $${paramCount} 
+         RETURNING id, username, email, avatar, bio, tag, exp, join_date, created_at, updated_at, username_updated_at, tag_updated_at`,
+        values
+      );
+      return result.rows[0];
+    } catch (error) {
+      // 如果新字段不存在，使用基本查询
+      if (error.code === '42703' || error.message.includes('column') || error.message.includes('does not exist')) {
+        console.warn('新字段不存在，使用向后兼容更新:', error.message);
+        // 移除新字段的更新
+        const basicUpdates = updates.filter(u => !u.includes('username_updated_at') && !u.includes('tag_updated_at'));
+        if (basicUpdates.length === 0) {
+          return await this.findById(id);
+        }
+        const basicValues = values.slice(0, -1); // 移除最后的 id
+        basicValues.push(id);
+        const result = await query(
+          `UPDATE users 
+           SET ${basicUpdates.join(', ')}, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = $${basicValues.length} 
+           RETURNING id, username, email, avatar, bio, tag, join_date, created_at, updated_at`,
+          basicValues
+        );
+        const user = result.rows[0] || null;
+        if (user) {
+          user.exp = 0;
+          user.username_updated_at = null;
+          user.tag_updated_at = null;
+        }
+        return user;
+      }
+      throw error;
+    }
   }
 
   // 验证密码
@@ -117,18 +183,37 @@ class User {
 
   // 获取用户统计信息（帖子数、评论数和获赞数）
   static async getStats(userId) {
-    const result = await query(
-      `SELECT 
-        COALESCE(us.post_count, 0) as post_count,
-        COALESCE(us.comment_count, 0) as comment_count,
-        COALESCE(url.received_likes, 0) as received_likes
-       FROM users u
-       LEFT JOIN user_stats us ON u.id = us.id
-       LEFT JOIN user_received_likes url ON u.id = url.user_id
-       WHERE u.id = $1`,
-      [userId]
-    );
-    return result.rows[0] || { post_count: 0, comment_count: 0, received_likes: 0 };
+    try {
+      const result = await query(
+        `SELECT 
+          COALESCE(us.post_count, 0) as post_count,
+          COALESCE(us.comment_count, 0) as comment_count,
+          COALESCE(url.received_likes, 0) as received_likes
+         FROM users u
+         LEFT JOIN user_stats us ON u.id = us.id
+         LEFT JOIN user_received_likes url ON u.id = url.user_id
+         WHERE u.id = $1`,
+        [userId]
+      );
+      return result.rows[0] || { post_count: 0, comment_count: 0, received_likes: 0 };
+    } catch (error) {
+      // 如果 user_received_likes 视图不存在（数据库迁移未执行），回退到基本查询
+      if (error.code === '42P01' || error.message.includes('does not exist') || error.message.includes('relation')) {
+        console.warn('user_received_likes 视图不存在，使用向后兼容查询:', error.message);
+        const result = await query(
+          `SELECT 
+            COALESCE(us.post_count, 0) as post_count,
+            COALESCE(us.comment_count, 0) as comment_count,
+            0 as received_likes
+           FROM users u
+           LEFT JOIN user_stats us ON u.id = us.id
+           WHERE u.id = $1`,
+          [userId]
+        );
+        return result.rows[0] || { post_count: 0, comment_count: 0, received_likes: 0 };
+      }
+      throw error;
+    }
   }
 
   // 获取用户完整资料（包含统计信息）
@@ -150,18 +235,42 @@ class User {
 
   // 获取公开用户资料（不包含邮箱）
   static async getPublicProfile(userId) {
-    const result = await query(
-      `SELECT u.id, u.username, u.avatar, u.bio, u.tag, u.exp, u.join_date,
-              COALESCE(us.post_count, 0) as post_count,
-              COALESCE(us.comment_count, 0) as comment_count,
-              COALESCE(url.received_likes, 0) as received_likes
-       FROM users u
-       LEFT JOIN user_stats us ON u.id = us.id
-       LEFT JOIN user_received_likes url ON u.id = url.user_id
-       WHERE u.id = $1`,
-      [userId]
-    );
-    return result.rows[0] || null;
+    try {
+      const result = await query(
+        `SELECT u.id, u.username, u.avatar, u.bio, u.tag, u.exp, u.join_date,
+                COALESCE(us.post_count, 0) as post_count,
+                COALESCE(us.comment_count, 0) as comment_count,
+                COALESCE(url.received_likes, 0) as received_likes
+         FROM users u
+         LEFT JOIN user_stats us ON u.id = us.id
+         LEFT JOIN user_received_likes url ON u.id = url.user_id
+         WHERE u.id = $1`,
+        [userId]
+      );
+      return result.rows[0] || null;
+    } catch (error) {
+      // 如果新字段或视图不存在（数据库迁移未执行），回退到基本查询
+      if (error.code === '42703' || error.code === '42P01' || error.message.includes('does not exist') || error.message.includes('column')) {
+        console.warn('新字段或视图不存在，使用向后兼容查询:', error.message);
+        const result = await query(
+          `SELECT u.id, u.username, u.avatar, u.bio, u.tag, u.join_date,
+                  COALESCE(us.post_count, 0) as post_count,
+                  COALESCE(us.comment_count, 0) as comment_count,
+                  0 as received_likes
+           FROM users u
+           LEFT JOIN user_stats us ON u.id = us.id
+           WHERE u.id = $1`,
+          [userId]
+        );
+        const user = result.rows[0] || null;
+        if (user) {
+          // 为缺失的字段设置默认值
+          user.exp = 0;
+        }
+        return user;
+      }
+      throw error;
+    }
   }
 }
 
