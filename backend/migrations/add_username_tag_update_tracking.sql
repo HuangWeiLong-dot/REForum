@@ -12,3 +12,5 @@ ADD COLUMN IF NOT EXISTS tag_updated_at TIMESTAMP DEFAULT NULL;
 COMMENT ON COLUMN users.username_updated_at IS '用户名最后修改时间，用于30天修改限制';
 COMMENT ON COLUMN users.tag_updated_at IS '称号最后修改时间，用于30天修改限制';
 
+
+

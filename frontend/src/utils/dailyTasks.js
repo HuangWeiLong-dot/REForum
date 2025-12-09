@@ -1,80 +1,53 @@
-// 每日任务系统
+// 每日任务系统（服务端同步 + 测试用户本地模式）
+import { userAPI } from '../services/api'
+import { TASK_EXP } from './levelSystem'
 
-const STORAGE_KEY = 'daily_tasks'
 const EXP_STORAGE_KEY = 'user_exp'
+const TASK_STORAGE_PREFIX = 'daily_tasks_'
 
-// 获取今天的日期字符串（YYYY-MM-DD）
 const getTodayString = () => {
   const today = new Date()
   return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
 }
 
-// 获取今天的任务状态
-export const getTodayTasks = () => {
-  const today = getTodayString()
-  const stored = localStorage.getItem(STORAGE_KEY)
-  
-  if (!stored) {
-    return {
-      date: today,
-      post: false,
-      like: false,
-      comment: false,
-    }
-  }
-  
-  const tasks = JSON.parse(stored)
-  
-  // 如果是新的一天，重置任务
-  if (tasks.date !== today) {
-    return {
-      date: today,
-      post: false,
-      like: false,
-      comment: false,
-    }
-  }
-  
-  return tasks
+const isTestUser = () => {
+  const token = localStorage.getItem('token')
+  const tokenStr = String(token || '')
+  return tokenStr.startsWith('test-token-')
 }
 
-// 更新任务状态
-export const updateTask = (taskType) => {
-  const tasks = getTodayTasks()
+const getLocalTaskKey = (userId = 'guest') => `${TASK_STORAGE_PREFIX}${userId}`
+
+const getLocalTasks = (user = null) => {
   const today = getTodayString()
-  
-  // 如果任务已完成，不重复奖励
-  if (tasks[taskType]) {
-    return false
+  const userId = user?.id || 'test-user'
+  const stored = localStorage.getItem(getLocalTaskKey(userId))
+  const base = { date: today, post: false, like: false, comment: false, checkin: false }
+  if (!stored) return base
+  try {
+    const parsed = JSON.parse(stored)
+    if (parsed.date !== today) return base
+    return { ...base, ...parsed }
+  } catch {
+    return base
   }
-  
-  // 标记任务完成
-  tasks[taskType] = true
-  tasks.date = today
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-  
-  // 添加经验值
-  addExp(5)
-  
-  return true
 }
 
-// 获取用户经验值
+const saveLocalTasks = (tasks, user = null) => {
+  const userId = user?.id || 'test-user'
+  localStorage.setItem(getLocalTaskKey(userId), JSON.stringify(tasks))
+}
+
 export const getUserExp = (user = null) => {
-  // 如果传入了用户对象，优先使用用户对象中的 exp
   if (user && (user.exp !== undefined && user.exp !== null)) {
-    // 如果是测试用户，并且用户对象中有exp，则使用用户对象中的exp
     const userId = String(user.id || '')
     if (userId.startsWith('test-user-') || userId === 'test-user-001') {
       return user.exp
     }
-    // 如果是正常用户，也使用用户对象中的exp（从服务器获取的）
     return user.exp
   }
-  
-  // 如果没有传入用户对象或用户对象中没有exp，从localStorage读取
+
   const stored = localStorage.getItem(EXP_STORAGE_KEY)
-  // 如果是测试用户，返回70级经验值
   const token = localStorage.getItem('token')
   const tokenStr = String(token || '')
   if (tokenStr.startsWith('test-token-')) {
@@ -82,7 +55,6 @@ export const getUserExp = (user = null) => {
     if (testUser.exp !== undefined && testUser.exp !== null) {
       return testUser.exp
     }
-    // 如果没有exp字段，设置70级经验值
     const exp70 = 15000
     setUserExp(exp70)
     return exp70
@@ -90,32 +62,89 @@ export const getUserExp = (user = null) => {
   return stored ? parseInt(stored, 10) : 0
 }
 
-// 添加经验值
-export const addExp = (amount) => {
-  const currentExp = getUserExp()
-  const newExp = currentExp + amount
-  localStorage.setItem(EXP_STORAGE_KEY, String(newExp))
-  return newExp
-}
-
-// 设置经验值（用于同步服务器数据）
 export const setUserExp = (exp) => {
   localStorage.setItem(EXP_STORAGE_KEY, String(exp))
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser)
+      parsed.exp = exp
+      localStorage.setItem('user', JSON.stringify(parsed))
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
-// 检查任务是否完成
-export const isTaskCompleted = (taskType) => {
-  const tasks = getTodayTasks()
-  return tasks[taskType] || false
+export const getTodayTasks = async (user = null) => {
+  const today = getTodayString()
+
+  // 测试用户：本地模式
+  if (isTestUser()) {
+    const tasks = getLocalTasks(user)
+    return { tasks, exp: getUserExp(user), from: 'local' }
+  }
+
+  // 正式用户：走后端
+  try {
+    const res = await userAPI.getDailyTasks()
+    const tasks = res.data?.tasks || { date: today, post: false, like: false, comment: false, checkin: false }
+    const exp = res.data?.exp ?? getUserExp(user)
+    setUserExp(exp)
+    return { tasks, exp, from: 'server' }
+  } catch (error) {
+    console.error('获取每日任务失败，使用本地兜底:', error)
+    const fallback = { date: today, post: false, like: false, comment: false, checkin: false }
+    return { tasks: fallback, exp: getUserExp(user), from: 'fallback' }
+  }
 }
 
-// 获取今日完成的任务数量
-export const getCompletedTasksCount = () => {
-  const tasks = getTodayTasks()
+// 完成任务（返回 {success, expAdded, alreadyCompleted, tasks, exp}）
+export const updateTask = async (taskType, user = null) => {
+  const normalized = String(taskType || '').toLowerCase()
+  if (!['post', 'like', 'comment', 'checkin'].includes(normalized)) {
+    return { success: false, error: 'INVALID_TASK' }
+  }
+
+  // 测试用户：本地模拟
+  if (isTestUser()) {
+    const tasks = getLocalTasks(user)
+    if (tasks[normalized]) {
+      return { success: true, alreadyCompleted: true, expAdded: 0, tasks, exp: getUserExp(user) }
+    }
+    const expAdded = TASK_EXP[normalized.toUpperCase()] || 0
+    const updated = { ...tasks, [normalized]: true }
+    saveLocalTasks(updated, user)
+    const newExp = getUserExp(user) + expAdded
+    setUserExp(newExp)
+    return { success: true, alreadyCompleted: false, expAdded, tasks: updated, exp: newExp }
+  }
+
+  // 正式用户：调用后端
+  try {
+    const res = await userAPI.completeDailyTask({ taskType: normalized })
+    const exp = res.data?.exp ?? getUserExp(user)
+    setUserExp(exp)
+    return {
+      success: true,
+      alreadyCompleted: !!res.data?.alreadyCompleted,
+      expAdded: res.data?.expAdded ?? 0,
+      tasks: res.data?.tasks,
+      exp,
+    }
+  } catch (error) {
+    console.error('完成任务失败:', error)
+    return { success: false, error: error.response?.data?.message || 'COMPLETE_TASK_FAILED' }
+  }
+}
+
+export const getCompletedTasksCount = (tasks) => {
+  if (!tasks) return 0
   let count = 0
   if (tasks.post) count++
   if (tasks.like) count++
   if (tasks.comment) count++
+  if (tasks.checkin) count++
   return count
 }
 

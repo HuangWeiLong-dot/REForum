@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import DailyTask from '../models/DailyTask.js';
 
 class UserController {
   // 获取当前用户资料
@@ -120,6 +121,77 @@ class UserController {
       return res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: '更新用户资料失败',
+      });
+    }
+  }
+
+  // 获取今日任务状态与当前经验
+  static async getDailyTasks(req, res) {
+    try {
+      const userId = req.userId;
+      const tasks = await DailyTask.getOrCreateToday(userId);
+      const user = await User.findById(userId);
+      return res.status(200).json({
+        tasks: {
+          date: tasks.task_date,
+          post: tasks.post_completed,
+          like: tasks.like_completed,
+          comment: tasks.comment_completed,
+          checkin: tasks.checkin_completed,
+        },
+        exp: parseInt(user?.exp || 0, 10),
+      });
+    } catch (error) {
+      console.error('获取每日任务失败:', error);
+      return res.status(500).json({
+        error: 'INTERNAL_ERROR',
+        message: '获取每日任务失败',
+      });
+    }
+  }
+
+  // 完成今日任务并增加经验
+  static async completeDailyTask(req, res) {
+    try {
+      const userId = req.userId;
+      const { taskType } = req.body;
+
+      if (!taskType) {
+        return res.status(400).json({
+          error: 'INVALID_TASK',
+          message: '任务类型不能为空',
+        });
+      }
+
+      try {
+        const result = await DailyTask.completeTask(userId, taskType);
+        const user = await User.findById(userId);
+        return res.status(200).json({
+          tasks: {
+            date: result.tasks.task_date,
+            post: result.tasks.post_completed,
+            like: result.tasks.like_completed,
+            comment: result.tasks.comment_completed,
+            checkin: result.tasks.checkin_completed,
+          },
+          exp: parseInt(result.currentExp ?? user?.exp ?? 0, 10),
+          alreadyCompleted: result.alreadyCompleted,
+          expAdded: result.expAdded,
+        });
+      } catch (err) {
+        if (err.status === 400) {
+          return res.status(400).json({
+            error: 'INVALID_TASK',
+            message: '任务类型无效',
+          });
+        }
+        throw err;
+      }
+    } catch (error) {
+      console.error('完成每日任务失败:', error);
+      return res.status(500).json({
+        error: 'INTERNAL_ERROR',
+        message: '完成每日任务失败',
       });
     }
   }

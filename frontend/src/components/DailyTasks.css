@@ -81,6 +81,53 @@
   font-weight: 600;
 }
 
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task-action-button {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--primary-color, #2563eb);
+  background: var(--primary-color, #2563eb);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.task-action-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.task-done-label {
+  font-size: 0.85rem;
+  color: var(--success-color, #10b981);
+  font-weight: 600;
+}
+
+.skeleton-task {
+  height: 44px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 37%, #f4f4f5 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+.task-error {
+  margin-top: 0.75rem;
+  color: var(--danger-color, #dc2626);
+  font-size: 0.9rem;
+}
+
 .task-item.completed .task-exp {
   color: var(--success-color, #10b981);
 }

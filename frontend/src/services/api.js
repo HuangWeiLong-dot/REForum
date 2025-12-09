@@ -118,6 +118,8 @@ export const userAPI = {
     return api.get('/users/profile')
   },
   updateProfile: (data) => api.put('/users/profile', data),
+  getDailyTasks: () => api.get('/users/daily-tasks'),
+  completeDailyTask: (data) => api.post('/users/daily-tasks/complete', data),
   getUser: (userId) => {
     if (isTestUserId(userId)) {
       return getTestUserData(userId)

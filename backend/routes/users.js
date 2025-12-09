@@ -7,6 +7,8 @@ const router = express.Router();
 
 // 获取当前用户资料（需要认证）
 router.get('/profile', authenticate, UserController.getProfile);
+router.get('/daily-tasks', authenticate, UserController.getDailyTasks);
+router.post('/daily-tasks/complete', authenticate, UserController.completeDailyTask);
 
 // 更新当前用户资料（需要认证）
 router.put('/profile', authenticate, validateUpdateProfile, UserController.updateProfile);

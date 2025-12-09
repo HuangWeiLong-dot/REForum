@@ -125,8 +125,9 @@ export const getRainbowGradient = (time = Date.now()) => {
 
 // 任务经验值奖励
 export const TASK_EXP = {
-  POST: 5,
-  LIKE: 5,
-  COMMENT: 5,
+  POST: 30,
+  LIKE: 30,
+  COMMENT: 30,
+  CHECKIN: 30,
 }
 
