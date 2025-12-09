@@ -1,4 +1,4 @@
-# 重新部署指南
+# 重新部署指南（含版本标签与镜像标记建议）
 ### 在服务器上执行以下命令：
 
 ```bash
@@ -6,21 +6,10 @@
 cd /opt/ReForum
 
 git fetch origin
-
-git checkout v1.6.2
-
-# 2. 拉取最新代码
+# 可选：切换到指定标签/版本（如需要回滚或固定版本）
+# git checkout v1.9.5
+# 常规部署保持 master 最新：
 git pull origin master
-
-git pull origin v1.5.8
-
-git pull origin v1.6.2
-
-git pull origin v1.7.0
-
-git pull origin v1.8.0
-
-git pull origin v1.9.0
 
 # 3. 停止现有容器
 docker-compose down
@@ -28,11 +17,13 @@ docker-compose down
 # 4. 重新构建镜像（不使用缓存，确保使用最新代码）
 docker-compose build --no-cache
 
+# 如只改前端，可单独重建：
 docker-compose build --no-cache frontend
 
 # 5. 启动容器
 docker-compose up -d
 
+# 如只改前端，可单独起前端：
 docker-compose up -d frontend
 
 # 6. 查看容器状态
@@ -41,6 +32,13 @@ docker-compose ps
 # 7. 查看日志（确认服务正常启动）
 docker-compose logs --tail=50 backend
 docker-compose logs --tail=50 frontend
+
+# 8. 给构建镜像打标签（便于溯源）
+# 获取当前最新提交短哈希
+GIT_HASH=$(git rev-parse --short HEAD)
+docker tag reforum_frontend:latest reforum_frontend:v1.9.5-${GIT_HASH}
+docker tag reforum_backend:latest reforum_backend:v1.9.5-${GIT_HASH}
+docker images | grep reforum
 ```
 
 ### （可选）前端容器内启用 API 与上传代理
