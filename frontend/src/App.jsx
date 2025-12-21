@@ -13,8 +13,7 @@ import Search from './pages/Search'
 import PostDetail from './pages/PostDetail'
 import UserProfile from './pages/UserProfile'
 import CreatePost from './pages/CreatePost'
-import About from './pages/About'
-import Contact from './pages/Contact'
+
 import Changelog from './pages/Changelog'
 import Fixes from './pages/Fixes'
 import Terms from './pages/Terms'
@@ -80,8 +79,7 @@ function App() {
                   <Route path="/post/:postId" element={<PostDetail />} />
                   <Route path="/user/:userId" element={<UserProfile />} />
                   <Route path="/create-post" element={<CreatePost />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
+                  
                   <Route path="/changelog" element={<Changelog />} />
                   <Route path="/fixes" element={<Fixes />} />
                   <Route path="/terms" element={<Terms />} />

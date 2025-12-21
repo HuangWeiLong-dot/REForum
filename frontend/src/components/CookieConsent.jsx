@@ -39,16 +39,56 @@ const CookieConsent = () => {
   const handleAccept = () => {
     const userId = user?.id || 'anonymous'
     const storageKey = `cookie-consent-${userId}`
+    
+    // 设置localStorage
     localStorage.setItem(storageKey, 'accepted')
     localStorage.setItem(`${storageKey}-date`, new Date().toISOString())
+    
+    // 设置HTTP Cookie
+    const cookieName = 'reforum-cookie-consent'
+    const cookieValue = 'accepted'
+    const expirationDays = 365 // 1年有效期
+    const expirationDate = new Date()
+    expirationDate.setDate(expirationDate.getDate() + expirationDays)
+    
+    // 构建Cookie字符串
+    let cookieString = `${cookieName}=${encodeURIComponent(cookieValue)}`
+    cookieString += `; expires=${expirationDate.toUTCString()}`
+    cookieString += '; path=/'
+    cookieString += '; SameSite=Lax'
+    cookieString += '; Secure'
+    
+    // 设置Cookie
+    document.cookie = cookieString
+    
     setShow(false)
   }
 
   const handleDecline = () => {
     const userId = user?.id || 'anonymous'
     const storageKey = `cookie-consent-${userId}`
+    
+    // 设置localStorage
     localStorage.setItem(storageKey, 'declined')
     localStorage.setItem(`${storageKey}-date`, new Date().toISOString())
+    
+    // 设置HTTP Cookie
+    const cookieName = 'reforum-cookie-consent'
+    const cookieValue = 'declined'
+    const expirationDays = 365 // 1年有效期
+    const expirationDate = new Date()
+    expirationDate.setDate(expirationDate.getDate() + expirationDays)
+    
+    // 构建Cookie字符串
+    let cookieString = `${cookieName}=${encodeURIComponent(cookieValue)}`
+    cookieString += `; expires=${expirationDate.toUTCString()}`
+    cookieString += '; path=/'
+    cookieString += '; SameSite=Lax'
+    cookieString += '; Secure'
+    
+    // 设置Cookie
+    document.cookie = cookieString
+    
     setShow(false)
     // 拒绝Cookie同意，跳转到外部网站
     window.location.href = 'https://www.google.com'

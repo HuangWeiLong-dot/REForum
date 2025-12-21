@@ -31,8 +31,7 @@ const translations = {
     'header.languageTitle': '选择语言',
     'header.themeColorTitle': '主题颜色',
     'sidebar.home': '首页',
-    'sidebar.about': '关于我们',
-    'sidebar.contact': '联系我们',
+
     'sidebar.privacy': '隐私政策',
     'sidebar.terms': '用户协议',
     'sidebar.policies': '合规与政策',
@@ -308,8 +307,7 @@ const translations = {
     'header.languageTitle': 'Choose language',
     'header.themeColorTitle': 'Theme color',
     'sidebar.home': 'Home',
-    'sidebar.about': 'About',
-    'sidebar.contact': 'Contact',
+
     'sidebar.privacy': 'Privacy Policy',
     'sidebar.terms': 'Terms of Service',
     'sidebar.policies': 'Compliance & Policies',
@@ -585,8 +583,7 @@ const translations = {
     'header.languageTitle': '言語を選択',
     'header.themeColorTitle': 'テーマカラー',
     'sidebar.home': 'ホーム',
-    'sidebar.about': '私たちについて',
-    'sidebar.contact': 'お問い合わせ',
+
     'sidebar.privacy': 'プライバシーポリシー',
     'sidebar.terms': '利用規約',
     'sidebar.policies': 'コンプライアンス・ポリシー',

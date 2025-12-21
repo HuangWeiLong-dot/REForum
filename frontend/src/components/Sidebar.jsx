@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   FaHome,
-  FaInfoCircle,
-  FaEnvelope,
   FaHistory,
   FaShieldAlt,
   FaBug,
@@ -63,7 +61,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (typeof window === 'undefined') return
+      if (typeof window === 'undefined') return false
       setIsMobile(window.innerWidth <= 768)
     }
 
@@ -111,20 +109,6 @@ const Sidebar = () => {
               >
                 <FaHome className="nav-icon" />
                 <span>{t('sidebar.home')}</span>
-              </Link>
-              <Link
-                to="/about"
-                className={`nav-item ${location.pathname === '/about' ? 'active' : ''}`}
-              >
-                <FaInfoCircle className="nav-icon" />
-                <span>{t('sidebar.about')}</span>
-              </Link>
-              <Link
-                to="/contact"
-                className={`nav-item ${location.pathname === '/contact' ? 'active' : ''}`}
-              >
-                <FaEnvelope className="nav-icon" />
-                <span>{t('sidebar.contact')}</span>
               </Link>
               <Link
                 to="/changelog"
@@ -263,4 +247,3 @@ const Sidebar = () => {
 }
 
 export default Sidebar
-
