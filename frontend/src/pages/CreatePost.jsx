@@ -50,9 +50,9 @@ const CreatePost = () => {
   // 上传单个图片到服务器
   const uploadImage = async (file) => {
     const formData = new FormData()
-    formData.append('image', file)
+    formData.append('file', file)
 
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api'}/upload/image`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api'}/upload/file`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

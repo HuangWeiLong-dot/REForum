@@ -4,17 +4,17 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// 上传单个图片（需要认证）
+// 上传单个文件（需要认证）
 router.post(
-  '/image',
+  '/file',
   authenticate,
   UploadController.uploadSingle,
   UploadController.handleUpload
 );
 
-// 上传多个图片（需要认证）
+// 上传多个文件（需要认证）
 router.post(
-  '/images',
+  '/files',
   authenticate,
   UploadController.uploadMultiple,
   UploadController.handleMultipleUpload

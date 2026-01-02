@@ -140,9 +140,9 @@ const EditProfileModal = ({ user, onClose, onUpdate }) => {
         setUploading(true)
         try {
           const formData = new FormData()
-          formData.append('image', avatarFile)
+          formData.append('file', avatarFile)
 
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api'}/upload/image`, {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || '/api'}/upload/file`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`,

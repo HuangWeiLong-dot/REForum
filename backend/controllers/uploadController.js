@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 class UploadController {
   // 处理单个文件上传
-  static uploadSingle = upload.single('image');
+  static uploadSingle = upload.single('file');
 
   // 处理文件上传响应
   static handleUpload(req, res) {
