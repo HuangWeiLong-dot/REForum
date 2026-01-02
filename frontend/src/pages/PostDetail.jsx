@@ -203,9 +203,10 @@ const PostDetail = () => {
 
           {post.content && (
             <div className="post-body">
-              {post.content.split('\n').map((line, index) => {
-                // 检查是否是Markdown媒体格式 ![alt](url)
-                const mediaMatch = line.match(/!\[([^\]]*)\]\(([^)]+)\)/)
+              {post.content.split('
+').map((line, index) => {
+                // 检查是否是Markdown媒体格式 ![alt](url) 或链接格式 [text](url)
+                const mediaMatch = line.match(/!\[([^\]]*)\]\(([^)]+)\)/) || line.match(/\[([^\]]*)\]\(([^)]+)\)/)
                 if (mediaMatch) {
                   const [, alt, url] = mediaMatch
                   // 处理媒体URL
@@ -245,19 +246,6 @@ const PostDetail = () => {
                   // 检查是否是音频文件
                   const audioExtensions = /\.(mp3|wav|ogg|m4a|aac|flac)$/i
                   if (audioExtensions.test(mediaUrl)) {
-                    // 从URL中提取文件名，去掉后缀
-                    const getFilenameFromUrl = (url) => {
-                      const cleanUrl = url.split('?')[0].split('#')[0]
-                      let filename = cleanUrl.split('/').pop()
-                      filename = decodeURIComponent(filename)
-                      // 去掉文件扩展名
-                      const filenameWithoutExt = filename.replace(/\.[^/.]+$/, '')
-                      return filenameWithoutExt
-                    }
-                    
-                    // 使用从URL提取的文件名作为标题，忽略alt文本
-                    const audioTitle = getFilenameFromUrl(url)
-                    
                     // 音频文件，使用音频播放器
                     return (
                       <div key={index} className="post-audio-container">
@@ -273,7 +261,13 @@ const PostDetail = () => {
                         >
                           您的浏览器不支持音频播放
                         </audio>
-                        <div className="audio-caption">{audioTitle}</div>
+                      </div>
+                    )
+                  } else if (!line.startsWith('![')) {
+                    // 普通链接，不是音频文件，直接显示为文本行
+                    return (
+                      <div key={index} className="post-text-line">
+                        {line}
                       </div>
                     )
                   } else {
@@ -285,16 +279,22 @@ const PostDetail = () => {
                           alt={alt || t('post.imageAlt')} 
                           className="post-image"
                           loading="lazy"
+                          onError={(e) => {
+                            console.error('图片加载失败:', mediaUrl)
+                            e.target.style.display = 'none'
+                          }}
                         />
                       </div>
                     )
                   }
                 }
-                // 普通文本行
-                if (line.trim()) {
-                  return <p key={index}>{line}</p>
-                }
-                return <br key={index} />
+                
+                // 普通文本行，直接显示
+                return (
+                  <div key={index} className="post-text-line">
+                    {line}
+                  </div>
+                )
               })}
             </div>
           )}

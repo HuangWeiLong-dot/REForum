@@ -174,21 +174,15 @@ const PostCard = ({ post }) => {
           <>
             {/* 首先检查整个内容中是否包含音频文件 */}
             {(() => {
-              // 搜索整个内容中的音频文件链接
-              const audioRegex = /!\[([^\]]*)\]\(([^)]+\.(mp3|wav|ogg|m4a|aac|flac))\)/gi
+              // 搜索整个内容中的音频文件链接（包括媒体格式和普通链接格式）
+              const audioRegex = /!\[([^\]]*)\]\(([^)]+\.(mp3|wav|ogg|m4a|aac|flac))\)|\[([^\]]*)\]\(([^)]+\.(mp3|wav|ogg|m4a|aac|flac))\)/gi
               const audioMatches = [...post.content.matchAll(audioRegex)]
               
-              // 搜索整个内容中的音频链接（链接格式）
-              const audioLinkRegex = /\[([^\]]*)\]\(([^)]+\.(mp3|wav|ogg|m4a|aac|flac))\)/gi
-              const audioLinkMatches = [...post.content.matchAll(audioLinkRegex)]
-              
-              // 合并所有音频匹配结果
-              const allAudioMatches = [...audioMatches, ...audioLinkMatches]
-              
               // 如果有音频文件，显示音频播放器
-                if (allAudioMatches.length > 0) {
-                  const [match] = allAudioMatches
-                  const [fullMatch, alt, url] = match
+                if (audioMatches.length > 0) {
+                  const [match] = audioMatches
+                  // 处理不同格式的匹配结果
+                  const url = match[2] || match[5] // 获取URL，根据匹配的是媒体格式还是链接格式
                   
                   // 处理音频URL
                   let audioUrl = url
@@ -223,22 +217,6 @@ const PostCard = ({ post }) => {
                     }
                   }
                   
-                  // 从URL中提取文件名，去掉后缀
-                  const getFilenameFromUrl = (url) => {
-                    // 移除查询参数和哈希
-                    const cleanUrl = url.split('?')[0].split('#')[0]
-                    // 从路径中提取文件名
-                    let filename = cleanUrl.split('/').pop()
-                    // 解码URL编码的文件名
-                    filename = decodeURIComponent(filename)
-                    // 去掉文件扩展名
-                    const filenameWithoutExt = filename.replace(/\.[^/.]+$/, '')
-                    return filenameWithoutExt
-                  }
-                  
-                  // 使用从URL提取的文件名作为标题，忽略alt文本
-                  const audioTitle = getFilenameFromUrl(url)
-                  
                   return (
                     <div className="post-audio-preview">
                       <audio 
@@ -253,7 +231,6 @@ const PostCard = ({ post }) => {
                       >
                         您的浏览器不支持音频播放
                       </audio>
-                      <div className="audio-title">{audioTitle}</div>
                     </div>
                   )
                 }
