@@ -203,8 +203,7 @@ const PostDetail = () => {
 
           {post.content && (
             <div className="post-body">
-              {post.content.split('
-').map((line, index) => {
+              {post.content.split('\n').map((line, index) => {
                 // 检查是否是Markdown媒体格式 ![alt](url) 或链接格式 [text](url)
                 const mediaMatch = line.match(/!\[([^\]]*)\]\(([^)]+)\)/) || line.match(/\[([^\]]*)\]\(([^)]+)\)/)
                 if (mediaMatch) {
