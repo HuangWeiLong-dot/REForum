@@ -339,9 +339,9 @@
     transition: all 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
-    height: 3rem;
-    min-height: 3rem;
-    line-height: 1;
+    height: auto;
+    min-height: 2.5rem;
+    line-height: 1.2;
   }
 
   .edit-profile-button {
@@ -472,19 +472,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
+    padding: 0.5rem 0.75rem;
     border: none;
     border-radius: 8px;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap;
-    height: 3rem;
-    min-height: 3rem;
-    line-height: 1;
+    white-space: normal;
+    height: auto;
+    min-height: 2.5rem;
+    line-height: 1.2;
     width: 100%;
     justify-content: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   
   .edit-profile-button {
