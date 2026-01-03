@@ -202,11 +202,31 @@ class User {
   // 修改密码
   static async changePassword(userId, currentPassword, newPassword) {
     // 1. 获取用户信息
-    const result = await query(
-      'SELECT id, username, email, password_hash, password_updated_at FROM users WHERE id = $1',
-      [userId]
-    );
-    const user = result.rows[0];
+    let user;
+    try {
+      // 尝试查询包含新字段的完整信息
+      const result = await query(
+        'SELECT id, username, email, password_hash, password_updated_at FROM users WHERE id = $1',
+        [userId]
+      );
+      user = result.rows[0];
+    } catch (error) {
+      // 如果 password_updated_at 字段不存在（数据库迁移未执行），回退到基本查询
+      if (error.code === '42703' || error.message.includes('column') || error.message.includes('does not exist')) {
+        console.warn('password_updated_at 字段不存在，使用向后兼容查询:', error.message);
+        const result = await query(
+          'SELECT id, username, email, password_hash FROM users WHERE id = $1',
+          [userId]
+        );
+        user = result.rows[0];
+        if (user) {
+          // 为缺失的字段设置默认值
+          user.password_updated_at = null;
+        }
+      } else {
+        throw error;
+      }
+    }
     if (!user) {
       throw new Error('USER_NOT_FOUND');
     }
