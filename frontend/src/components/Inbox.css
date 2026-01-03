@@ -273,6 +273,31 @@
   background-color: var(--hover-background);
 }
 
+/* 删除按钮样式 - 移除背景，只显示X图标 */
+.inbox-item-delete {
+  background: none !important;
+  border: none !important;
+  color: var(--text-tertiary) !important;
+  cursor: pointer !important;
+  padding: 0.25rem !important;
+  border-radius: var(--radius-sm) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s !important;
+  font-size: 0.75rem !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  opacity: 0.7 !important;
+}
+
+.inbox-item-delete:hover {
+  color: var(--text-primary) !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+}
+
 /* 滚动条样式 */
 .inbox-list::-webkit-scrollbar {
   width: 6px;
