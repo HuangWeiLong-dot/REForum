@@ -269,18 +269,27 @@
 .post-audio-player {
   width: 100%;
   outline: none;
+  background: transparent;
+  border: none;
 }
 
-/* 夜间模式音频播放器样式 */
+/* 确保音频控件在所有主题下都没有背景 */
+.post-audio-player::-webkit-media-controls-panel {
+  background: transparent;
+  border: none;
+}
+
+/* 夜间模式音频播放器样式 - 移除滤镜和背景，让浏览器默认控件正常显示 */
 .theme-dark .post-audio-player {
-  filter: invert(1) hue-rotate(180deg);
-  background-color: var(--background-alt);
-  border-radius: 4px;
+  background: transparent;
+  border: none;
+  filter: none;
 }
 
-/* 确保音频控件在夜间模式下有合适的背景 */
+/* 确保音频控件在夜间模式下自适应系统主题 */
 .theme-dark .post-audio-player::-webkit-media-controls-panel {
-  background-color: var(--background-alt);
+  background: transparent;
+  border: none;
 }
 
 /* 确保音频时长和进度条文本在夜间模式下清晰可见 */

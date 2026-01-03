@@ -322,6 +322,14 @@
 .post-audio-player {
   width: 100%;
   outline: none;
+  background: transparent;
+  border: none;
+}
+
+/* 确保音频控件在所有主题下都没有背景 */
+.post-audio-player::-webkit-media-controls-panel {
+  background: transparent;
+  border: none;
 }
 
 /* 夜间模式音频播放器样式 - 移除滤镜和背景，让浏览器默认控件正常显示 */
