@@ -19,27 +19,26 @@ export const LoaderProvider = ({ children }) => {
   })
   const [isLoading, setIsLoading] = useState(true)
   
-  // 开发阶段超时保护：如果10秒后还有资源未加载，自动标记为已加载
+  // 超时保护：如果10秒后还有资源未加载，自动标记为已加载
+  // 在所有环境中启用，避免生产环境下应用卡在加载状态
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      const timeout = setTimeout(() => {
-        // 检查哪些资源未加载
-        const unloadedResources = Object.keys(resources).filter(key => !resources[key].loaded)
-        if (unloadedResources.length > 0) {
-          console.warn(`开发阶段超时保护：自动标记以下资源为已加载：${unloadedResources.join(', ')}`)
-          // 标记所有未加载的资源为已加载
-          setResources(prev => {
-            const updated = { ...prev }
-            unloadedResources.forEach(key => {
-              updated[key].loaded = true
-            })
-            return updated
+    const timeout = setTimeout(() => {
+      // 检查哪些资源未加载
+      const unloadedResources = Object.keys(resources).filter(key => !resources[key].loaded)
+      if (unloadedResources.length > 0) {
+        console.warn(`超时保护：自动标记以下资源为已加载：${unloadedResources.join(', ')}`)
+        // 标记所有未加载的资源为已加载
+        setResources(prev => {
+          const updated = { ...prev }
+          unloadedResources.forEach(key => {
+            updated[key].loaded = true
           })
-        }
-      }, 10000) // 10秒超时
-      
-      return () => clearTimeout(timeout)
-    }
+          return updated
+        })
+      }
+    }, 10000) // 10秒超时
+    
+    return () => clearTimeout(timeout)
   }, [resources])
 
   // 计算当前进度
