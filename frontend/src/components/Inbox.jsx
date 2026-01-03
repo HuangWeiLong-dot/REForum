@@ -93,14 +93,17 @@ const Inbox = ({ showLabel = false }) => {
     e.stopPropagation()
     try {
       await notificationAPI.deleteNotification(notificationId)
+    } catch (error) {
+      // 即使API调用失败（例如通知已不存在），也继续更新UI
+      console.error('Failed to delete notification:', error)
+    } finally {
+      // 无论API是否成功，都从UI中移除通知
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
       // 如果删除的是未读通知，减少计数
       const deleted = notifications.find(n => n.id === notificationId)
       if (deleted && !deleted.is_read) {
         setUnreadCount(prev => Math.max(0, prev - 1))
       }
-    } catch (error) {
-      console.error('Failed to delete notification:', error)
     }
   }
 
