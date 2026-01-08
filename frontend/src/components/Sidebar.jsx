@@ -119,7 +119,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               {isMobile ? (
                 <>
                   <FaFileContract className="accordion-leading-icon" />
-                  <span>版本说明</span>
+                  <span>{t('sidebar.versionHistory')}</span>
                 </>
               ) : (
                 <>

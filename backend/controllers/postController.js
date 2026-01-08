@@ -175,6 +175,10 @@ class PostController {
         // 通知创建失败不影响帖子创建
       });
 
+      // 从帖子内容中提取文件和图片信息
+      const files = Post.extractFilesFromContent(content);
+      const images = Post.extractImagesFromContent(content);
+      
       // 异步站外邮件通知
       EmailService.sendNewPostNotificationEmails({
         recipients: recipientResult.rows,
@@ -182,6 +186,8 @@ class PostController {
         postId: post.id,
         authorUsername,
         excerpt,
+        files,
+        images,
       }).catch(err => {
         console.error('发送站外新帖邮件失败:', err);
       });

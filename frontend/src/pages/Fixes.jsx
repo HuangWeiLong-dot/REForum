@@ -9,6 +9,154 @@ import './Fixes.css'
 
 export const fixes = [
   {
+    date: '2026-01-08',
+    version: '1.12.0',
+    issue: 48,
+    translations: {
+      zh: {
+        title: '新增多种文件支持样式',
+        description:
+          '为帖子中的各种文件类型添加了样式支持，优化用户体验。',
+        details: [
+          '新增多种文件类型的样式支持',
+          '优化文件卡片显示效果',
+          '确保不同类型文件都有合适的图标和样式',
+        ],
+      },
+      en: {
+        title: 'Added Support for Multiple File Types with Styling',
+        description:
+          'Added styling support for various file types in posts to enhance user experience.',
+        details: [
+          'Added styling support for multiple file types',
+          'Optimized file card display effect',
+          'Ensured appropriate icons and styles for different file types',
+        ],
+      },
+      ja: {
+        title: '複数のファイルタイプのスタイルサポートを追加',
+        description:
+          '投稿内のさまざまなファイルタイプにスタイルサポートを追加し、ユーザーエクスペリエンスを向上させました。',
+        details: [
+          '複数のファイルタイプのスタイルサポートを追加',
+          'ファイルカードの表示効果を最適化',
+          '異なるタイプのファイルに適切なアイコンとスタイルを確保',
+        ],
+      },
+    },
+  },
+  {
+    date: '2026-01-08',
+    version: '1.12.0',
+    issue: 49,
+    translations: {
+      zh: {
+        title: '修复通知显示问题',
+        description:
+          '修复通知显示异常的问题，确保通知内容正确展示。',
+        details: [
+          '修复通知内容显示问题',
+          '确保通知标题和内容正确渲染',
+          '优化通知样式和布局',
+        ],
+      },
+      en: {
+        title: 'Fixed Notification Display Issues',
+        description:
+          'Fixed notification display issues to ensure notification content is displayed correctly.',
+        details: [
+          'Fixed notification content display issues',
+          'Ensured notification titles and content render correctly',
+          'Optimized notification styles and layout',
+        ],
+      },
+      ja: {
+        title: '通知表示の問題を修正',
+        description:
+          '通知表示の異常を修正し、通知内容が正しく表示されるようにしました。',
+        details: [
+          '通知内容の表示問題を修正',
+          '通知のタイトルと内容が正しくレンダリングされるようにする',
+          '通知のスタイルとレイアウトを最適化',
+        ],
+      },
+    },
+  },
+  {
+    date: '2026-01-08',
+    version: '1.12.0',
+    issue: 50,
+    translations: {
+      zh: {
+        title: '修复通知数量显示位置',
+        description:
+          '修复通知数量显示位置错误的问题，确保通知数量正确显示。',
+        details: [
+          '修复通知数量显示位置',
+          '确保通知图标上的数量显示正确',
+          '优化通知数量的视觉效果',
+        ],
+      },
+      en: {
+        title: 'Fixed Notification Count Display Position',
+        description:
+          'Fixed incorrect notification count display position to ensure proper visibility.',
+        details: [
+          'Fixed notification count display position',
+          'Ensured correct display of count on notification icon',
+          'Optimized visual effect of notification count',
+        ],
+      },
+      ja: {
+        title: '通知数の表示位置を修正',
+        description:
+          '通知数の表示位置が誤っている問題を修正し、通知数が正しく表示されるようにしました。',
+        details: [
+          '通知数の表示位置を修正',
+          '通知アイコンのカウント表示が正しくなるようにする',
+          '通知数の視覚効果を最適化',
+        ],
+      },
+    },
+  },
+  {
+    date: '2026-01-08',
+    version: '1.12.0',
+    issue: 51,
+    translations: {
+      zh: {
+        title: '修复语言适配问题',
+        description:
+          '修复语言适配相关问题，确保多语言环境下的正确显示。',
+        details: [
+          '修复语言适配问题',
+          '确保多语言环境下的正确显示',
+          '优化不同语言的布局适配',
+        ],
+      },
+      en: {
+        title: 'Fixed Language Adaptation Issues',
+        description:
+          'Fixed language adaptation issues to ensure correct display in multi-language environments.',
+        details: [
+          'Fixed language adaptation issues',
+          'Ensured correct display in multi-language environments',
+          'Optimized layout adaptation for different languages',
+        ],
+      },
+      ja: {
+        title: '言語適応の問題を修正',
+        description:
+          '言語適応に関する問題を修正し、多言語環境での正しい表示を確保しました。',
+        details: [
+          '言語適応の問題を修正',
+          '多言語環境での正しい表示を確保',
+          '異なる言語のレイアウト適応を最適化',
+        ],
+      },
+    },
+  },
+  {
     date: '2026-01-04',
     version: '1.11.0',
     issue: 47,

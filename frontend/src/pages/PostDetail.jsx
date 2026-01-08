@@ -247,16 +247,23 @@ const PostDetail = () => {
                     }
                   }
                   
-                  // 检查是否是音频文件
+                  // 检查文件类型并渲染相应的组件
                   const audioExtensions = /\.(mp3|wav|ogg|m4a|aac|flac)$/i
+                  const videoExtensions = /\.(mp4|webm|ogg|mov|avi|mkv)$/i
+                  const imageExtensions = /\.(jpg|jpeg|png|gif|webp|bmp)$/i
+                  const pdfExtensions = /\.pdf$/i
+                  const docExtensions = /\.(doc|docx|xls|xlsx|ppt|pptx)$/i
+                  const archiveExtensions = /\.(zip|rar|7z|tar|gz)$/i
+                  const codeExtensions = /\.(js|jsx|ts|tsx|html|css|scss|json|md|txt|py|java|cpp|c)$/i
+                  
                   if (audioExtensions.test(mediaUrl)) {
                     // 音频文件，使用音频播放器
                     return (
-                      <div key={index} className="post-audio-container">
+                      <div key={index} className="post-media-container post-audio-container">
                         <audio 
                           src={mediaUrl} 
                           controls 
-                          className="post-audio-player"
+                          className="post-media-player post-audio-player"
                           preload="metadata"
                           onError={(e) => {
                             console.error('音频加载失败:', mediaUrl)
@@ -267,27 +274,73 @@ const PostDetail = () => {
                         </audio>
                       </div>
                     )
-                  } else if (!line.startsWith('![')) {
-                    // 普通链接，不是音频文件，直接显示为文本行
+                  } else if (videoExtensions.test(mediaUrl)) {
+                    // 视频文件，使用视频播放器
                     return (
-                      <div key={index} className="post-text-line">
-                        {line}
+                      <div key={index} className="post-media-container post-video-container">
+                        <video 
+                          src={mediaUrl} 
+                          controls 
+                          className="post-media-player post-video-player"
+                          preload="metadata"
+                          width="100%"
+                          onError={(e) => {
+                            console.error('视频加载失败:', mediaUrl)
+                            e.target.style.display = 'none'
+                          }}
+                        >
+                          您的浏览器不支持视频播放
+                        </video>
                       </div>
                     )
-                  } else {
+                  } else if (imageExtensions.test(mediaUrl)) {
                     // 图片文件，使用图片标签
                     return (
-                      <div key={index} className="post-image-container">
+                      <div key={index} className="post-media-container post-image-container">
                         <img 
                           src={mediaUrl} 
                           alt={alt || t('post.imageAlt')} 
-                          className="post-image"
+                          className="post-media post-image"
                           loading="lazy"
                           onError={(e) => {
                             console.error('图片加载失败:', mediaUrl)
                             e.target.style.display = 'none'
                           }}
                         />
+                      </div>
+                    )
+                  } else if (!line.startsWith('![')) {
+                    // 普通链接，直接显示为文本行
+                    return (
+                      <div key={index} className="post-text-line">
+                        {line}
+                      </div>
+                    )
+                  } else {
+                    // 其他文件类型，显示文件卡片
+                    let fileType = 'unknown'
+                    if (pdfExtensions.test(mediaUrl)) fileType = 'pdf'
+                    else if (docExtensions.test(mediaUrl)) fileType = 'doc'
+                    else if (archiveExtensions.test(mediaUrl)) fileType = 'archive'
+                    else if (codeExtensions.test(mediaUrl)) fileType = 'code'
+                    
+                    return (
+                      <div key={index} className="post-media-container post-file-container">
+                        <div className="post-file-card" data-file-type={fileType}>
+                          <div className="post-file-icon">
+                            <span className="file-type-badge">
+                              {fileType === 'archive' ? 'ARC' : fileType.toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="post-file-info">
+                            <div className="post-file-name">{alt || mediaUrl.split('/').pop()}</div>
+                            <div className="post-file-url">
+                              <a href={mediaUrl} target="_blank" rel="noopener noreferrer" className="post-file-link">
+                                {t('common.download')}
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )
                   }

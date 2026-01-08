@@ -162,7 +162,7 @@ class EmailService {
   }
 
   // 站外新帖通知邮件
-  static async sendNewPostNotificationEmails({ recipients, postTitle, postId, authorUsername, excerpt, authorThemeColor = '#2563eb' }) {
+  static async sendNewPostNotificationEmails({ recipients, postTitle, postId, authorUsername, excerpt, files = [], images = [], authorThemeColor = '#2563eb' }) {
     try {
       if (!process.env.RESEND_API_KEY) {
         console.warn('RESEND_API_KEY 未配置，跳过邮件发送');
@@ -188,6 +188,62 @@ class EmailService {
           const batchResults = await Promise.allSettled(
             batch.map(async ({ email, username, language = 'zh-CN' }) => {
               const displayName = username || 'REForum 用户';
+              
+              // 生成图片列表HTML
+              let imagesHtml = '';
+              if (images && images.length > 0) {
+                imagesHtml = `
+                  <div style="margin: 16px 0;">
+                    <h3 style="color: #374151; font-size: 16px; margin: 0 0 12px;">帖子包含的图片：</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                `;
+                
+                images.forEach(image => {
+                  imagesHtml += `
+                    <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; max-width: 100%;">
+                      <img src="${image.url}" alt="${image.alt}" style="width: 100%; max-height: 300px; object-fit: cover;" />
+                      ${image.alt ? `<div style="padding: 8px; background-color: #f9fafb; font-size: 14px; color: #6b7280;">${image.alt}</div>` : ''}
+                    </div>
+                  `;
+                });
+                
+                imagesHtml += `
+                    </div>
+                  </div>
+                `;
+              }
+              
+              // 生成文件列表HTML
+              let filesHtml = '';
+              if (files && files.length > 0) {
+                filesHtml = `
+                  <div style="margin: 16px 0; text-align: left;">
+                    <h3 style="color: #374151; font-size: 16px; margin: 0 0 12px;">帖子包含的文件：</h3>
+                    <ul style="list-style-type: none; padding: 0; margin: 0;">
+                `;
+                
+                files.forEach(file => {
+                  filesHtml += `
+                    <li style="margin: 8px 0; padding: 12px; background-color: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb;">
+                      <div style="display: flex; align-items: center;">
+                        <div style="width: 40px; height: 40px; background-color: ${authorThemeColor}; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 12px;">
+                          ${file.type === 'archive' ? 'ARC' : file.type.toUpperCase()}
+                        </div>
+                        <div style="flex: 1;">
+                          <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">${file.name}</div>
+                          <a href="${file.url}" style="color: ${authorThemeColor}; text-decoration: none; font-size: 14px;">下载文件</a>
+                        </div>
+                      </div>
+                    </li>
+                  `;
+                });
+                
+                filesHtml += `
+                    </ul>
+                  </div>
+                `;
+              }
+              
               try {
                 const { error } = await resend.emails.send({
                   from: 'REForum <noreply@reforum.space>',
@@ -211,6 +267,8 @@ class EmailService {
                           <a href="${postUrl}" style="display: inline-block; padding: 12px 20px; background-color: ${authorThemeColor}; color: #fff; text-decoration: none; border-radius: 6px;">查看帖子</a>
                         </div>
                         ${excerpt ? `<p style="color: #4b5563; margin: 0 0 12px;">${excerpt}</p>` : ''}
+                        ${imagesHtml}
+                        ${filesHtml}
                         <p style="color: #6b7280; font-size: 12px; margin-top: 24px;">如果按钮无法点击，请复制链接到浏览器：<br /><span style="word-break: break-all;">${postUrl}</span></p>
                         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
                         <p style="color: #9ca3af; font-size: 12px;">此邮件由 REForum 系统自动发送，请勿回复。</p>

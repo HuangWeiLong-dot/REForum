@@ -5,6 +5,7 @@ const STORAGE_KEY = 'app-language'
 const translations = {
   zh: {
     'common.ok': '确定',
+    'common.download': '下载文件',
 
     'common.loading': '加载中...',
 
@@ -43,6 +44,7 @@ const translations = {
     'sidebar.changelog': '更新日志',
     'sidebar.fixes': '问题修复',
     'sidebar.navToggle': '首页菜单',
+    'sidebar.versionHistory': '版本说明',
     'right.categoriesTitle': '版块分类',
     'right.tagsTitle': '标签',
     'right.loading': '加载中...',
@@ -315,6 +317,7 @@ const translations = {
   },
   en: {
     'common.ok': 'OK',
+    'common.download': 'Download File',
 
     'common.loading': 'Loading...',
 
@@ -353,6 +356,7 @@ const translations = {
     'sidebar.changelog': 'Changelog',
     'sidebar.fixes': 'Fixes',
     'sidebar.navToggle': 'Menu',
+    'sidebar.versionHistory': 'Version History',
     'right.categoriesTitle': 'Categories',
     'right.tagsTitle': 'Tags',
     'right.loading': 'Loading...',
@@ -625,6 +629,7 @@ const translations = {
   },
   ja: {
     'common.ok': 'OK',
+    'common.download': 'ファイルをダウンロード',
 
     'common.loading': '読み込み中...',
 
@@ -663,6 +668,7 @@ const translations = {
     'sidebar.changelog': '更新履歴',
     'sidebar.fixes': '修正情報',
     'sidebar.navToggle': 'メニュー',
+    'sidebar.versionHistory': 'バージョン履歴',
     'right.categoriesTitle': 'カテゴリー',
     'right.tagsTitle': 'タグ',
     'right.loading': '読み込み中...',

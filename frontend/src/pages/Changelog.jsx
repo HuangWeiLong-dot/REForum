@@ -29,6 +29,58 @@ const changelogCopy = {
 
 const updates = [
   {
+    date: '2026-01-08',
+    version: '1.12.0',
+    type: 'update',
+    translations: {
+      zh: {
+        title: '文件样式支持与通知系统优化',
+        description:
+          '新增多种文件类型的样式支持，修复通知系统相关问题，改进语言适配。',
+        details: [
+          '新增多种文件类型的样式支持，优化文件卡片显示效果',
+          '修复通知显示异常问题，确保通知内容正确展示',
+          '修复通知数量显示位置错误，确保通知图标上的数量显示正确',
+          '修复语言适配问题，确保多语言环境下的正确显示',
+          '优化不同类型文件的图标和样式',
+          '优化通知样式和布局',
+          '优化通知数量的视觉效果',
+          '优化不同语言的布局适配',
+        ],
+      },
+      en: {
+        title: 'File Style Support and Notification System Optimization',
+        description:
+          'Added styling support for multiple file types, fixed notification system issues, and improved language adaptation.',
+        details: [
+          'Added styling support for multiple file types, optimized file card display',
+          'Fixed notification display issues, ensuring correct content rendering',
+          'Fixed notification count display position, ensuring proper visibility on icons',
+          'Fixed language adaptation issues for correct display in multi-language environments',
+          'Optimized icons and styles for different file types',
+          'Optimized notification styles and layout',
+          'Enhanced visual effect of notification counts',
+          'Improved layout adaptation for different languages',
+        ],
+      },
+      ja: {
+        title: 'ファイルスタイルサポートと通知システムの最適化',
+        description:
+          '複数のファイルタイプのスタイルサポートを追加し、通知システムの問題を修正し、言語適応を改善しました。',
+        details: [
+          '複数のファイルタイプのスタイルサポートを追加、ファイルカードの表示効果を最適化',
+          '通知表示の問題を修正、通知内容が正しく表示されるように',
+          '通知数の表示位置を修正、通知アイコンのカウント表示が正しくなるように',
+          '言語適応の問題を修正、多言語環境での正しい表示を確保',
+          '異なるタイプのファイルのアイコンとスタイルを最適化',
+          '通知のスタイルとレイアウトを最適化',
+          '通知数の視覚効果を強化',
+          '異なる言語のレイアウト適応を改善',
+        ],
+      },
+    },
+  },
+  {
     date: '2026-01-04',
     version: '1.11.0',
     type: 'update',

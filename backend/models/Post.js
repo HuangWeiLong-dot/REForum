@@ -469,6 +469,68 @@ class Post {
     return text.substring(0, maxLength) + '...';
   }
 
+  // 从帖子内容中提取文件信息（非图片）
+  static extractFilesFromContent(content) {
+    if (!content) return [];
+    
+    // 匹配 Markdown 文件链接格式: ![alt](url) 或直接链接: [text](url)
+    const fileRegex = /!?\[(.*?)\]\((.*?)\)/g;
+    const files = [];
+    let match;
+    
+    while ((match = fileRegex.exec(content)) !== null) {
+      const alt = match[1];
+      const url = match[2];
+      
+      // 检查是否为文件链接（不是图片链接）
+      // 图片链接通常以图片扩展名结尾，或者在Markdown中使用!开头
+      if (!url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) && !match[0].startsWith('!')) {
+        // 提取文件名
+        const fileName = url.split('/').pop();
+        // 检测文件类型
+        let fileType = 'unknown';
+        if (url.match(/\.(pdf)$/i)) fileType = 'pdf';
+        else if (url.match(/\.(doc|docx)$/i)) fileType = 'doc';
+        else if (url.match(/\.(zip|rar|tar|gz)$/i)) fileType = 'archive';
+        else if (url.match(/\.(js|ts|html|css|java|py|cpp|c|go|rb|php|json)$/i)) fileType = 'code';
+        
+        files.push({
+          name: alt || fileName,
+          url: url,
+          type: fileType,
+          fileName: fileName
+        });
+      }
+    }
+    
+    return files;
+  }
+  
+  // 从帖子内容中提取图片信息
+  static extractImagesFromContent(content) {
+    if (!content) return [];
+    
+    // 匹配 Markdown 图片链接格式: ![alt](url)
+    const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
+    const images = [];
+    let match;
+    
+    while ((match = imageRegex.exec(content)) !== null) {
+      const alt = match[1];
+      const url = match[2];
+      
+      // 检查是否为图片链接
+      if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+        images.push({
+          alt: alt,
+          url: url
+        });
+      }
+    }
+    
+    return images;
+  }
+
   // 格式化帖子数据（用于 API 响应）
   static async formatPostListItem(post, userId = null) {
     const baseData = {

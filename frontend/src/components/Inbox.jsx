@@ -307,12 +307,14 @@ const Inbox = ({ showLabel = false }) => {
           title={t('bottomNav.inbox') || '通知'}
           aria-label={t('bottomNav.inbox') || '通知'}
         >
-          <FaEnvelope />
-          {unreadCount > 0 && (
-            <span className="inbox-badge">
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
-          )}
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <FaEnvelope />
+            {unreadCount > 0 && (
+              <span className="inbox-badge">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </div>
           <span className="actions-toggle-label">{t('bottomNav.inbox')}</span>
         </button>
       ) : (

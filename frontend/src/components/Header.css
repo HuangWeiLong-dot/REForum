@@ -555,6 +555,7 @@
   flex: 1;
   max-width: 100px;
   min-height: 56px;
+  position: relative;
 }
 
 /* 底部导航栏图标样式 */
