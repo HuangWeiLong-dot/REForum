@@ -29,7 +29,7 @@ const changelogCopy = {
 
 const updates = [
   {
-    date: '2026-01-15',
+    date: '2026-02-20',
     version: '1.12.1',
     type: 'update',
     translations: {

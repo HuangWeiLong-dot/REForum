@@ -9,7 +9,7 @@ import './Fixes.css'
 
 export const fixes = [
   {
-    date: '2026-01-15',
+    date: '2026-02-20',
     version: '1.12.1',
     issue: 52,
     translations: {
@@ -46,7 +46,7 @@ export const fixes = [
     },
   },
   {
-    date: '2026-01-15',
+    date: '2026-02-20',
     version: '1.12.1',
     issue: 53,
     translations: {
