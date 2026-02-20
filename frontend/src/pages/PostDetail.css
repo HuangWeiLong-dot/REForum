@@ -240,12 +240,26 @@
   line-height: 1.8;
   color: var(--text-primary);
   font-size: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .post-body p {
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0 0 1rem 0;
+}
+
+.post-text-line {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  white-space: pre-wrap;
 }
 
 .post-image-container {
@@ -261,6 +275,12 @@
   display: block;
   max-width: 100%;
   object-fit: contain;
+}
+
+@media (min-width: 769px) {
+  .post-image {
+    max-height: 80vh;
+  }
 }
 
 /* 音频容器样式 */
