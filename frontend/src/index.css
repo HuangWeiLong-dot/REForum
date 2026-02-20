@@ -156,3 +156,15 @@ a {
   color: inherit;
 }
 
+/* 去除浏览器默认焦点样式 */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus,
+a:focus,
+[tabindex]:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+

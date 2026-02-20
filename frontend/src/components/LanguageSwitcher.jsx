@@ -4,7 +4,6 @@ import { useLanguage } from '../context/LanguageContext'
 import './LanguageSwitcher.css'
 
 const languages = [
-  { code: 'zh', label: '中文', symbol: '文' },
   { code: 'en', label: 'English', symbol: 'A' },
   { code: 'ja', label: '日本語', symbol: 'あ' },
 ]

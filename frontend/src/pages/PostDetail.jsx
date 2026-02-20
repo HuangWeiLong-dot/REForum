@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import zhCN from 'date-fns/locale/zh-CN'
 import { useAuth } from '../context/AuthContext'
@@ -14,8 +14,19 @@ import LoginModal from '../components/LoginModal'
 import RegisterModal from '../components/RegisterModal'
 import './PostDetail.css'
 
+// 生成URL友好的标题slug
+const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+}
+
 const PostDetail = () => {
-  const { postId } = useParams()
+  const { postId, slug } = useParams()
+  const navigate = useNavigate()
   const { isAuthenticated, user } = useAuth()
   const { t, getCategoryName } = useLanguage()
   const [post, setPost] = useState(null)
@@ -45,7 +56,14 @@ const PostDetail = () => {
   const fetchPost = async () => {
     try {
       const response = await postAPI.getPost(postId)
-      setPost(response.data)
+      const postData = response.data
+      setPost(postData)
+      
+      // 检查URL是否包含正确的帖子标题slug，如果不包含则重定向
+      const correctSlug = generateSlug(postData.title)
+      if (!slug || slug !== correctSlug) {
+        navigate(`/post/${postId}/${correctSlug}`, { replace: true })
+      }
     } catch (error) {
       console.error('Failed to fetch post:', error)
     } finally {
@@ -78,6 +96,9 @@ const PostDetail = () => {
         ...prev,
         likeCount: response.data.likeCount
       }))
+      
+      // 更新每日任务：点赞
+      updateTask('like')
     } catch (error) {
       console.error('Failed to toggle like:', error)
       if (error.response?.status === 401) {

@@ -65,7 +65,7 @@ function App() {
                 <Routes location={location}>
                   <Route path="/" element={<Home />} />
                   <Route path="/search" element={<Search />} />
-                  <Route path="/post/:postId" element={<PostDetail />} />
+                  <Route path="/post/:postId/:slug?" element={<PostDetail />} />
                   <Route path="/user/:userId" element={<UserProfile />} />
                   <Route path="/create-post" element={<CreatePost />} />
                   

@@ -10,14 +10,14 @@
 }
 
 .header-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  margin: 0;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 1.5rem;
-  padding: 0 1.5rem;
+  padding: 0 0.5rem;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .header-left {
@@ -633,6 +633,18 @@
   position: absolute;
   top: 0;
   right: 0;
+  background-color: var(--error-color);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+/* 移动端底部导航栏通知红点位置调整 */
+.actions-toggle-button .inbox-badge {
+  position: absolute;
+  top: 0;
+  right: -2px;
   background-color: var(--error-color);
   width: 8px;
   height: 8px;
@@ -1435,7 +1447,7 @@
   .header-container {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 1.25rem;
-    padding: 0 1.25rem;
+    padding: 0;
   }
 
   .header-left {
@@ -1465,11 +1477,11 @@
   .header-container {
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    margin: 0;
+    padding: 0 0.5rem;
     gap: 1.5rem;
     align-items: center;
+    width: 100%;
   }
   
   .header-center {
@@ -1551,7 +1563,7 @@
   .header-container {
     grid-template-columns: minmax(0, 1fr) auto auto auto;
     grid-template-rows: auto;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     gap: 1rem;
     align-items: center;
   }
@@ -1631,7 +1643,7 @@
   }
 
   .header-container {
-    padding: 0 0.75rem;
+    padding: 0 0.5rem;
     gap: 0.5rem;
   }
 

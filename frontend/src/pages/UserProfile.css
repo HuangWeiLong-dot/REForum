@@ -1,6 +1,5 @@
 .user-profile {
   flex: 1;
-  max-width: 900px;
   width: 100%;
 }
 
@@ -162,18 +161,18 @@
   }
 }
 
-/* 桌面端：卡片式布局 */
+/* 桌面端：简洁布局 */
 @media (min-width: 769px) {
 .profile-header {
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 12px;
-    padding: 2.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 2.5rem 0;
   margin-bottom: 2rem;
   display: flex;
     flex-wrap: wrap;
     gap: 2.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
     align-items: flex-start;
   }
 
@@ -202,7 +201,6 @@
   /* 经验进度条区域 - 占满整行 */
   .profile-exp-section {
     width: 100%;
-    flex-basis: 100%;
     margin-top: 1rem;
     position: relative;
     display: flex;
@@ -216,7 +214,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-}
+  }
 
 .profile-avatar {
   flex-shrink: 0;
@@ -256,12 +254,12 @@
   /* 用户数据手风琴区域 - 占满整行 */
   .profile-stats-section {
     width: 100%;
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 12px;
-    padding: 1.5rem 2.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 1.5rem 0;
     margin-bottom: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
   }
 
   .profile-stats-section .stats-accordion {
@@ -433,20 +431,20 @@
   }
 }
 
-/* 移动端：卡片式布局，适配小屏幕 */
+/* 移动端：简洁布局，适配小屏幕 */
 @media (max-width: 768px) {
   .profile-header {
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 12px;
-    padding: 1.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 1.5rem 0;
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
   }
 
   .profile-username-row {
@@ -560,7 +558,7 @@
   }
 
   .profile-stats-section {
-    padding: 1.25rem 1.5rem;
+    padding: 1.25rem 0;
     margin-bottom: 1.5rem;
   }
 
@@ -699,14 +697,14 @@
   margin-top: 2rem;
 }
 
-/* 桌面端：帖子区域也使用卡片样式 */
+/* 桌面端：帖子区域简洁布局 */
 @media (min-width: 769px) {
   .profile-content {
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 2rem 0;
+    box-shadow: none;
   }
 
   .profile-section-title {
@@ -723,15 +721,15 @@
   }
 }
 
-/* 移动端：帖子区域也使用卡片样式 */
+/* 移动端：帖子区域简洁布局 */
 @media (max-width: 768px) {
   .profile-content {
     margin-top: 1.5rem;
-    background: var(--card-background, #ffffff);
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 12px;
-    padding: 1.5rem 1.25rem; /* 增加左右内边距 */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 1.5rem 0; /* 移除左右内边距 */
+    box-shadow: none;
 }
 
 .profile-section-title {

@@ -11,6 +11,12 @@ import { useLanguage } from '../context/LanguageContext'
 import { notificationAPI } from '../services/api'
 import './Inbox.css'
 
+// 从环境变量获取通知徽章显示配置
+const SHOW_NOTIFICATION_BADGE = import.meta.env.VITE_SHOW_NOTIFICATION_BADGE !== 'false'
+
+// 测试模式：用于手动设置未读数量来测试红点显示
+const TEST_UNREAD_COUNT = import.meta.env.VITE_TEST_UNREAD_COUNT ? parseInt(import.meta.env.VITE_TEST_UNREAD_COUNT) : 0
+
 const formatLocale = {
   zh: zhCN,
   en: enUS,
@@ -23,7 +29,7 @@ const Inbox = ({ showLabel = false }) => {
   const location = useLocation()
   const [showDropdown, setShowDropdown] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(TEST_UNREAD_COUNT)
   const [loading, setLoading] = useState(false)
   const dropdownRef = useRef(null)
   const intervalRef = useRef(null)
@@ -152,11 +158,14 @@ const Inbox = ({ showLabel = false }) => {
   useEffect(() => {
     if (!isAuthenticated) return
 
-    fetchUnreadCount()
-    // 每30秒更新一次未读数量
-    intervalRef.current = setInterval(() => {
+    // 如果设置了测试未读数量，则不调用API
+    if (TEST_UNREAD_COUNT === 0) {
       fetchUnreadCount()
-    }, 30000)
+      // 每30秒更新一次未读数量
+      intervalRef.current = setInterval(() => {
+        fetchUnreadCount()
+      }, 30000)
+    }
 
     return () => {
       if (intervalRef.current) {
@@ -309,7 +318,7 @@ const Inbox = ({ showLabel = false }) => {
         >
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <FaEnvelope />
-            {unreadCount > 0 && (
+            {SHOW_NOTIFICATION_BADGE && unreadCount > 0 && (
               <span className="inbox-badge"></span>
             )}
           </div>
@@ -324,7 +333,7 @@ const Inbox = ({ showLabel = false }) => {
           aria-label={t('header.inbox') || '通知'}
         >
           <FaEnvelope />
-          {unreadCount > 0 && (
+          {SHOW_NOTIFICATION_BADGE && unreadCount > 0 && (
             <span className="inbox-badge"></span>
           )}
         </button>

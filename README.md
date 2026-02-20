@@ -1,7 +1,4 @@
-# REForum - Modern Forum System
-
-An open-source, modern forum platform with a **separated frontend and backend** architecture.
-
+# REForum - Modern Forum
 ---
 
 ## 项目结构
@@ -61,9 +58,7 @@ REForum/
 - ✅ 年龄验证与 Cookie 同意提示
 - ✅ 响应式设计，移动端优化
 
-更多细节可参考 `logs/UPDATE_LOG.md`、`logs/BUG_TRACKER.md` 与前端 `Changelog` / `Fixes` 页面。
-
-## 本地开发
+更多细节可参考 `logs/UPDATE_LOG.md`、`logs/BUG_TRACKER.md`(已删除) 与前端 `Changelog` / `Fixes` 页面。
 
 ### 前置要求
 
@@ -82,7 +77,7 @@ npm run dev
 
 默认在 `http://localhost:5173`（或终端提示的端口）启动。
 
-### 启动后端（本地 Node.js）
+### 启动后端
 
 ```bash
 cd backend
@@ -92,7 +87,7 @@ npm run dev
 
 默认在 `http://localhost:3000` 启动 API 服务（具体以 `backend/app.js` 与环境变量为准）。
 
-### 使用 Docker 一键启动
+### Docker
 
 ```bash
 # 在项目根目录
@@ -108,69 +103,9 @@ docker-compose logs -f
 docker-compose down
 ```
 
-详细的重新部署流程请查看 `docs/REDEPLOY.md`。
-
-## 环境配置
-
-### 前端环境变量
-
-在 `frontend/.env` 中配置：
-
-```env
-VITE_API_BASE_URL=http://localhost:3000/api
-# 测试登录功能（仅在开发/测试环境生效，必须明确设置为 true 才能启用）
-VITE_ENABLE_TEST_LOGIN=true
-```
-
-如果通过 Nginx 反向代理到同域，可以改为：
-
-```env
-VITE_API_BASE_URL=/api
-VITE_ENABLE_TEST_LOGIN=true
-```
-
-**注意**：`VITE_ENABLE_TEST_LOGIN` 只在开发/测试环境中生效，生产环境中无论设置什么值都会禁用测试登录功能。
-
-### 后端环境变量
-
-后端示例环境变量请参考 `backend/env.example`，包括：
-
-- 数据库连接（PostgreSQL）
-- JWT/认证配置
-- 邮件服务（Resend）用于验证码发送和新帖子通知
-- 前端 URL（用于邮件中的链接）
-
-## 文档
-
-- `openapi.yaml`：完整 API 规范
-- `docs/REDEPLOY.md`：线上环境重新部署指南
-- `logs/UPDATE_LOG.md`：功能更新与修复记录
-- `logs/BUG_TRACKER.md`：Bug 跟踪与修复记录
-
-前端站点内还提供「更新日志」「问题修复」等可视化页面，方便非技术用户理解改动。
-
-## 贡献指南
-
-1. Fork 本仓库
-2. 创建特性分支：`git checkout -b feature/YourFeature`
-3. 提交更改：`git commit -m "Add YourFeature"`
-4. 推送分支：`git push origin feature/YourFeature`
-5. 发起 Pull Request
-
-## 许可证
-
-本项目采用 **MIT License** 开源协议，详见仓库根目录 `LICENSE` 文件
-
 ## 最后更新日期
 
-2026年1月3日
+2026年2月7日
 
-## 当前版本
+修复页面header布局,user页面下的布局
 
-**v1.9.4** - 编辑资料验证和响应式布局修复
-
-主要更新：
-- 修复编辑资料时请求参数验证失败问题
-- 修复响应式设备上布局间距冲突
-- 修复测试登录环境变量逻辑
-- 优化后端验证规则和前端数据发送逻辑

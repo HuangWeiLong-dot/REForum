@@ -147,15 +147,6 @@ const ImageUpload = ({ images = [], onChange, maxImages = 10 }) => {
               ) : (
                 // 非图片文件预览
                 <div className="file-preview">
-                  <div className="file-preview-icon">
-                    <FaUpload />
-                  </div>
-                  <div className="file-preview-info">
-                    <div className="file-preview-name">{file.name}</div>
-                    <div className="file-preview-size">
-                      {(file.file.size / (1024 * 1024)).toFixed(2)} MB
-                    </div>
-                  </div>
                 </div>
               )}
               <button

@@ -52,7 +52,6 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const languageMenuRef = useRef(null)
 
   const languages = [
-    { code: 'zh', label: '中文', symbol: '文' },
     { code: 'en', label: 'English', symbol: 'A' },
     { code: 'ja', label: '日本語', symbol: 'あ' },
   ]
@@ -339,16 +338,18 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
         {isAuthenticated ? (
           <>
             <button 
-              className={`header-button create-button ${showLabels ? 'with-label' : ''}`}
-              onClick={() => {
-                navigate('/create-post')
-                if (isMobile) closeActionsMenu()
-              }}
-              title={t('header.createTitle')}
-            >
-              <FaPlus />
-              {showLabels ? <span className="action-button-label">{t('header.create')}</span> : <span className="create-button-label">发布</span>}
-            </button>
+            className={`header-button create-button ${showLabels ? 'with-label' : ''}`}
+            onClick={() => {
+              navigate('/create-post')
+              if (isMobile) closeActionsMenu()
+            }}
+            title={t('header.createTitle')}
+          >
+            <FaPlus />
+            {showLabels ? 
+              <span className="action-button-label">{t('header.create')}</span> 
+              : <span className="create-button-label">{t('header.create')}</span>}
+          </button>
             {/* 点击头像直接跳转到用户资料页面 */}
             <button 
               className={`user-avatar-button ${showLabels ? 'with-label' : ''}`}

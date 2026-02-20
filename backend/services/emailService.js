@@ -235,14 +235,8 @@ class EmailService {
                 files.forEach(file => {
                   filesHtml += `
                     <li style="margin: 8px 0; padding: 12px; background-color: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb;">
-                      <div style="display: flex; align-items: center;">
-                        <div style="width: 40px; height: 40px; background-color: ${authorThemeColor}; color: white; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 12px;">
-                          ${file.type === 'archive' ? 'ARC' : file.type.toUpperCase()}
-                        </div>
-                        <div style="flex: 1;">
-                          <div style="font-weight: 600; color: #374151; margin-bottom: 4px;">${file.name}</div>
-                          <a href="${file.url}" style="color: ${authorThemeColor}; text-decoration: none; font-size: 14px;">下载文件</a>
-                        </div>
+                      <div style="flex: 1;">
+                        <a href="${file.url}" style="color: ${authorThemeColor}; text-decoration: none; font-size: 14px;">下载文件</a>
                       </div>
                     </li>
                   `;

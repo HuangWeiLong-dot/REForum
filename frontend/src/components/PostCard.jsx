@@ -13,6 +13,16 @@ import { updateTask } from '../utils/dailyTasks'
 import LevelBadge from '../components/LevelBadge'
 import './PostCard.css'
 
+// 生成URL友好的标题slug
+const generateSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+}
+
 const PostCard = ({ post }) => {
   const { isAuthenticated } = useAuth()
   const { t, getCategoryName, language } = useLanguage()
@@ -166,7 +176,7 @@ const PostCard = ({ post }) => {
           <span className="post-time">{formatDate(post.createdAt)}</span>
         </div>
 
-        <Link to={`/post/${post.id}`} className="post-title">
+        <Link to={`/post/${post.id}/${generateSlug(post.title)}`} className="post-title">
           <h2>{post.title}</h2>
         </Link>
 
