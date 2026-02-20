@@ -161,6 +161,16 @@ class EmailService {
     }
   }
 
+  // 生成URL友好的标题slug
+  static generateSlug(title) {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+  }
+
   // 站外新帖通知邮件
   static async sendNewPostNotificationEmails({ recipients, postTitle, postId, authorUsername, excerpt, files = [], images = [], authorThemeColor = '#2563eb' }) {
     try {
@@ -175,7 +185,8 @@ class EmailService {
       }
 
       const postUrlBase = process.env.FRONTEND_URL || process.env.APP_URL || '';
-      const postUrl = `${postUrlBase}/post/${postId}`;
+      const slug = this.generateSlug(postTitle);
+      const postUrl = `${postUrlBase}/post/${postId}/${slug}`;
       
       // 清理预览文本中的Markdown链接，只保留纯文本
       const cleanPreviewText = excerpt ? excerpt.replace(/!?\[(.*?)\]\((.*?)\)/g, '') : '点击查看详情';
