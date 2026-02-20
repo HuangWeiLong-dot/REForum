@@ -29,6 +29,55 @@ const changelogCopy = {
 
 const updates = [
   {
+    date: '2026-01-15',
+    version: '1.12.1',
+    type: 'update',
+    translations: {
+      zh: {
+        title: '页面布局与功能优化',
+        description:
+          '修复页面崩坏问题，解决点赞任务Bug，优化界面布局，更新HTTPS证书。',
+        details: [
+          '修复长标题导致页面崩坏的问题，添加文本换行和截断功能',
+          '修复点赞任务Bug，现在可以通过点赞任何帖子完成任务',
+          '优化界面布局，移除不必要的边框和阴影，统一设计风格',
+          '更新HTTPS证书，确保网站安全访问',
+          '修复通知徽章位置，优化移动端显示效果',
+          '移除文件上传图标和文件名显示，简化界面',
+          '优化语言切换功能，只保留英文和日文选项',
+        ],
+      },
+      en: {
+        title: 'Page Layout and Functionality Optimization',
+        description:
+          'Fixed page break issues, resolved like task bug, optimized interface layout, and updated HTTPS certificate.',
+        details: [
+          'Fixed page break issues caused by long titles with text wrapping and truncation',
+          'Fixed like task bug, now can complete task by liking any post',
+          'Optimized interface layout, removed unnecessary borders and shadows, unified design style',
+          'Updated HTTPS certificate to ensure secure website access',
+          'Fixed notification badge position, optimized mobile display',
+          'Removed file upload icons and filename display to simplify interface',
+          'Optimized language switcher, only保留 English and Japanese options',
+        ],
+      },
+      ja: {
+        title: 'ページレイアウトと機能の最適化',
+        description:
+          'ページ崩壊の問題を修正、いいねタスクのバグを解決、インターフェースレイアウトを最適化、HTTPS証明書を更新。',
+        details: [
+          '長いタイトルによるページ崩壊の問題を修正、テキストの折り返しと切り詰め機能を追加',
+          'いいねタスクのバグを修正、どの投稿にいいねを付けてもタスクを完了できるように',
+          'インターフェースレイアウトを最適化、不要な境界線と影を削除、デザインスタイルを統一',
+          'HTTPS証明書を更新、ウェブサイトの安全なアクセスを確保',
+          '通知バッジの位置を修正、モバイル表示を最適化',
+          'ファイルアップロードアイコンとファイル名の表示を削除、インターフェースを簡素化',
+          '言語切り替え機能を最適化、英語と日本語のオプションのみを保持',
+        ],
+      },
+    },
+  },
+  {
     date: '2026-01-08',
     version: '1.12.0',
     type: 'update',

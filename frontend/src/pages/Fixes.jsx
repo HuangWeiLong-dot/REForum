@@ -9,6 +9,80 @@ import './Fixes.css'
 
 export const fixes = [
   {
+    date: '2026-01-15',
+    version: '1.12.1',
+    issue: 52,
+    translations: {
+      zh: {
+        title: '页面崩坏问题修复',
+        description:
+          '修复长标题导致页面崩坏的问题，确保在各种设备上都能正常显示。',
+        details: [
+          '为帖子标题添加文本换行和截断功能',
+          '优化移动端显示效果，防止标题过长导致布局错乱',
+          '确保长标题在各种屏幕尺寸下都能正确显示',
+        ],
+      },
+      en: {
+        title: 'Page Break Issue Fix',
+        description:
+          'Fixed page break issues caused by long titles, ensuring proper display on all devices.',
+        details: [
+          'Added text wrapping and truncation for post titles',
+          'Optimized mobile display to prevent layout disruption from long titles',
+          'Ensured long titles display correctly across all screen sizes',
+        ],
+      },
+      ja: {
+        title: 'ページ崩壊の問題を修正',
+        description:
+          '長いタイトルによるページ崩壊の問題を修正し、すべてのデバイスで正常に表示されるようにしました。',
+        details: [
+          '投稿タイトルにテキストの折り返しと切り詰め機能を追加',
+          'モバイル表示を最適化し、長いタイトルによるレイアウトの乱れを防止',
+          'すべての画面サイズで長いタイトルが正しく表示されるようにする',
+        ],
+      },
+    },
+  },
+  {
+    date: '2026-01-15',
+    version: '1.12.1',
+    issue: 53,
+    translations: {
+      zh: {
+        title: '点赞任务Bug修复',
+        description:
+          '修复点赞任务只有在点赞自己的帖子时才能完成的问题。',
+        details: [
+          '修复点赞任务逻辑，现在可以通过点赞任何帖子完成任务',
+          '确保点赞任务在各种情况下都能正确触发',
+          '优化任务完成后的反馈机制',
+        ],
+      },
+      en: {
+        title: 'Like Task Bug Fix',
+        description:
+          'Fixed issue where like task only completed when liking own posts.',
+        details: [
+          'Fixed like task logic to complete when liking any post',
+          'Ensured like task triggers correctly in all scenarios',
+          'Optimized task completion feedback mechanism',
+        ],
+      },
+      ja: {
+        title: 'いいねタスクのバグを修正',
+        description:
+          'いいねタスクが自分の投稿にいいねを付けたときにのみ完了する問題を修正しました。',
+        details: [
+          'いいねタスクのロジックを修正し、どの投稿にいいねを付けてもタスクを完了できるように',
+          'いいねタスクがあらゆる状況で正しくトリガーされるようにする',
+          'タスク完了後のフィードバックメカニズムを最適化',
+        ],
+      },
+    },
+  },
+  {
     date: '2026-01-08',
     version: '1.12.0',
     issue: 48,
