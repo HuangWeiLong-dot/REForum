@@ -1,7 +1,12 @@
 # 重新部署指南（含版本标签与镜像标记建议）
 ### 在服务器上执行以下命令：
 
+
+
 ```bash
+# 清理旧容器与镜像
+docker system prune -a --volumes -f
+
 # 1. 进入项目目录
 cd /opt/ReForum
 

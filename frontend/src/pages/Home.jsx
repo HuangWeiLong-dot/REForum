@@ -203,7 +203,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 30,
     total: 0,
     totalPages: 0,
   })
@@ -297,8 +297,8 @@ const Home = () => {
         
         const params = {
         page: pagination.page,
-        // 如果有日期筛选，显示该日期的所有帖子；否则最多显示10条
-        limit: dateParam ? 100 : 10, // 日期筛选时使用较大值获取所有帖子，否则显示10条
+        // 如果有日期筛选，显示该日期的所有帖子；否则最多显示30条
+        limit: dateParam ? 100 : 30, // 日期筛选时使用较大值获取所有帖子，否则显示30条
         sort,
       }
         if (selectedCategory) {
@@ -342,7 +342,7 @@ const Home = () => {
                 hotScore: calculateHotScore(post)
               }))
               .sort((a, b) => b.hotScore - a.hotScore)
-              .slice(0, 10) // 只取前10条
+              .slice(0, 30) // 只取前30条
           } catch (error) {
             console.error('Failed to fetch posts for hot sorting:', error)
             // 如果失败，使用原来的数据
@@ -684,7 +684,7 @@ const Home = () => {
       <div className="posts-container">
         {loading ? (
           <>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((index) => (
+            {[...Array(30).keys()].map((index) => (
               <article key={index} className="post-card post-card-skeleton">
                 <div className="post-content">
                   <div className="post-skeleton-header">
