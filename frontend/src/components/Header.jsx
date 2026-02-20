@@ -167,7 +167,6 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
     input.className = 'search-modal-input'
     input.autofocus = true
     input.value = searchQuery
-    input.oninput = (e) => setSearchQuery(e.target.value)
     
     // 关闭按钮
     const closeBtn = document.createElement('button')
@@ -191,7 +190,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
     return () => {
       document.body.removeChild(overlay)
     }
-  }, [showSearchModal, t, navigate, searchQuery, setSearchQuery, setShowSearchModal])
+  }, [showSearchModal, t, navigate])
   
   // 移除原来的SearchModal组件定义
   // const SearchModal = () => { ... }
